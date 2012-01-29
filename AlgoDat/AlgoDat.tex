@@ -2,10 +2,8 @@
 
 \usepackage{Header}
 
-%\usepackage{scalefnt}
-%\usepackage{parcolumns}
-%\usepackage{tikz-er2}
-\usepackage{hyperref}
+\usepackage{hyperref} %for links
+\usepackage{algorithmic} %for pseudocode
 
 \begin{document}
 
@@ -20,8 +18,284 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
 
 \textit{Find any errors? Please send them back, I want to keep them!}
 
-\section*{something}
+\section{Einführung}
+\subsection{Auswahlproblem}
+Ziel: "`Bestimme das $k$. kleinste Element von $n$ Elementen"' \\
+Spezialfälle: $k=
+\begin{cases}
+1 & Minimumsuche \\
+n & Maximumsuche \\
+\lfloor \frac{n}{2} \rfloor & Median
+\end{cases}$\\
 
-\section*{more}
+Verschiedene Ansätze:
+\begin{enumerate}
+	\item Auswahl nach Sortieren
+	\item Wiederholte Minimumsuche
+	\item Aktualisierung einer vorläufigen Lösung
+	\item Nutzen von Standartbibliotheken
+\end{enumerate}
+Bewertung ist schwer, bei $1$ und $4$ muss mehr über die Implementierung bekannt sein, bei allen Varianten muss zudem mehr über die Eingabe bekannt sein.
+
+\subsection{Maschinenmodell}
+Wie soll bewertet werden? Laufzeit in Sekunden? Hängt massgeblich ab von:
+\begin{itemize}
+	\item Programmiersprache
+	\item Rechner (Aufbau, Taktfrequenz, Speicher, \dots)
+	\item Eingabedaten
+\end{itemize}
+
+Müssen Bewertung unabhängig davon finden $\Rightarrow$ \textbf{Zählen von \emph{elementaren Schritten}}
+
+\begin{shaded}
+\textbf{Random Access Machine} \\
+
+Maschinenmodell mit:
+
+\begin{itemize}
+	\item endliche Zahl an Speicherzellen für Programm
+	\item abzählbar endliche Zahl von Speicherzellen für Daten
+	\item endliche Zahl von Registern
+	\item arithmetisch-logische Einheit (ALU)
+\end{itemize}
+
+Anweisungen:
+
+\begin{itemize}
+	\item Transportbefehle (Laden, Verschieben, Speichern)
+	\item Sprungbefehle (bedingt, unbedingt; $\to$ Schleifen, Rekursionen)
+	\item arithmetische und logische Vernküpfungen
+\end{itemize}
+
+\end{shaded}
+
+\subsection{Komplexität}
+Beschreiben Komplexität durch.
+\begin{description}
+	\item[Laufzeit:] Anahl Schritte (asymptotisch)
+	\item[Speicherbedarf:] Anzahl benutzter Speicherzellen
+\end{description}
+
+\subsubsection{Definitionen}
+\begin{enumerate}
+	\item höchstens so schnell wachsen wie $f$, {\tiny langsamer und gleich als $f$}
+	\begin{shaded}
+	\[ \mathcal{O}(f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
+	\begin{array}{c}
+	\textrm{es gibt Konstanten } c,n_0>0 \textrm{ mit} \\
+	\vert g(n) \vert \leq c \cdot \vert f(n) \vert \textrm{ für alle } n>n_0
+	\end{array}
+	\right\rbrace \]
+	\end{shaded}
+	\item mindestens so schnell wachsen wie $f$, {\tiny schneller und gleich als $f$}
+	\begin{shaded}
+	\[ \Omega (f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
+	\begin{array}{c}
+	\textrm{es gibt Konstanten } c,n_0>0 \textrm{ mit} \\
+	c \cdot \vert g(n) \vert \geq \vert f(n) \vert \textrm{ für alle } n>n_0
+	\end{array}
+	\right\rbrace \]
+	\end{shaded}
+	\item genauso so schnell wachsen wie $f$
+	\begin{shaded}
+	\[ \Theta(f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
+	\begin{array}{c}
+	\textrm{es gibt Konstanten } c_1,c_2,n_0>0 \textrm{ mit} \\
+	c_1 \leq \frac{\vert g(n) \vert}{\vert f(n) \vert} \leq c_2 \textrm{ für alle } n>n_0
+	\end{array}
+	\right\rbrace \]
+	\end{shaded}
+	\item die gegenüber $f$ verschwinden, {\tiny langsamer als $f$}
+	\begin{shaded}
+	\[ o(f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
+	\begin{array}{c}
+	\textrm{zu jedem } c>0 \textrm{ex. \emph{ein} } n_0>0 \textrm{ mit} \\
+	c \cdot \vert g(n) \leq \vert f(n) \vert \textrm{ für alle } n>n_0
+	\end{array}
+	\right\rbrace \]
+	\end{shaded}
+	\item denen gegenüber $f$ verschwindet, {\tiny schneller als $f$}
+	\begin{shaded}
+	\[ \omega(f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
+	\begin{array}{c}
+	\textrm{zu jedem } c>0 \textrm{ex. \emph{ein} } n_0>0 \textrm{ mit} \\
+	\vert g(n) \geq c \cdot \vert f(n) \vert \textrm{ für alle } n>n_0
+	\end{array}
+	\right\rbrace \]
+	\end{shaded}
+\end{enumerate}
+
+\begin{shaded}
+\[ \log_a{n} \leq \sqrt{n} \leq n^2 \leq n^3 \leq 1,1^n \leq 2^n \leq n! \leq n^n\]
+\end{shaded}
+
+\subsubsection{Satz}
+\begin{enumerate}
+	\item $g \in \mathcal{O}(f) $ genau dann, wenn $f \in \Omega(g) $
+	\\ $g \in \Theta(f) $ genau dann, wenn $f \in \Theta(g) $
+	\item $\log_b{n} \in \Theta (\log_2{n}) $ für alle $b>1$ \\
+	"`Die Basis des Logarithmus spielt für das Wachstum keine Rolle"'
+	\item $ (\log_2{n})^d \in o(n^\varepsilon) $ für alle $d \in \mathds{N}_0, \varepsilon>0$\\
+	"`Logarithmen wachsen langsamer als alle Polynomialfunktionen "'
+	\item $ n^d \in o((1+\varepsilon)^n) $ für alle $d\in \mathds{N}_0, \varepsilon>0$\\
+	"` Exponentielles Wachstum ist immer schneller als polynomielles "'
+	\item $ b^n \in o((b+\varepsilon)^n) $ für alle $b\geq 1, \varepsilon>0$ \\
+	"` Jede Verringerung der Basis verlangt exponentielles Wachstum"'
+	\item $ \binom{a}{b} \in \Theta(n^k)$
+	\item $H_n := \sum^n_{k=1} \frac{1}{k} = \ln n + \mathcal{O}(1)$ {\tiny (harmonische Zahlen)}
+	\item $n! = \sqrt{2\pi n} \cdot \left( \frac{n}{c}^n \right) \cdot \left( 1+\Theta \left( \frac{1}{n} \right) \right)$ {\tiny (Stirlingformel)}
+\end{enumerate}
+
+\section{Sortieren}
+\subsubsection{Gütekriterien}
+\begin{itemize}
+	\item Laufzeit
+	\item Speicherbedarf
+	\item Stabilität (kein Vertauschen der Reihenfolge schon sortierter Elemente)
+	\item u.U. getrennte Betrachtung von Anzahl Vergleiche $C(n)$ und Anzahl Umspeicherungen $M(n)$
+\end{itemize}
+
+\subsection{SelectionSort}
+\subsubsection{Algorithmus}
+
+\begin{algorithmic}
+\FOR {$i=1,\dots,n-1$}
+\STATE {$m \gets i$}
+	\FOR {$j=i+1,\dots,n$}
+	\IF {$M[j] < M[m]$}
+	\STATE {$m\gets j$}
+	\ENDIF
+	\ENDFOR
+	{vertausche $M[i]$ und $M[m]$}
+\ENDFOR
+\end{algorithmic}
+
+\subsubsection{Laufzeit}
+\begin{align*}
+\textrm{Anzahl Vergleiche:} & & C(n) &= n-1 + n-2 + \cdots + 1 = \sum_{n-1}^{i=i}i = \frac{n-1)\cdot n}{2} \\
+\textrm{Anzahl Umspeicherungen:} & & M(n) &= 3\cdot (n-1)
+\end{align*}
+Laufzeit liegt damit in $\Theta(n^2)$
+\subsubsection{Stabilität}
+Da weiter vorne stehende Elemente hinter gleiche andere vertauscht werden können: \textbf{nicht stabil}
+
+\subsection{Divide \& Conquer: QuickSort}
+\begin{shaded}
+\textbf{Divide \& Conquer:} \\ Zerteile Aufgabe in kleinere Aufgaben \& Löse diese rekursiv.
+\end{shaded}
+
+Idee: Wähle ein Element $p$ ("`Pivot"') und teile die anderen Elemente der Eingabe auf in :
+\begin{description}
+	\item[$M_1$:] die höchstens kleineren Elemente
+	\item[$M_2$:] die größeren Elemente
+\end{description}
+Sortierung von $M$ erhält man nun durch Hintereinanderschalten von $M_1,p,M_2$
+\subsubsection{Algorithmus}
+\begin{algorithmic}
+\STATE \texttt{quicksort(M,l,r)}
+\IF{$l<r$}
+\STATE {$i \gets l+1$} \\
+	{$j \gets r$} \\
+	{$p \gets M[l]$}
+	\WHILE{$i \leq j$}
+	\STATE \WHILE {$i \leq j$ \&\& $M[i]\leq p$}
+		\STATE {$i \gets i+1$}
+		\ENDWHILE
+		\WHILE {$i \leq j$ \&\& $M[j]\geq p$}
+		\STATE {$j \gets j-1$}
+		\ENDWHILE
+		\IF{$i<j$}
+		\STATE {vertausche M[i] und M[j]}
+		\ENDIF
+	\ENDWHILE
+	\IF {$l<j$}
+	\STATE {vertausche $M[l]$ und $M[j]$} \\
+		\texttt{quicksort($M,l,j-1$)}
+	\ENDIF
+	\IF {$j<r$}
+	\STATE {\texttt{quicksort(M,j+1,r)}}
+	\ENDIF
+\ENDIF
+\end{algorithmic}
+\subsubsection{Laufzeit}
+\begin{description}
+	\item[im besten Fall:] $\Theta(n\log n)$
+	\item[im schlechtesten Fall:] $\Theta(n^2)$ {\tiny (bereits sortierte Eingabe)}
+	\item[mittlere Laufzeit:] $\Theta(n\log n)$
+\end{description}
+Eine zufällige Auswahl des Pivot führt zu einem Algorithmus, der im Mittel auch auf vorsortierten Eingaben schnell ist.
+
+\subsection{Divide \& Conquer: MergeSort}
+MergeSort quasi umgekehrt zu QuickSort: triviale Aufteilung, linearer Aufwand bei Rekombination
+\subsubsection{Algorithmus}
+\begin{algorithmic}
+\STATE \texttt{mergesort(M,l,r)}
+\IF {$l<r$}
+\STATE {$m \gets \lfloor \frac{l+r-1}{2} \rfloor$} \\
+	\texttt{mergesort(M,l,m)} \\
+	\texttt{mergesort(M,m+1,r)} \\
+	{$i\gets l;\; j\gets m+1;\; k\gets l$}
+	\WHILE{$i\leq m$ \&\& $j\leq r$}
+	\STATE \IF {$M[i]\leq M[j]$}
+		\STATE {$M'[k] \gets M[i]$} \\
+			{$i\gets i+1$}
+		\ELSE
+		\STATE {$M'[k] \gets M[j]$} \\
+			$j\gets j+1$
+		\ENDIF \\
+		{$k \gets k+1$}
+	\ENDWHILE
+	\FOR {$h=i,\dots,m$}
+	\STATE {$M[k+(h-1)] \gets M[h]$}
+	\ENDFOR
+	\FOR {$h=l,\dots,k-1$}
+	\STATE {$M[h] \gets M'[h]$}
+	\ENDFOR
+\ENDIF
+\end{algorithmic}
+\subsubsection{Laufzeit}
+Laufzeit ist in $\Theta(n\log n)$ {\tiny (unabhängig von der Eingabe, dafür aber höherer Speicherbedarf)}
+
+\subsection{HeapSort}
+\subsubsection{Heap}
+\begin{shaded}
+\textbf{Heap-Bedingung:} \\ Für jeden Knoten gilt, dass der darin gespeicherte Wert nicht kleienr ist, als die beiden Werte in seinen Kindern.
+\end{shaded}
+\centerline{\input{images/heap-bedingung.tex}}
+
+\textbf{Einfügen:} Das neue Objekt wird hinten ins Array eingefügt, dann wird es solange mit seinem Vorgänger vertauscht, bis die \emph{Heap-Bedingung} wiederhergestellt ist. \textbf{Laufzeit:} $\mathcal{O}(\log n)$
+\begin{algorithmic}
+\STATE \texttt{insert}
+\STATE {$i \gets n+1$}
+\WHILE {$i>1$ \&\& $M\left[\lfloor\frac{i}{2}\rfloor\right]<a$}
+\STATE {$M[i] \gets M\left[\lfloor\frac{i}{2}\rfloor\right]$} \\
+	{$i \gets \lfloor\frac{i}{2}\rfloor$}
+\ENDWHILE
+\STATE {$M[i] \gets a$}
+\end{algorithmic}
+
+\textbf{ExtractMax:} Zum Entfernen wird das erste Element entfernt. Das letzte Element des Arrays wird an die Spitze gefüllt und "`versickert"' nun nach unten. Dies wird mittels "`heapify"' erreicht.
+
+\begin{algorithmic}
+\STATE {$a\gets M[i]$} \\ {$j\gets 2\cdot i$}
+\WHILE {$j\leq r$}
+\STATE \IF {$j<r$ \&\& $M[j+1]>M[j]$}
+	\STATE %{$j \gets j+1$}
+	\ENDIF
+	\IF {$a<M[j]$}
+	\STATE {$M[i] \gets M[j]$} \\
+		{$i \gets j$} \\
+		{$j \gets 2\cdot i$}
+	\ELSE
+	\STATE {$j \gets r+1$}
+	\ENDIF
+\ENDWHILE
+\STATE {$M[i] \gets a$}
+\end{algorithmic}
+
+%%%%%%%%%%%% Seite 25 (pdf) bzw 21 (script)
+
+\subsubsection{Algorithmus}
+\subsubsection{Laufzeit}
 
 \end{document}
