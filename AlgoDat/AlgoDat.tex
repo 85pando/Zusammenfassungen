@@ -146,6 +146,11 @@ Beschreiben Komplexität durch.
 	\item $n! = \sqrt{2\pi n} \cdot \left( \frac{n}{c}^n \right) \cdot \left( 1+\Theta \left( \frac{1}{n} \right) \right)$ {\tiny (Stirlingformel)}
 \end{enumerate}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \section{Sortieren}
 \subsubsection{Gütekriterien}
 \begin{itemize}
@@ -349,16 +354,108 @@ Die Laufzeit ist $\Theta(s\cdot n)$. Besonders geeignet, wenn $s$ klein im Verh�
 \paragraph{Stabilität}
 Nicht stabil.
 
+\subsection{Gegenüberstellung}
 
+\begin{tabular}{|l|ccc|c|c|c|}
+\hline Algorithmus & Lauf- & -zeit- & -klasse & Speicher & stabil & Einschränkung \\ 
+  & worst & average & best &  &  &  \\ 
+\hline SelectionSort & $n^2$ & $n^2$ & $n^2$ & $\Theta(1)$ & \wrong & keine \\ 
+ QuickSort & $n^2$ & $n\log n$ & $n\log n$ & $\mathcal{O}(n)$ & \wrong & keine \\ 
+ MergeSort & $n\log n$ & $n\log n$ & $n\log n$ & $\mathcal{O}(n)$ & \correct & keine \\ 
+ HeapSort & $n\log n$ & $n\log n$ & $n$ & $\Theta(1)$ & \wrong & keine \\ 
+\hline untere Schranke & $n\log n$ & $n\log n$ & n & n.a. & n.a. & keine \\ 
+\hline BucketSort & $n\log n$ & $n$ & $n$ & $\Theta(1)$ & \correct & reelle Zahlen aus $(0,1]$ \\ 
+ CountingSort & $n+k$ & $n+k$ & $n+k$ & $\Theta(n+k)$ & \correct & ganze Zahlen aus $(0,k-1)$ \\ 
+ RadixSort & $s\cdot(n+d)$ & $s\cdot(n+d)$ & $s\cdot(n+d)$ & $\Theta(n+d)$ & \correct & d-äre Zahlen, Wortlänge $s$ \\ 
+ RadixExchangeSort & $s\cdot n$ & $s\cdot n$ & $s\cdot n$ & $\mathcal{O}(n)$ & \wrong & Binärzahlen, Bitlänge $s$ \\ 
+\hline 
+\end{tabular} 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Suchen}
 
+\begin{shaded}
+\textbf{Dictionary:} \\
+\begin{description}
+	\item[Schlüssel:] eindeutige Kennung
+	\item[Element:] zu einem Schlüssel gehörender Datensatz
+\end{description}
+\end{shaded}
+\subsection{Lineare Suche}
+Suchen in einem unsortierten Array/einer unsortierten Liste.
+\subsubsection{Laufzeit}
+Lineare Suche benötigt im mittleren Fall $\mathcal{O}(n)$. {\tiny Kommt der Schlüssel nicht vor, muss das ganze Array/die ganze Liste durchlaufen werden.}
+\subsection{Selbstanordnende Folgen}
+Annahme: Die Reihenfolge der Liste darf geändert werden. Anfragehäufigkeiten sind unbekannt. Wir betrachten $3$ Strategien:
+\begin{itemize}
+	\item MF (move to front): Der Schlüssel auf den zugegriffen wurde, wird nach vorne verschoben.
+	\item T (tranpose): Der Schlüssel, auf den gerade zugegriffen wurde, wird mit seinem Vorgänger vertauscht.
+	\item FC (frequency count): Die Liste wird entsprechend einem Zähler sortiert, der die Zugriffshäufigkeiten angibt.
+\end{itemize}
+Empirisch zeigt sich, dass T schlechter ist als MF, FC und MF sind ähnlich, MF aber manchmal besser.\\
+\begin{tabular}{cp{450px}}
+ $C_A(S)$ & Kosten für Zugriffe S \\ 
+ $F_A(S)$ & kostenfreie Vertauschungen von benachbarten Schlüsseln an den untersuchen Positionen \\ 
+ $X_A(S)$ & konstenpflichtige Vertauschungen \\  
+\end{tabular}
 
+\begin{shaded}
+Für jeden beliebigen Algorithmus A zur Selbstanordnung gilt für jede Folge S von Zugriffen:
+\[ C_{MF} \leq 2\cdot C_A(S)+X_A(S)-F_A(S)-\vert S\vert \] 
+\end{shaded}
 
+\subsection{sortierte Arrays, binäre Suche}
+Annahme: Die Elemente sind sortiert. Wir betrachten immer das mittlere des verbleibenden Arrays und können damit die Hälfte der verbleibenden ausschliessen, da der Schlüssel größer oder kleiner sein muss (oder der gesuchte)
+\paragraph{Laufzeit}
+Die Laufzeit für binäre Suche beträgt $\Theta(\log n)$ um einen Schlüssel zu finden, bzw herauszufinden, ob er nicht enthalten ist.\\
+Bei Prozessoren mit Pipelining/Multithreading kann eine ungleiche Aufteilung sinnvoller sein.
 
+\subsection{geordnete Wörterbücher}
+\begin{shaded}
+\textbf{geordnetes Wörterbuch:} so angeordnet, dass zu jeder Zeit alle Paare aus Schlüssel und Element mit linearem Aufwand in Sortierreihenfolge ausgegeben werden können. {\tiny (Vorraussetung ist, dass über den Schlüsseln eine Ordnung $\leq$ besteht)}
+\end{shaded}
+\subsubsection{binärer Suchbaum}
+Speicherung:\begin{tabular}{|c|c|}
+\hline • & Node \\ 
+\hline \hline \texttt{node} & parent \\ 
+\hline \texttt{node} & left, right \\ 
+\hline \texttt{item} & item \\ 
+\hline 
+\end{tabular}
 
+\begin{shaded}
+\textbf{Suchbaumeigenschaft:}
+\begin{align*}
+	w.key &< v.key & \forall w \in L(v) \\
+	w.key &> v.key & \forall w \in R(v)
+\end{align*}
+wobei $L(v)$ den linken und $R(v)$ den rechten Teilbaum von $v$ bezeichnet. \\
+Ausgabe erfolt mittels eines \texttt{inorder}-Suchlaufes (Links,Mitte,Rechts)
+\paragraph{ADT dictionary:}
+\begin{align*}
+\texttt{find}(k) & \textrm{Element mit Schlüssel } k \textrm{ finden} \\
+\texttt{search}(T,k) & \textrm{suche } k \textrm{ im (Unter)Baum } T \\
+\texttt{insert}(a,k) & \textrm{einfügen von Element } a \textrm{ mit Schlüssel } k \\
+\texttt{remove}(k) & k \textrm{Element mit Schlüssel } k \textrm{ Entfernen} \\
+\end{align*}
+\end{shaded}
 
+%%%%%%%%%%%%%%%% S47 ## 51
 
+\subsection{AVL-Bäume}
+Um die Entartung von Bäumen zu verhindern, wird eine zusätzliche Balanciertheitseigenschaft gefordert.
 
+\begin{shaded}
+\textbf{Balanciertheitseigenschaft:} Für jeden (inneren) Knoten eines Binärbaums gilt, dass die Höhe der Teilbäume der beiden inneren Kindern sich um höchstens $1$ unterscheidet.\\ \ \\ 
+Ein AVL-Baum mit $n$ Knoten hat Höhe $\Theta(\log n)$.
+\end{shaded}
+
+Die Operationen \texttt{find} und \texttt{search} bleiben unverändert. Bei \texttt{insert} und \texttt{remove} muss jedoch die Balanciertheitseigenschaft beachtet werden. Dazu werden Rotationen eingefügt, die Knoten umsortieren, um diese Eigenschaften wiederherzustellen (S.49 im Script). \\
+\includegraphics[width=\textwidth]{images/AVL-einfacheRotation.png}
+
+\subsection{Rot-Schwarz-Bäume}
 
 \end{document}
