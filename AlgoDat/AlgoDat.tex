@@ -158,17 +158,17 @@ Beschreiben Komplexität durch.
 \subsection{SelectionSort}
 \subsubsection{Algorithmus}
 Idee: Man nehme pro Durchlauf das kleinste Element heraus und mache das solange, bis das Quellarray leer ist.
-\begin{algorithmic}
-\FOR {$i=1,\dots,n-1$}
-\STATE {$m \gets i$}
-	\FOR {$j=i+1,\dots,n$}
-	\IF {$M[j] < M[m]$}
-	\STATE {$m\gets j$}
-	\ENDIF
-	\ENDFOR
-	{vertausche $M[i]$ und $M[m]$}
-\ENDFOR
-\end{algorithmic}
+%\begin{algorithmic}
+%\FOR {$i=1,\dots,n-1$}
+%\STATE {$m \gets i$}
+%	\FOR {$j=i+1,\dots,n$}
+%	\IF {$M[j] < M[m]$}
+%	\STATE {$m\gets j$}
+%	\ENDIF
+%	\ENDFOR
+%	{vertausche $M[i]$ und $M[m]$}
+%\ENDFOR
+%\end{algorithmic}
 
 \subsubsection{Laufzeit}
 \begin{align*}
@@ -192,32 +192,32 @@ Idee: Wähle ein Element $p$ ("`Pivot"') und teile die anderen Elemente der Eing
 Sortierung von $M$ erhält man nun durch Hintereinanderschalten von $M_1,p,M_2$
 \subsubsection{Algorithmus}
 Idee: Wähle Pivot und teile die Arrays dementsprechend auf.
-\begin{algorithmic}
-\STATE \texttt{quicksort(M,l,r)}
-\IF{$l<r$}
-\STATE {$i \gets l+1$} \\
-	{$j \gets r$} \\
-	{$p \gets M[l]$}
-	\WHILE{$i \leq j$}
-	\STATE \WHILE {$i \leq j$ \&\& $M[i]\leq p$}
-		\STATE {$i \gets i+1$}
-		\ENDWHILE
-		\WHILE {$i \leq j$ \&\& $M[j]\geq p$}
-		\STATE {$j \gets j-1$}
-		\ENDWHILE
-		\IF{$i<j$}
-		\STATE {vertausche M[i] und M[j]}
-		\ENDIF
-	\ENDWHILE
-	\IF {$l<j$}
-	\STATE {vertausche $M[l]$ und $M[j]$} \\
-		\texttt{quicksort($M,l,j-1$)}
-	\ENDIF
-	\IF {$j<r$}
-	\STATE {\texttt{quicksort(M,j+1,r)}}
-	\ENDIF
-\ENDIF
-\end{algorithmic}
+%\begin{algorithmic}
+%\STATE \texttt{quicksort(M,l,r)}
+%\IF{$l<r$}
+%\STATE {$i \gets l+1$} \\
+%	{$j \gets r$} \\
+%	{$p \gets M[l]$}
+%	\WHILE{$i \leq j$}
+%	\STATE \WHILE {$i \leq j$ \&\& $M[i]\leq p$}
+%		\STATE {$i \gets i+1$}
+%		\ENDWHILE
+%		\WHILE {$i \leq j$ \&\& $M[j]\geq p$}
+%		\STATE {$j \gets j-1$}
+%		\ENDWHILE
+%		\IF{$i<j$}
+%		\STATE {vertausche M[i] und M[j]}
+%		\ENDIF
+%	\ENDWHILE
+%	\IF {$l<j$}
+%	\STATE {vertausche $M[l]$ und $M[j]$} \\
+%		\texttt{quicksort($M,l,j-1$)}
+%	\ENDIF
+%	\IF {$j<r$}
+%	\STATE {\texttt{quicksort(M,j+1,r)}}
+%	\ENDIF
+%\ENDIF
+%\end{algorithmic}
 \subsubsection{Laufzeit}
 \begin{description}
 	\item[im besten Fall:] $\Theta(n\log n)$
@@ -229,31 +229,31 @@ Eine zufällige Auswahl des Pivot führt zu einem Algorithmus, der im Mittel auc
 \subsection{Divide \& Conquer: MergeSort}
 MergeSort quasi umgekehrt zu QuickSort: triviale Aufteilung, linearer Aufwand bei Rekombination
 \subsubsection{Algorithmus}
-\begin{algorithmic}
-\STATE \texttt{mergesort(M,l,r)}
-\IF {$l<r$}
-\STATE {$m \gets \lfloor \frac{l+r-1}{2} \rfloor$} \\
-	\texttt{mergesort(M,l,m)} \\
-	\texttt{mergesort(M,m+1,r)} \\
-	{$i\gets l;\; j\gets m+1;\; k\gets l$}
-	\WHILE{$i\leq m$ \&\& $j\leq r$}
-	\STATE \IF {$M[i]\leq M[j]$}
-		\STATE {$M'[k] \gets M[i]$} \\
-			{$i\gets i+1$}
-		\ELSE
-		\STATE {$M'[k] \gets M[j]$} \\
-			$j\gets j+1$
-		\ENDIF \\
-		{$k \gets k+1$}
-	\ENDWHILE
-	\FOR {$h=i,\dots,m$}
-	\STATE {$M[k+(h-1)] \gets M[h]$}
-	\ENDFOR
-	\FOR {$h=l,\dots,k-1$}
-	\STATE {$M[h] \gets M'[h]$}
-	\ENDFOR
-\ENDIF
-\end{algorithmic}
+%\begin{algorithmic}
+%\STATE \texttt{mergesort(M,l,r)}
+%\IF {$l<r$}
+%\STATE {$m \gets \lfloor \frac{l+r-1}{2} \rfloor$} \\
+%	\texttt{mergesort(M,l,m)} \\
+%	\texttt{mergesort(M,m+1,r)} \\
+%	{$i\gets l;\; j\gets m+1;\; k\gets l$}
+%	\WHILE{$i\leq m$ \&\& $j\leq r$}
+%	\STATE \IF {$M[i]\leq M[j]$}
+%		\STATE {$M'[k] \gets M[i]$} \\
+%			{$i\gets i+1$}
+%		\ELSE
+%		\STATE {$M'[k] \gets M[j]$} \\
+%			$j\gets j+1$
+%		\ENDIF \\
+%		{$k \gets k+1$}
+%	\ENDWHILE
+%	\FOR {$h=i,\dots,m$}
+%	\STATE {$M[k+(h-1)] \gets M[h]$}
+%	\ENDFOR
+%	\FOR {$h=l,\dots,k-1$}
+%	\STATE {$M[h] \gets M'[h]$}
+%	\ENDFOR
+%\ENDIF
+%\end{algorithmic}
 \subsubsection{Laufzeit}
 Laufzeit ist in $\Theta(n\log n)$ {\tiny (unabhängig von der Eingabe, dafür aber höherer Speicherbedarf)}
 
@@ -265,38 +265,100 @@ Laufzeit ist in $\Theta(n\log n)$ {\tiny (unabhängig von der Eingabe, dafür ab
 \centerline{\input{images/heap-bedingung.tex}}
 
 \textbf{Einfügen:} Das neue Objekt wird hinten ins Array eingefügt, dann wird es solange mit seinem Vorgänger vertauscht, bis die \emph{Heap-Bedingung} wiederhergestellt ist. \textbf{Laufzeit:} $\mathcal{O}(\log n)$
-\begin{algorithmic}
-\STATE \texttt{insert}
-\STATE {$i \gets n+1$}
-\WHILE {$i>1$ \&\& $M\left[\lfloor\frac{i}{2}\rfloor\right]<a$}
-\STATE {$M[i] \gets M\left[\lfloor\frac{i}{2}\rfloor\right]$} \\
-	{$i \gets \lfloor\frac{i}{2}\rfloor$}
-\ENDWHILE
-\STATE {$M[i] \gets a$}
-\end{algorithmic}
+%\begin{algorithmic}
+%\STATE \texttt{insert}
+%\STATE {$i \gets n+1$}
+%\WHILE {$i>1$ \&\& $M\left[\lfloor\frac{i}{2}\rfloor\right]<a$}
+%\STATE {$M[i] \gets M\left[\lfloor\frac{i}{2}\rfloor\right]$} \\
+%	{$i \gets \lfloor\frac{i}{2}\rfloor$}
+%\ENDWHILE
+%\STATE {$M[i] \gets a$}
+%\end{algorithmic}
 
-\textbf{ExtractMax:} Zum Entfernen wird das erste Element entfernt. Das letzte Element des Arrays wird an die Spitze gefüllt und "`versickert"' nun nach unten. Dies wird mittels "`heapify"' erreicht.
+\textbf{ExtractMax:} Zum Entfernen wird das erste Element entfernt. Das letzte Element des Arrays wird an die Spitze gefüllt und "`versickert"' nun nach unten. Dies wird mittels "`heapify"' erreicht. \\
 
-\begin{algorithmic}
-\STATE {$a\gets M[i]$} \\ {$j\gets 2\cdot i$}
-\WHILE {$j\leq r$}
-\STATE \IF {$j<r$ \&\& $M[j+1]>M[j]$}
-	\STATE %{$j \gets j+1$}
-	\ENDIF
-	\IF {$a<M[j]$}
-	\STATE {$M[i] \gets M[j]$} \\
-		{$i \gets j$} \\
-		{$j \gets 2\cdot i$}
-	\ELSE
-	\STATE {$j \gets r+1$}
-	\ENDIF
-\ENDWHILE
-\STATE {$M[i] \gets a$}
-\end{algorithmic}
+\textbf{heapify:} Lässt aktuelles Element nach unten "`sickern"', indem es den Platz mit dem Größeren der Kinder vertauscht.
+
+%\begin{algorithmic}
+%\STATE {$a\gets M[i]$} \\ {$j\gets 2\cdot i$}
+%\WHILE {$j\leq r$}
+%\STATE \IF {$j<r$ \&\& $M[j+1]>M[j]$}
+%	\STATE %{$j \gets j+1$}
+%	\ENDIF
+%	\IF {$a<M[j]$}
+%	\STATE {$M[i] \gets M[j]$} \\
+%		{$i \gets j$} \\
+%		{$j \gets 2\cdot i$}
+%	\ELSE
+%	\STATE {$j \gets r+1$}
+%	\ENDIF
+%\ENDWHILE
+%\STATE {$M[i] \gets a$}
+%\end{algorithmic}
 
 %%%%%%%%%%%% Seite 25 (pdf) bzw 21 (script)
 
 \subsubsection{Algorithmus}
+Idee: Der Algorithmus teilt sich in 2 Phasen:
+\begin{enumerate}
+	\item Herstellen der Heap-Eigenschaft: \\
+	Starten bei $\lfloor \frac{n}{2} \rfloor$, rufen hier \texttt{heapify} auf und gehen dann zu $\lfloor \frac{n}{2} \rfloor, \dots,1$
+	\item Abbau des Heap (Maximumsuche und Vertauschen nach Hinten: \\
+	Um Speicherplatz zu sparen wird im selben Array gearbeitet. Dazu wird immer das erste Element mit dem letzten Element des verleibenden Heapes vertauscht und dieses neue dann "`versickert"' mittels \texttt{heapify}. Danach wir der Heap um $1$ verkleinert.
+\end{enumerate}
+
 \subsubsection{Laufzeit}
+Die Laufzeit ist $\mathcal{O}(n \log n)$.
+
+\subsection{Untere Laufzeitschranke}
+Frage: Wie schnell kann man überhaupt Sortieren {\tiny(bzw etwas machen)}. Sortieren kann auch als Entscheidungsbaum dargestellt werden. Anhand des ersten Vergleiches folgen weitere Vergleiche, abhängig vom ersten Vergleich. Das sind $n!$ Blätter und somit:
+\begin{align*}
+\log n! &= \log[n\cdot (n-1) \cdot \ldots \cdot 2 \cdot 1]\\
+        &=\log \left[ \left( \frac{n}{2}^{\frac{n}{2}} \right) \right]
+        &= \frac{n}{2}\cdot\log\frac{n}{2}
+        &\in \Omega(n\log n)
+\end{align*}
+\begin{shaded}
+Jedes allgemeine Sortierverfahren benötigt im schlechtesten Fall $\Omega(n\log n)$ Vergleiche.
+\end{shaded}
+
+\subsection{Sortierverfahren für spezielle Universen}
+\subsubsection{BucketSort}
+Annahme: Wollen nur reelle Zahlen sortieren. O.B.d.A. gilt $\mathcal{U}=(0,1]$.
+Für die Zahlen $M=\{a_1,\ldots,a_m\}$ werden nun $n$ Buckets erstellt und jede Zahl in den entsprechenden Bucket geworfen. Die einzelnen Buckets werden dann mit einem anderen Verfahren sortiert. Daher ist BucketSort ein \emph{Hüllensortierverfahren}.
+\paragraph{Laufzeit}
+Die mittlere Laufzeit von Bucketsort ist in $\mathcal{O}(n)$
+
+\subsubsection{CountingSort}
+Annahme: Wollen ganzzahlige Zahlen sortieren: $\mathcal{U}\subseteq\mathds N_0=\{0,\ldots,n\}$. O.B.d.A. gilt $M=\{0,\ldots,k-1\}$. Es wird nun für jede Zahl $1,\ldots,n$ ein Bucket erstellt und die Zahlen dort einsortiert. Danach werden die nun sortierten Zahlen wieder zurück ins Ursprungsarray geführt. \\
+Damit die evtl Zuordnung zu Daten erhalten bleibt, braucht es noch ein Zusatzarray, aus welchem diese Zuordnung nachher wieder abgelesen werden kann.
+\paragraph{Laufzeit}
+Die Laufzeit von CountingSort ist in $\mathcal{O}(n+k)$.
+\paragraph{Stabilität}
+Nicht stabil.
+
+\subsubsection{RadixSort}
+Angenommen wir wollen Zahlen sortieren aus $\mathcal{U}=\{0,\ldots,d-1\}$ und wir haben ein stabiles Sortierverfahren für die $d$-äre Darstellung. Dann sortieren wir nach den Stellen, von hinten nach vorne. $s$ ist die Anzahl der Stellen. {\tiny Als Sortierverfahren bietet sich CountingSort an.}
+\paragraph{Laufzeit}
+Die Laufzeit ist in $\Theta(s\cdot(n+d)$. {\tiny Ein großes $d$ (z.B. $d=256 \; \Rightarrow$ byteweise Aufteilung) lohnt sich, da dann $s$ klein wird.}
+
+\subsubsection{RadixExchangeSort}
+Annahme: Zahlen in Binärdarstellung, Partitionierung aufgrund der der jeweils aktuellen Binärziffer
+\paragraph{Laufzeit}
+Die Laufzeit ist $\Theta(s\cdot n)$. Besonders geeignet, wenn $s$ klein im Verhältnis zu $n$.
+\paragraph{Stabilität}
+Nicht stabil.
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
