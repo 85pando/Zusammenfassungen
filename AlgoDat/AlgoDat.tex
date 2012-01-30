@@ -157,7 +157,7 @@ Beschreiben Komplexität durch.
 
 \subsection{SelectionSort}
 \subsubsection{Algorithmus}
-
+Idee: Man nehme pro Durchlauf das kleinste Element heraus und mache das solange, bis das Quellarray leer ist.
 \begin{algorithmic}
 \FOR {$i=1,\dots,n-1$}
 \STATE {$m \gets i$}
@@ -191,6 +191,7 @@ Idee: Wähle ein Element $p$ ("`Pivot"') und teile die anderen Elemente der Eing
 \end{description}
 Sortierung von $M$ erhält man nun durch Hintereinanderschalten von $M_1,p,M_2$
 \subsubsection{Algorithmus}
+Idee: Wähle Pivot und teile die Arrays dementsprechend auf.
 \begin{algorithmic}
 \STATE \texttt{quicksort(M,l,r)}
 \IF{$l<r$}
