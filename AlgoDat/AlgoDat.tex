@@ -443,8 +443,6 @@ Ausgabe erfolt mittels eines \texttt{inorder}-Suchlaufes (Links,Mitte,Rechts)
 \end{align*}
 \end{shaded}
 
-%%%%%%%%%%%%%%%% S47 ## 51
-
 \subsection{AVL-Bäume}
 Um die Entartung von Bäumen zu verhindern, wird eine zusätzliche Balanciertheitseigenschaft gefordert.
 
@@ -453,9 +451,170 @@ Um die Entartung von Bäumen zu verhindern, wird eine zusätzliche Balancierthei
 Ein AVL-Baum mit $n$ Knoten hat Höhe $\Theta(\log n)$.
 \end{shaded}
 
-Die Operationen \texttt{find} und \texttt{search} bleiben unverändert. Bei \texttt{insert} und \texttt{remove} muss jedoch die Balanciertheitseigenschaft beachtet werden. Dazu werden Rotationen eingefügt, die Knoten umsortieren, um diese Eigenschaften wiederherzustellen (S.49 im Script). \\
-\includegraphics[width=\textwidth]{images/AVL-einfacheRotation.png}
+Die Operationen \texttt{find} und \texttt{search} bleiben unverändert. Bei \texttt{insert} (nur in Blätter) und \texttt{remove} muss jedoch die Balanciertheitseigenschaft beachtet werden. Dazu werden Rotationen eingefügt, die Knoten umsortieren, um diese Eigenschaften wiederherzustellen (S.49 im Script). \\
+\includegraphics[width=\textwidth]{images/AVL-einfacheRotation.png} \\
+\includegraphics[width=\textwidth]{images/AVL-doppelteRotation.png}
 
 \subsection{Rot-Schwarz-Bäume}
+Alternativ kann man bestimmte Knoten von der Eigenschaft für einen perfekten Binärbaum ausnehmen, also "`Färben"':
 
+\begin{shaded}
+\begin{tabular}{cc}
+schwarz: & normaler Knoten \\ 
+rot: & Ausgleichsknoten (für Höhenunterschiede) \\ 
+\end{tabular}\\
+\textbf{Wurzelbedingung:} Die Wurzel ist schwarz. \\
+\textbf{Farbbedingung:} Die Kinder von roten Knoten sind schwarze Knoten (oder nil). \\
+\textbf{Tiefenbedingung:} Alle Blätter haben die gleiche schwarze Tiefe (definiert als die Anzahl schwarze Vorfahren $-1$) \\ \ \\
+Die Höhe eines rot-schwarz Baumes mit $n$ Knoten ist $\Theta(\log n)$
+\end{shaded}
+Beim Einfügen wird das neue Blatt \rot{rot} (ausser, wenn das neue Blatt die Wurzel ist). Ist der Elternknoten des neuen Blattes jedoch bereits rot, ist die Farbbedingung verletzt. Sollte nach dem Rotieren bei $u$ Doppelrot auftreten, wird solande nach oben iteriert, bis man die Wurzel erreicht.\\
+\paragraph{Fall 1: Der Geschwisterknoten $z$ von $v$ ist schwarz:} \ \\
+\includegraphics[scale=0.4]{images/RS-Insert1.png}
+\paragraph{Fall 1: Der Geschwisterknoten $z$ von $v$ ist rot:} \ \\
+\includegraphics[scale=0.4]{images/RS-Insert2.png}
+
+{\Huge \rot{Löschen von AVL-Bäumen (S.53-55 im Script)}}
+
+\subsection{B-Bäume}
+Ist der Index zu groß, müssen Werte evtl weit verstreut abgelegt werden. \\
+
+\begin{shaded}
+\underline{Vielwegbaum:} speichert pro Knoten mehrere Schlüssel in aufsteigender Reihenfolge. Zwischen je zwei Schlüsseln, sowie vor dem Ersten und nach dem Letzten wird in Kind/Teilbaum angehängt. Die Zahl der Kinder ist immer Anzahl Schlüssel $-1$
+
+\underline{B-Baum} der Ordnung $d$, $d\geq 2$ \\
+\textbf{Wurzelbedingung:} Die Wurzel hat mindestens $2$ und höchstens $d$ Kinder. \\
+\textbf{Knotenbedingung:} Jeder andere Knoten hat mindestens $\lceil \frac{d}{2}\rceil$ und höchstens $d$ Kinder. \\
+\textbf{Schlüsselbedingung:} Jeder Knoten mit $i$ Kindern hat $i-1$ Schlüssel. \\
+\textbf{Tiefenbedingung:} Alle Blätter haben dieselbe Tiefe. \\ \ \\
+Ein B-Baum der Ordnung $d$ miz $n$ Knoten hat Höhe $\Theta(\log_d n)$
+\end{shaded}
+
+\paragraph{\texttt{insert}:} Suche das Blatt, in das eingefügt werden soll. Wieviele Schlüssel hat das Blatt?
+\begin{description}
+	\item[$<d-1$] einfügen, fertig
+	\item[$=d-1$] Überlauf: teile die $d$ Schlüssel auf in die kleineren $\lfloor \frac{d}{2} \rfloor$ und die größeren $\lceil \frac{d}{2} \rceil+1$, für die zwei neue Knoten erzeugt werden. Das mittlere $(\lfloor \frac{d}{2} \rfloor)$-te wird im Elternknoten eingefügt, evtl Überlauf im Elternknoten durch nach oben iterieren beheben.
+\end{description}
+
+\paragraph{\texttt{remove}:} Suche den Knoten, aus dem ein Schlüssel entfernt werden soll. Wieviele Schlüssel enthält er?
+\begin{description}
+	\item[$>\lceil\frac{d}{2}\rceil -1$] löschen, fertig
+	\item[$=\lceil\frac{d}{2}\rceil -1$] Unterlauf
+	\begin{enumerate}
+		\item Knoten ist innerer Knoten (d.h. kein Blatt)\\
+		Ersetze Schlüssel durch Inorder-Vorgänger (oder Nachfolger), d.h. letzten Schlüssel im rechtesten Blatt des vorangeheneden Teilbaumes.
+		\item Knoten ist Blatt \\
+		Falls ein direkter rechter oder linker Geschwisterknoten mehr als $\lceil\frac{d}{2}\rceil -1$ Schlüssel enthält, verschiebe den Letzten bzw Ersten von dort in den gemeinsamen Vorgänger und den trennenten Schlüssel von vorher in den Knoten mit Unterlauf. \\
+		Anderfalls Knoten mit einem der direkten Geschwisterknoten und dem trennenden Schlüssel aus dem Vorgänger verschmelzen.
+	\end{enumerate}
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Streuen}
+Betrachten ungeordnete Wörterbücher. Schlüssel ohne Sortierreihenfolge gespeichert.
+
+\begin{shaded}
+\textbf{Bezeichnungen:} \\
+\begin{tabular}{ll}
+(Schlüssel-)Universum &$\mathcal{U} \subseteq \mathds{N}_0$ \\ 
+Schlüsselmenge & $K \subseteq \mathcal{U}, \; \vert K \vert = n$ \\ 
+Hashtabelle & $H[0,\ldots, m-1]$ (Array von Zeigern) \\ 
+\end{tabular} 
+\end{shaded}
+Eine Hashfunktion $h: \mathcal{U} \to \{0,\ldots,m-1\}$ weisst jedem Schlüssel $k\in\mathcal{U}$ seine Speicherstelle $H[h(k)]$ zu. Im Optimalfall ist jede Stelle in der Hashtabelle nur einfach besetzt ($\Rightarrow$ Einfügen, Suchen, Löschen in $\Theta(1)$). \\
+Beispiele für Hashfunktionen:
+\begin{itemize}
+	\item $h(k) = k \mod m$ \; für Primzahl $m$ (Divisions- /Kongruenzmethode)
+	\item $h(k) = \lfloor m\cdot(k\alpha-\lfloor k\alpha\rfloor)\rfloor$, zBsp für $\alpha=\phi^{-1}=\frac{\sqrt{5}-1}{2}\approx 0,61803$ \; (Multiplikationsmethode)
+\end{itemize}
+
+\subsection{Kollissionen}
+Im Allg. kommt vor: $h(k_1)=h(k_2)$ für einige $h_1,h_2\in K$ $\Rightarrow$ heisst \emph{Kollision}, $k_1,k_2$ heissten \emph{Synonym}.
+\begin{shaded}
+$p_{m,n} := P \textrm{(keine Kollision)} = 1\cdot\frac{m-1}{m}\cdot\frac{m-1}{m}\cdot\ldots\cdot\frac{m-n+1}{m}$ \\
+Schlüssel werden durch $h$ gleichmässig gestreut, d.h. alle Positionen gleich wahrscheinlich. (Bsp. Geburtstagsparadoxon) \\ \vspace{2em}
+Erwartete Anzahl Kollisionen: \\
+Sei $X_{ij}=
+\begin{cases} 
+1 & \textrm{falls } h(k_i)=h(k_j) \textrm{\tiny (Also bei Kollision)} \\
+0 & sonst
+\end{cases}$\\
+Bei Gleichmässiger Streuung: $E(X)=E\left(\sum_{i<j}X_{ij}\right)=\binom{n}{2}\cdot\frac{1}{m}$ \\
+Im Allgemeinen: $E(X)\geq 1 \Leftrightarrow n(n-1)\geq 2m$ \\ \vspace{2em}
+\underline{Belegungsfaktor} (load factor): $\beta = \frac{n}{m}$\\
+Erwartete Anzahl Leerfelder: $m-m\cdot e^{-\beta} = m(1-e^{-\beta})$
+\end{shaded}
+
+\subsection{Kollisionsbehandlung}
+\subsubsection{Verkettung}
+In der Hashtabelle wird eine Liste von Elementen angelegt. Wenn mehrere Zugriffe auf Zeiger erfolgen, heisst dies \underline{Sondieren}. Im Mittel sind $n=m\ln m$ Einfügungen nötig, um alle Felder zu füllen, dann ist $\beta=\frac{m\ln m}{m}=\ln m > 1$
+\subsubsection{Open Hashing}
+Idee: In jedem Feld wird nur ein Element gespeichert. $\Rightarrow$ Bei Kollision muss neuer Platz gefunden werden. Wähle dazu eine Folge $d_1,d_2,\ldots,d_i \in \mathds{Z}$ und versuche \[ H[(h(k)+d_i) \mod m], \; i=1,2,\ldots \]
+Für $(d_i)$ gibt es verschiedene Wahlen: \\
+\begin{tabular}{rp{13cm}}
+lineares Sondieren & $d_i=i$ \\ 
+quadratisches Sondieren & $d_i=i^2$ \\ 
+double Hashing & $d_i=i\cdot h'(k)$, wobei $h':\mathcal{U}\to \{1,\ldots,m-1\}$ eine zweite Hashfunktion mit $h'(k) \not= 0 \; \forall k\in\mathcal{U}$ und $m$ prim ist. \\ 
+\end{tabular}
+
+\subsubsection{Kollisionsvermeidung}
+Ziel: Gleichmässiges Streuen durch Hash-Funktion\\
+Problem: Wissen nicht, welche Schlüssel gespeichert werden sollen. \\
+Idee: Wähle aus einer Menge von Hashfunktionen $\mathcal{H} \subseteq \{h:\mathcal{U} \to \{0,\ldots,m-1\}\}$ zufällig eine aus.
+\begin{shaded}
+Eine Familie von Streufunktionen heisst \underline{universell}, falls \[ \vert \{h\in\mathcal{H}: h(k_1) = h(k_2)\}\vert \leq \frac{\vert \mathcal{H}\vert}{m}\;\forall k_1,k_2\in\mathcal{U} \] 
+\end{shaded}
+Bei zufälliger Wahl sind wir berechtigt $P(h(k_1)=h(k_2))=\frac{1}{m}$ anzunehmen. \\
+
+\rot{Das ist mir jetzt grad zu blöd die Formeln weiter abzutippen, Seite 68ff}
+
+\subsubsection{Bloom-Filter {\tiny (aus der Übung)}}
+\rot{das noch machen...}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Dynamische Programmierung: Ausrichten}
+Idee: Suchen nach "`ähnlichen"' Wortketten.
+\begin{shaded}
+\begin{itemize}
+	\item $\Sigma$ ist Alphabet
+	\item $s=a_1a_2\cdots a_n\in\Sigma^*=\bigcup \Sigma^k$ heisst "`Wort"' oder "`Sequenz"' der Länge $\vert s\vert=n$
+	\item $\varepsilon$ ist das leere Wort, $\vert\varepsilon\vert=0$
+	\item Teilsequenz $s'$ von $s=s=a_1a_2\cdots a_n$ erfüllt $s'=a_i\cdots a_j$ für $1\leq i,j\leq n$ (im Unterschied zum Teilwort, bei dem auch Zeichen ausgelassen werden können.
+\end{itemize}
+\vspace{2em}
+Um zwei Wörter zu vergleichen, gibt es drei Operationen. Ähnlichkeit ist die minimale Anzahl Operationen
+\begin{description}
+	\item[Substitution:] Ein Zeichen wird durch ein anderes ersetzt.
+	\item[Einfügung:] Ein Zeichen wird in einem Wort hinzugefügt.
+	\item[Löschung:] Ein Zeichen wird in einem Wort entfernt
+\end{description}
+\vspace{2em}
+
+Ein Paar heisst $\overline{s},\overline{t}\in\Sigma^*\times\Sigma^*$ \underline{Ausrichtung} von $s,t\in\Sigma^*$, falls
+\begin{itemize}
+	\item $\overline{s}\vert_\Sigma=s,\overline{t}\vert_\Sigma$ {\tiny (Weglassen aller Leerzeichen ergibt Ausganssequenz)}
+	\item $\vert\overline{s}\vert=\vert\overline{t}\vert$ {\tiny (Beide Sperrungen gleich lang)}
+	\item \rot{Bewertung und Editierbarkeit Script S74}
+\end{itemize}
+\vspace{2em}
+\end{shaded}
+
+\rot{Der Ausrichtalgorithmus aus der Übung} \\
+
+Eine optimale Ausrichtung kann in $\mathcal{O}(nm)$ mit $\mathcal{O}(\min\{n,m\})$ Platz bestimmt werden.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Graphen}
+\begin{shaded}
+Das Paar $G=(V,E)$ aus den Mengen $V$ und $E\subseteq\binom{V}{2}$ heisst (endlicher, ungerichteter) Graph, Elemente aus $V$ heissen Knoten, Elemente aus $E$ heissen Kannten. Allgemein: $n=n(G)=\vert V\vert$ und $m=m(g)=\vert E\vert$.
+\end{shaded}
 \end{document}
