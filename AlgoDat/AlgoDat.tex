@@ -614,7 +614,74 @@ Eine optimale Ausrichtung kann in $\mathcal{O}(nm)$ mit $\mathcal{O}(\min\{n,m\}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Graphen}
+\subsection{Definitionen}
 \begin{shaded}
-Das Paar $G=(V,E)$ aus den Mengen $V$ und $E\subseteq\binom{V}{2}$ heisst (endlicher, ungerichteter) Graph, Elemente aus $V$ heissen Knoten, Elemente aus $E$ heissen Kannten. Allgemein: $n=n(G)=\vert V\vert$ und $m=m(g)=\vert E\vert$.
+Das Paar $G=(V,E)$ aus den Mengen $V$ und $E\subseteq\binom{V}{2}$ heisst (endlicher, ungerichteter) Graph, Elemente aus $V$ heissen Knoten, Elemente aus $E$ heissen Kannten. Allgemein: $n=n(G)=\vert V\vert$ und $m=m(g)=\vert E\vert$. \\
+Zwei Knoten $u,v\in V$ heissen \underline{adjazent} (benachbart), falls es eine Kante $\{u,v\}\in E$ gibt. \\
+Die \underline{Adjazenzmatrix} $A(G)=(a_{v,w\in V}$ mit \[a_{v,w}=
+\begin{cases}
+1 & \textrm{falls } \{v,w\} \in E \\
+0 & \textrm sonst
+\end{cases} \] \\
+Die \underline{Inzidenzmatrix} $I(G)=(i_{v,e})_{v\in V \wedge e\in E}$ mit \[i_{v,e}=
+\begin{cases}
+1 & \textrm{falls } v\in e \\
+0 & \textrm sonst
+\end{cases} \] \\
+Ein Knoten $v\in V$ und eine Kante $e\in E$ heissen \underline{inzident}, falls $v\in e$. \\
+Die Menge der zu $v$ adjazenten Knoten heisst \underline{Nachbarschaft} und deren Kardinalität \underline{Grad} $d_G$\\
+Ein \underline{Teilgraph} $G'=(V',E')$ mit $V'\subseteq V, E'\subseteq E$ heisst \underline{Teilgraph} von $G$, $G$ \underline{enthält} $G'$.\\
+Ein Teilgraph heisst \underline{aufspannend}, wenn er alle Knoten enthält.\\
+Gibt es zu zwei Graphen $G_1,G_2$ eine isomorphe Abbildung, so heissen $G_1$ und $G_2$ \underline{isomorph} \\
+Ein $(s,t)$-\underline{Weg} der Länge $k$ ist vorhanden, wenn eine Verbindung mit $k$-Kanten zwischen $s$ und $t$ besteht. Der kürzeste Weg heisst \underline{Abstand} oder \underline{Distanz}. \\
+Ein \underline{Kreis} ist ein Weg, der denselben Start- wie Endknoten hat. \\
+Ein Graph heisst \underline{zusammenhängend}, wenn es zu je zwei Knoten $s,t\in V$ einen Weg gibt. ($\Rightarrow$ Zusammenhangskomponenten)\\
+\vspace{2em}
+Für alle Graphen $G=(V,E)$ gilt: $\displaystyle\sum_{v\in V}d_G(v)=2m$. Die Anzahl der Knoten ungeraden Grades ist gerade. Es gibt immer zwei Knoten mit gleichem Grad.
 \end{shaded}
+
+\subsection{Bäume und Wälder}
+\begin{shaded}
+Ein zusammenhängender Graph ohne Kreis heisst \underline{Baum}. Ein Graph, dessen Zusammenhangskomponenten Bäume sind, ist ein \underline{Wald}. \\
+Für jeden Graphen $G=(V,E)$ gilt: $m\geq n-\kappa(G)$, Bei Gleichheit ist $G$ ein Wald.\\ \vspace{2em}
+Für einen Graphen sind folgende Aussagen äquivalent:
+\begin{enumerate}
+	\item $G$ ist ein Baum.
+	\item Zwischen je zwei Knoten in $G$ existiert genau ein Weg.
+	\item $G$ ist zusammenhängend und hat $n-1$ Kanten.
+	\item $G$ ist minimal zusammenhängend.
+	\item $G$ ist maximal kreisfrei.
+\end{enumerate}
+Jeder zusammenhängende Graph enthält einen Baum. Die Anzahl $\mu(G)=m-n+\kappa(G)$ heisst \underline{zyklomatische Zahl}. \\
+\rot{Kanzenzugdefinitionen usw S86} \\
+Eine Tour heisst \underline{Eulertour} falls sie jede Kante genau einmal enthält. Ein Graph enthält genau dann eine Eulertour, wenn alle Kanten geraden grad haben.
+\end{shaded}
+
+\subsection{Tiefensuche}
+Idee: Knotenstack speichert noch zu bearbeitende Knoten. Wir gehen zuerst über Nachbarn in die Tiefe, wenn keine Knoten mehr vorhanden sind, gehen wir zum letzten bereits besuchten Knoten zurück, der noch unbesuchte Nachbarn hat.
+\subsubsection{Laufzeit}
+Die Laufzeit ist in $\mathcal{O}(n+m)$
+
+\subsection{Breitensuche}
+Idee: Knotenwarteschlange (Queue), wir besuchen von einem Knoten erst alle Nachbarn. Jeder markierte Knoten wird in die Queue gelegt. Dann wird jeweils der vorderste entnommen und von diesem alle Nachbarn besucht.
+\subsubsection{Laufzeit}
+Die Laufzeit ist in $\mathcal{O}(n+m)$
+
+\subsection{Kürzeste Wege}
+Betrachten nun gerichtete Graphen. Kanten werden durch Gewichte unterschiedlich bewertet (labeled). \\
+\begin{shaded}
+\textbf{Single-Source Shortes-Path} Problem {\tiny (SSSP)}:\\
+geg: gerichteter Graph $G=(V,E,\lambda)$ mit Kantenlängen/-gewichten $\lambda:E\to\mathds{R}$\\
+ges: Kürzeste Wege zu allen Knoten
+\end{shaded}
+
+\subsubsection{Algorithmus von \textbf{Dijkstra}}
+Idee: Wir optimieren lokal und hangeln uns dann im Graph weiter vor.\\
+Dazu wird jeweils der aktuell kürzeste Pfad zu jedem Knoten gespeichert. Wenn ein Knoten noch nicht besuchte inzidente Kanten hat, wird er in eine Warteschlange gelegt. Für den vordersten Knoten in der Warteschlange wird nun überprüft, welche inzidente Kante den kürzesten Weg zum nächsten Knoten bildet, dieser wird mit dem aktuell kürzesten Weg zum gerade Betrachteten Knoten addiert und dem neuen Knoten gutgeschrieben. Wenn der neuen Knoten bereits einen Weg hat, wird der kürzere der beiden genommen.\\ Einschränkung: funktioniert nur mit nicht-negativen Kantengewichten.
+\paragraph{Laufzeit} Je nach verwendeter Struktur zur Speicherung des Graphen bis zu $\mathcal{O}(m+n\log n)$ {\tiny Fibonacci-Heap} bzw $\mathcal{O}(n+m\log n)$ {\tiny Heap aus Kapitel 2}
+
+\subsubsection{Algorithmus von \textbf{Bellman/Ford}}
+Vorteil: Kann auch mit negativen Kantengewichten umgehen.\\
+Nachteil: Benötigt $\mathcal{O}(nm)$ \\
+Nicht möglich bei: enthaltene Zykel negativer Länge {\tiny sonst würde er unendlich diesen Zykel nehmen...}
 \end{document}
