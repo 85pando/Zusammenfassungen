@@ -177,7 +177,7 @@ Idee: Man nehme pro Durchlauf das kleinste Element heraus und mache das solange,
 
 \subsubsection{Laufzeit}
 \begin{align*}
-\textrm{Anzahl Vergleiche:} & & C(n) &= n-1 + n-2 + \cdots + 1 = \sum_{n-1}^{i=i}i = \frac{n-1)\cdot n}{2} \\
+\textrm{Anzahl Vergleiche:} & & C(n) &= n-1 + n-2 + \cdots + 1 = \sum^{n-1}_{i=1}i = \frac{(n-1)\cdot n}{2} \\
 \textrm{Anzahl Umspeicherungen:} & & M(n) &= 3\cdot (n-1)
 \end{align*}
 Laufzeit liegt damit in $\Theta(n^2)$
@@ -345,7 +345,7 @@ Nicht stabil.
 \subsubsection{RadixSort}
 Angenommen wir wollen Zahlen sortieren aus $\mathcal{U}=\{0,\ldots,d-1\}$ und wir haben ein stabiles Sortierverfahren für die $d$-äre Darstellung. Dann sortieren wir nach den Stellen, von hinten nach vorne. $s$ ist die Anzahl der Stellen. {\tiny Als Sortierverfahren bietet sich CountingSort an.}
 \paragraph{Laufzeit}
-Die Laufzeit ist in $\Theta(s\cdot(n+d)$. {\tiny Ein großes $d$ (z.B. $d=256 \; \Rightarrow$ byteweise Aufteilung) lohnt sich, da dann $s$ klein wird.}
+Die Laufzeit ist in $\Theta(s\cdot(n+d))$. {\tiny Ein großes $d$ (z.B. $d=256 \; \Rightarrow$ byteweise Aufteilung) lohnt sich, da dann $s$ klein wird.}
 
 \subsubsection{RadixExchangeSort}
 Annahme: Zahlen in Binärdarstellung, Partitionierung aufgrund der der jeweils aktuellen Binärziffer
