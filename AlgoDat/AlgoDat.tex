@@ -572,7 +572,17 @@ Bei zufälliger Wahl sind wir berechtigt $P(h(k_1)=h(k_2))=\frac{1}{m}$ anzunehm
 \rot{Das ist mir jetzt grad zu blöd die Formeln weiter abzutippen, Seite 68ff}
 
 \subsubsection{Bloom-Filter {\tiny (aus der Übung)}}
-\rot{das noch machen...}
+Bloom-Filter besteht aus $m$ Bits, die zu Beginn 0 sind, $k$ verschiedenen Hash-Funktionen mit Wertebereich $\{0,\ldots,m-1\}$ \\
+\begin{description}
+	\item[Einfügen:] Berechne alle $k$ Hashwerte und setze die entsprechenden Bits auf 1.
+	\item[Suchen ob drin:] Berechne $k$ Hashwerte
+	\begin{itemize}
+		\item wenn alle Bits $0$, auf keinen Fall enthalten
+		\item wenn alle Bits $1$, mit sehr großer Wahrscheinlichkeit enthalten
+		\item wenn einige Bits $1$, evtl vorhanden
+	\end{itemize}
+
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
