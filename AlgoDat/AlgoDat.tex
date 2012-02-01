@@ -468,7 +468,7 @@ rot: & Ausgleichsknoten (für Höhenunterschiede) \\
 \textbf{Tiefenbedingung:} Alle Blätter haben die gleiche schwarze Tiefe (definiert als die Anzahl schwarze Vorfahren $-1$) \\ \ \\
 Die Höhe eines rot-schwarz Baumes mit $n$ Knoten ist $\Theta(\log n)$
 \end{shaded}
-Beim Einfügen wird das neue Blatt \rot{rot} (ausser, wenn das neue Blatt die Wurzel ist). Ist der Elternknoten des neuen Blattes jedoch bereits rot, ist die Farbbedingung verletzt. Sollte nach dem Rotieren bei $u$ Doppelrot auftreten, wird solande nach oben iteriert, bis man die Wurzel erreicht.\\
+Beim Einfügen wird das neue Blatt \rot{rot} (ausser, wenn das neue Blatt die Wurzel ist). Ist der Elternknoten des neuen Blattes jedoch bereits rot, ist die Farbbedingung verletzt. Sollte nach dem Rotieren bei $u$ Doppelrot auftreten, wird solange nach oben iteriert, bis man die Wurzel erreicht.\\
 \paragraph{Fall 1: Der Geschwisterknoten $z$ von $v$ ist schwarz:} \ \\
 \includegraphics[scale=0.4]{images/RS-Insert1.png}
 \paragraph{Fall 1: Der Geschwisterknoten $z$ von $v$ ist rot:} \ \\
@@ -487,7 +487,7 @@ Ist der Index zu groß, müssen Werte evtl weit verstreut abgelegt werden. \\
 \textbf{Knotenbedingung:} Jeder andere Knoten hat mindestens $\lceil \frac{d}{2}\rceil$ und höchstens $d$ Kinder. \\
 \textbf{Schlüsselbedingung:} Jeder Knoten mit $i$ Kindern hat $i-1$ Schlüssel. \\
 \textbf{Tiefenbedingung:} Alle Blätter haben dieselbe Tiefe. \\ \ \\
-Ein B-Baum der Ordnung $d$ miz $n$ Knoten hat Höhe $\Theta(\log_d n)$
+Ein B-Baum der Ordnung $d$ mit $n$ Knoten hat Höhe $\Theta(\log_d n)$
 \end{shaded}
 
 \paragraph{\texttt{insert}:} Suche das Blatt, in das eingefügt werden soll. Wieviele Schlüssel hat das Blatt?
