@@ -3,7 +3,7 @@
 \usepackage{Header}
 
 \usepackage{hyperref} %for links
-\usepackage{algorithmic} %for pseudocode
+%\usepackage{algorithmic} %for pseudocode
 
 \begin{document}
 
@@ -357,19 +357,19 @@ Nicht stabil.
 \subsection{Gegenüberstellung}
 
 \begin{tabular}{|l|ccc|c|c|c|}
-\hline Algorithmus & Lauf- & -zeit- & -klasse & Speicher & stabil & Einschränkung \\ 
-  & worst & average & best &  &  &  \\ 
-\hline SelectionSort & $n^2$ & $n^2$ & $n^2$ & $\Theta(1)$ & \wrong & keine \\ 
- QuickSort & $n^2$ & $n\log n$ & $n\log n$ & $\mathcal{O}(n)$ & \wrong & keine \\ 
- MergeSort & $n\log n$ & $n\log n$ & $n\log n$ & $\mathcal{O}(n)$ & \correct & keine \\ 
- HeapSort & $n\log n$ & $n\log n$ & $n$ & $\Theta(1)$ & \wrong & keine \\ 
-\hline untere Schranke & $n\log n$ & $n\log n$ & n & n.a. & n.a. & keine \\ 
-\hline BucketSort & $n\log n$ & $n$ & $n$ & $\Theta(1)$ & \correct & reelle Zahlen aus $(0,1]$ \\ 
- CountingSort & $n+k$ & $n+k$ & $n+k$ & $\Theta(n+k)$ & \correct & ganze Zahlen aus $(0,k-1)$ \\ 
- RadixSort & $s\cdot(n+d)$ & $s\cdot(n+d)$ & $s\cdot(n+d)$ & $\Theta(n+d)$ & \correct & d-äre Zahlen, Wortlänge $s$ \\ 
- RadixExchangeSort & $s\cdot n$ & $s\cdot n$ & $s\cdot n$ & $\mathcal{O}(n)$ & \wrong & Binärzahlen, Bitlänge $s$ \\ 
-\hline 
-\end{tabular} 
+\hline Algorithmus & Lauf- & -zeit- & -klasse & Speicher & stabil & Einschränkung \\
+  & worst & average & best &  &  &  \\
+\hline SelectionSort & $n^2$ & $n^2$ & $n^2$ & $\Theta(1)$ & \wrong & keine \\
+ QuickSort & $n^2$ & $n\log n$ & $n\log n$ & $\mathcal{O}(n)$ & \wrong & keine \\
+ MergeSort & $n\log n$ & $n\log n$ & $n\log n$ & $\mathcal{O}(n)$ & \correct & keine \\
+ HeapSort & $n\log n$ & $n\log n$ & $n$ & $\Theta(1)$ & \wrong & keine \\
+\hline untere Schranke & $n\log n$ & $n\log n$ & n & n.a. & n.a. & keine \\
+\hline BucketSort & $n\log n$ & $n$ & $n$ & $\Theta(1)$ & \correct & reelle Zahlen aus $(0,1]$ \\
+ CountingSort & $n+k$ & $n+k$ & $n+k$ & $\Theta(n+k)$ & \correct & ganze Zahlen aus $(0,k-1)$ \\
+ RadixSort & $s\cdot(n+d)$ & $s\cdot(n+d)$ & $s\cdot(n+d)$ & $\Theta(n+d)$ & \correct & d-äre Zahlen, Wortlänge $s$ \\
+ RadixExchangeSort & $s\cdot n$ & $s\cdot n$ & $s\cdot n$ & $\mathcal{O}(n)$ & \wrong & Binärzahlen, Bitlänge $s$ \\
+\hline
+\end{tabular}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -397,14 +397,14 @@ Annahme: Die Reihenfolge der Liste darf geändert werden. Anfragehäufigkeiten s
 \end{itemize}
 Empirisch zeigt sich, dass T schlechter ist als MF, FC und MF sind ähnlich, MF aber manchmal besser.\\
 \begin{tabular}{cp{450px}}
- $C_A(S)$ & Kosten für Zugriffe S \\ 
- $F_A(S)$ & kostenfreie Vertauschungen von benachbarten Schlüsseln an den untersuchen Positionen \\ 
- $X_A(S)$ & konstenpflichtige Vertauschungen \\  
+ $C_A(S)$ & Kosten für Zugriffe S \\
+ $F_A(S)$ & kostenfreie Vertauschungen von benachbarten Schlüsseln an den untersuchen Positionen \\
+ $X_A(S)$ & konstenpflichtige Vertauschungen \\
 \end{tabular}
 
 \begin{shaded}
 Für jeden beliebigen Algorithmus A zur Selbstanordnung gilt für jede Folge S von Zugriffen:
-\[ C_{MF} \leq 2\cdot C_A(S)+X_A(S)-F_A(S)-\vert S\vert \] 
+\[ C_{MF} \leq 2\cdot C_A(S)+X_A(S)-F_A(S)-\vert S\vert \]
 \end{shaded}
 
 \subsection{sortierte Arrays, binäre Suche}
@@ -419,11 +419,11 @@ Bei Prozessoren mit Pipelining/Multithreading kann eine ungleiche Aufteilung sin
 \end{shaded}
 \subsubsection{binärer Suchbaum}
 Speicherung:\begin{tabular}{|c|c|}
-\hline • & Node \\ 
-\hline \hline \texttt{node} & parent \\ 
-\hline \texttt{node} & left, right \\ 
-\hline \texttt{item} & item \\ 
-\hline 
+\hline • & Node \\
+\hline \hline \texttt{node} & parent \\
+\hline \texttt{node} & left, right \\
+\hline \texttt{item} & item \\
+\hline
 \end{tabular}
 
 \begin{shaded}
@@ -447,7 +447,7 @@ Ausgabe erfolt mittels eines \texttt{inorder}-Suchlaufes (Links,Mitte,Rechts)
 Um die Entartung von Bäumen zu verhindern, wird eine zusätzliche Balanciertheitseigenschaft gefordert.
 
 \begin{shaded}
-\textbf{Balanciertheitseigenschaft:} Für jeden (inneren) Knoten eines Binärbaums gilt, dass die Höhe der Teilbäume der beiden inneren Kindern sich um höchstens $1$ unterscheidet.\\ \ \\ 
+\textbf{Balanciertheitseigenschaft:} Für jeden (inneren) Knoten eines Binärbaums gilt, dass die Höhe der Teilbäume der beiden inneren Kindern sich um höchstens $1$ unterscheidet.\\ \ \\
 Ein AVL-Baum mit $n$ Knoten hat Höhe $\Theta(\log n)$.
 \end{shaded}
 
@@ -460,8 +460,8 @@ Alternativ kann man bestimmte Knoten von der Eigenschaft für einen perfekten Bi
 
 \begin{shaded}
 \begin{tabular}{cc}
-schwarz: & normaler Knoten \\ 
-rot: & Ausgleichsknoten (für Höhenunterschiede) \\ 
+schwarz: & normaler Knoten \\
+rot: & Ausgleichsknoten (für Höhenunterschiede) \\
 \end{tabular}\\
 \textbf{Wurzelbedingung:} Die Wurzel ist schwarz. \\
 \textbf{Farbbedingung:} Die Kinder von roten Knoten sind schwarze Knoten (oder nil). \\
@@ -519,10 +519,10 @@ Betrachten ungeordnete Wörterbücher. Schlüssel ohne Sortierreihenfolge gespei
 \begin{shaded}
 \textbf{Bezeichnungen:} \\
 \begin{tabular}{ll}
-(Schlüssel-)Universum &$\mathcal{U} \subseteq \mathds{N}_0$ \\ 
-Schlüsselmenge & $K \subseteq \mathcal{U}, \; \vert K \vert = n$ \\ 
-Hashtabelle & $H[0,\ldots, m-1]$ (Array von Zeigern) \\ 
-\end{tabular} 
+(Schlüssel-)Universum &$\mathcal{U} \subseteq \mathds{N}_0$ \\
+Schlüsselmenge & $K \subseteq \mathcal{U}, \; \vert K \vert = n$ \\
+Hashtabelle & $H[0,\ldots, m-1]$ (Array von Zeigern) \\
+\end{tabular}
 \end{shaded}
 Eine Hashfunktion $h: \mathcal{U} \to \{0,\ldots,m-1\}$ weisst jedem Schlüssel $k\in\mathcal{U}$ seine Speicherstelle $H[h(k)]$ zu. Im Optimalfall ist jede Stelle in der Hashtabelle nur einfach besetzt ($\Rightarrow$ Einfügen, Suchen, Löschen in $\Theta(1)$). \\
 Beispiele für Hashfunktionen:
@@ -538,7 +538,7 @@ $p_{m,n} := P \textrm{(keine Kollision)} = 1\cdot\frac{m-1}{m}\cdot\frac{m-1}{m}
 Schlüssel werden durch $h$ gleichmässig gestreut, d.h. alle Positionen gleich wahrscheinlich. (Bsp. Geburtstagsparadoxon) \\ \vspace{2em}
 Erwartete Anzahl Kollisionen: \\
 Sei $X_{ij}=
-\begin{cases} 
+\begin{cases}
 1 & \textrm{falls } h(k_i)=h(k_j) \textrm{\tiny (Also bei Kollision)} \\
 0 & sonst
 \end{cases}$\\
@@ -555,9 +555,9 @@ In der Hashtabelle wird eine Liste von Elementen angelegt. Wenn mehrere Zugriffe
 Idee: In jedem Feld wird nur ein Element gespeichert. $\Rightarrow$ Bei Kollision muss neuer Platz gefunden werden. Wähle dazu eine Folge $d_1,d_2,\ldots,d_i \in \mathds{Z}$ und versuche \[ H[(h(k)+d_i) \mod m], \; i=1,2,\ldots \]
 Für $(d_i)$ gibt es verschiedene Wahlen: \\
 \begin{tabular}{rp{13cm}}
-lineares Sondieren & $d_i=i$ \\ 
-quadratisches Sondieren & $d_i=i^2$ \\ 
-double Hashing & $d_i=i\cdot h'(k)$, wobei $h':\mathcal{U}\to \{1,\ldots,m-1\}$ eine zweite Hashfunktion mit $h'(k) \not= 0 \; \forall k\in\mathcal{U}$ und $m$ prim ist. \\ 
+lineares Sondieren & $d_i=i$ \\
+quadratisches Sondieren & $d_i=i^2$ \\
+double Hashing & $d_i=i\cdot h'(k)$, wobei $h':\mathcal{U}\to \{1,\ldots,m-1\}$ eine zweite Hashfunktion mit $h'(k) \not= 0 \; \forall k\in\mathcal{U}$ und $m$ prim ist. \\
 \end{tabular}
 
 \subsubsection{Kollisionsvermeidung}
@@ -565,7 +565,7 @@ Ziel: Gleichmässiges Streuen durch Hash-Funktion\\
 Problem: Wissen nicht, welche Schlüssel gespeichert werden sollen. \\
 Idee: Wähle aus einer Menge von Hashfunktionen $\mathcal{H} \subseteq \{h:\mathcal{U} \to \{0,\ldots,m-1\}\}$ zufällig eine aus.
 \begin{shaded}
-Eine Familie von Streufunktionen heisst \underline{universell}, falls \[ \vert \{h\in\mathcal{H}: h(k_1) = h(k_2)\}\vert \leq \frac{\vert \mathcal{H}\vert}{m}\;\forall k_1,k_2\in\mathcal{U} \] 
+Eine Familie von Streufunktionen heisst \underline{universell}, falls \[ \vert \{h\in\mathcal{H}: h(k_1) = h(k_2)\}\vert \leq \frac{\vert \mathcal{H}\vert}{m}\;\forall k_1,k_2\in\mathcal{U} \]
 \end{shaded}
 Bei zufälliger Wahl sind wir berechtigt $P(h(k_1)=h(k_2))=\frac{1}{m}$ anzunehmen. \\
 
@@ -683,5 +683,48 @@ Dazu wird jeweils der aktuell kürzeste Pfad zu jedem Knoten gespeichert. Wenn e
 \subsubsection{Algorithmus von \textbf{Bellman/Ford}}
 Vorteil: Kann auch mit negativen Kantengewichten umgehen.\\
 Nachteil: Benötigt $\mathcal{O}(nm)$ \\
-Nicht möglich bei: enthaltene Zykel negativer Länge {\tiny sonst würde er unendlich diesen Zykel nehmen...}
+Nicht möglich bei: enthaltene Zykel negativer Länge {\tiny sonst würde er unendlich diesen Zykel nehmen...} \\
+Führt Relaxationen in schematisch fester Reihenfolge durch.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{amortisierte Analyse}
+Idee: wir wollen eine schärfere Laufzeitschranke finden, als wir dies normal könnten. Verwenden dazu die "`Bank-Account-Method"', betrachten die Gesamtlaufzeit, nicht die einzelnen Operationen. Werden bei zeitlich früherer Operation mehr "`Zeit verbuchen"' als nötig, um dadurch folgende Operationen günstiger zu bekommen.
+\subsection{Beispiel: Binärzähler}
+Kosten: $\left.
+\begin{tabular}{c|c}
+	 & reale Kosten \\
+	\hline
+	0 & \\
+	1 & 1 \\
+	10 & 2 \\
+	11 & 1 \\
+	100 & 3 \\
+	101 & 1
+\end{tabular} \right\rbrace \Rightarrow$ sehr unterschiedliche Kosten \\
+\vspace*{2ex} \\
+\begin{tabular}{|c|c|c|c|c}
+\hline
+   &   &   & 5 & $\curvearrowright 1 \curvearrowright 10$ \\
+\hline
+   &   & 5 & 4 & $\curvearrowright 11$ \\
+\hline
+   &   & 5 & 8 & $\curvearrowright 100$ \\
+\hline
+   & 5 & 4 & 7 & $\curvearrowright 101$ \\
+\hline
+   & 5 & 4 & 11 & $\curvearrowright 111$ \\
+\hline
+   & 5 & 8 & 15 & \\
+\hline
+\end{tabular}
+\\ \vspace{2ex} \\
+\begin{tabular}{c|c|c}
+ & normale Analyse & amortisierte Analyse \\
+eine Einfügeoperation & $\mathcal O(\log n)$ & \\
+$n$ Operationen & $\mathcal O(n\log n)$ & $\mathcal O(n)$
+\end{tabular}
+
 \end{document}
