@@ -78,7 +78,7 @@ Beschreiben Komplexität durch.
 
 \subsubsection{Definitionen}
 \begin{enumerate}
-	\item höchstens so schnell wachsen wie $f$, {\tiny langsamer und gleich als $f$}
+	\item höchstens so schnell wachsen wie $f$, {\tiny langsamer als oder gleich wie $f$}
 	\begin{shaded}
 	\[ \mathcal{O}(f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
 	\begin{array}{c}
@@ -87,7 +87,7 @@ Beschreiben Komplexität durch.
 	\end{array}
 	\right\rbrace \]
 	\end{shaded}
-	\item mindestens so schnell wachsen wie $f$, {\tiny schneller und gleich als $f$}
+	\item mindestens so schnell wachsen wie $f$, {\tiny schneller als oder gleich wie $f$}
 	\begin{shaded}
 	\[ \Omega (f(n)) = \left\lbrace g: \mathds{N}_0 \to \mathds{R}
 	\begin{array}{c}
@@ -138,12 +138,12 @@ Beschreiben Komplexität durch.
 	\item $ (\log_2{n})^d \in o(n^\varepsilon) $ für alle $d \in \mathds{N}_0, \varepsilon>0$\\
 	"`Logarithmen wachsen langsamer als alle Polynomialfunktionen "'
 	\item $ n^d \in o((1+\varepsilon)^n) $ für alle $d\in \mathds{N}_0, \varepsilon>0$\\
-	"` Exponentielles Wachstum ist immer schneller als polynomielles "'
+	"`Exponentielles Wachstum ist immer schneller als polynomielles "'
 	\item $ b^n \in o((b+\varepsilon)^n) $ für alle $b\geq 1, \varepsilon>0$ \\
-	"` Jede Verringerung der Basis verlangt exponentielles Wachstum"'
+	"`Jede Verringerung der Basis verlangt exponentielles Wachstum"'
 	\item $ \binom{a}{b} \in \Theta(n^k)$
 	\item $H_n := \sum^n_{k=1} \frac{1}{k} = \ln n + \mathcal{O}(1)$ {\tiny (harmonische Zahlen)}
-	\item $n! = \sqrt{2\pi n} \cdot \left( \frac{n}{c}^n \right) \cdot \left( 1+\Theta \left( \frac{1}{n} \right) \right)$ {\tiny (Stirlingformel)}
+	\item $n! = \sqrt{2\pi n} \cdot \left( \left( \frac{n}{e}\right)^n \right) \cdot \left( 1+\Theta \left( \frac{1}{n} \right) \right)$ {\tiny (Stirlingformel)}
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -493,7 +493,7 @@ Ein B-Baum der Ordnung $d$ mit $n$ Knoten hat Höhe $\Theta(\log_d n)$
 \paragraph{\texttt{insert}:} Suche das Blatt, in das eingefügt werden soll. Wieviele Schlüssel hat das Blatt?
 \begin{description}
 	\item[$<d-1$] einfügen, fertig
-	\item[$=d-1$] Überlauf: teile die $d$ Schlüssel auf in die kleineren $\lfloor \frac{d}{2} \rfloor$ und die größeren $\lceil \frac{d}{2} \rceil+1$, für die zwei neue Knoten erzeugt werden. Das mittlere $(\lfloor \frac{d}{2} \rfloor)$-te wird im Elternknoten eingefügt, evtl Überlauf im Elternknoten durch nach oben iterieren beheben.
+	\item[$=d-1$] Überlauf: teile die $d$ Schlüssel auf in die kleineren $\lfloor \frac{d}{2} \rfloor$ und die größeren $\lceil \frac{d}{2} \rceil-1$, für die zwei neue Knoten erzeugt werden. Das mittlere $(\lfloor \frac{d}{2} \rfloor)$-te wird im Elternknoten eingefügt, evtl Überlauf im Elternknoten durch nach oben iterieren beheben.
 \end{description}
 
 \paragraph{\texttt{remove}:} Suche den Knoten, aus dem ein Schlüssel entfernt werden soll. Wieviele Schlüssel enthält er?
@@ -502,7 +502,7 @@ Ein B-Baum der Ordnung $d$ mit $n$ Knoten hat Höhe $\Theta(\log_d n)$
 	\item[$=\lceil\frac{d}{2}\rceil -1$] Unterlauf
 	\begin{enumerate}
 		\item Knoten ist innerer Knoten (d.h. kein Blatt)\\
-		Ersetze Schlüssel durch Inorder-Vorgänger (oder Nachfolger), d.h. letzten Schlüssel im rechtesten Blatt des vorangeheneden Teilbaumes.
+		Ersetze Schlüssel durch Inorder-Vorgänger (oder Nachfolger), d.h. letzten Schlüssel im rechtesten Blatt des vorangeheneden (ersten Schlüssel im linkesten Blatt des nachfolgenden) Teilbaumes.
 		\item Knoten ist Blatt \\
 		Falls ein direkter rechter oder linker Geschwisterknoten mehr als $\lceil\frac{d}{2}\rceil -1$ Schlüssel enthält, verschiebe den Letzten bzw Ersten von dort in den gemeinsamen Vorgänger und den trennenten Schlüssel von vorher in den Knoten mit Unterlauf. \\
 		Anderfalls Knoten mit einem der direkten Geschwisterknoten und dem trennenden Schlüssel aus dem Vorgänger verschmelzen.
