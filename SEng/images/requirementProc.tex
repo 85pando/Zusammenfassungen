@@ -1,0 +1,44 @@
+\begin{tikzpicture}[%
+	>=stealth,
+	node distance=3.5cm,
+	on grid,
+	auto,
+	io/.style={draw, text width=2.5cm, align=center},
+	proc/.style={draw, rounded corners=1.2em, text width=2.5cm, align=center},
+	dist/.style={node distance = 3cm},
+	dick0/.style={draw,line width=1.5pt},
+	dick/.style={dick0,->},
+	duenn/.style={draw,line width=1.5pt,dashed,->}
+]
+
+\node[io] (root) at (0,0) {customer or user requirements (abstract)};
+
+\node[proc] (2) [below left of  = root] {requirements analysis and negotiation};
+\node[proc] (1) [left of       = 2   ] {requirements elicitation};
+\node[proc] (3) [below right of = root] {requirements documentation and specification};
+\node[proc] (4) [right of      = 3   ] {requirements validation};
+
+\node[io,node distance=2cm] (leaf) [below of = 3] {negotiated and validated requirements};
+
+\node[node distance=1.5cm] (phantom1) [below left of =root] {};
+\node[node distance=1.5cm] (phantom2) [below right of =root] {};
+
+\path[dick] (root) -| (1);
+\path[dick] (1) -- (2);
+\path[dick] (2) -- (3);
+\path[dick] (3) -- (4);
+\path[dick] (3) -- (leaf);
+\path[duenn] (root) -| (4);
+
+\path[dick] (phantom2) -| (1.north east);
+\path[dick] (phantom2) -| (2);
+\path[dick] (phantom1) -| (3);
+\path[dick0] (phantom1) -| (4.north west);
+
+
+%	\node[state] (A)              {A};
+%	\node        (B) [right of=A,fill=blue!25,text width=3cm]{This is a demonstration text for showing how line breaking works.};;
+%	\path[->] (A) edge (B);
+
+
+\end{tikzpicture}

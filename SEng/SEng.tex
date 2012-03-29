@@ -6,6 +6,8 @@
 \usepackage{newclude}
 \include{../zusammenfassung}
 
+\usetikzlibrary{trees}
+
 \begin{document}
 
 \Gruppe{Stephan Heidinger}{SEng - Zusammenfassung v0.1}
@@ -100,7 +102,7 @@ Highly complex systems: SE has to provide solutions.
 	\item[\follows] software engineering process model
 \end{description}
 
-\subsection*{waterfall model}
+\section*{waterfall model}
 \input{images/waterfall.tex}
 
 \begin{description}
@@ -161,5 +163,109 @@ Highly complex systems: SE has to provide solutions.
 	\item[Modularity:] decompose problem into independent modules \follows separation of concern
 	\item[Generality:] focus on the discovery of more general problems
 \end{description}
+
+\section*{Requiremnt \& Analysis}
+
+\subsection*{Requirement Elicitation}
+\begin{shaded}
+``A \textbf{requirement} is a condition or capability that must be met or professed by a system component to satisfy a contract, standard, specification or other formally inposed document.'' \\
+(ANSI/IEEE Standard 729-1983)
+\end{shaded}
+requirements \follows description of the \emph{externally visible (interface) \marginnote{not environment behaviour}behaviour}, the ``what''\\
+Interaction between the system and the system-relevant portion of the envrionment
+
+\begin{description}
+	\item[User (Client) requirements:] statements in natural language plus diagramms
+	\item[System requirements:] structured document, detailed description of system's functions, services and operational constraints; may be part of contract between client and contractor
+\end{description}
+\subsubsection{Types of requirements}
+\begin{description}
+	\item[functional requirements:] high-level-``what'' the system should do
+		\begin{itemize}
+			\item statement which services the system should provide
+			\item interaction between system and environment (system states, i/o)
+			\item how the system should behave in particular situations
+			\item describe the system services in detail
+			\item often included with ``shall/should''
+		\end{itemize}
+	\item[nonfunctional requirements:] (if not met, system may be useless (not usable)) \\
+	nonfunctional requirements often have quantitative measures (MB, training time, availability, \dots)\\
+	\input{images/nonfunctional_req.tex}
+		\begin{itemize}
+			\item not primarly related to sytem's funcions/services, but to quality and additinal (quantitative) characteristics
+			\item constraints on the services/functions:
+			\begin{itemize}
+				\item reliability (avalability, integrity, security, safety)
+				\item accuracy of results
+				\item performance / timing
+				\item human-computer interface issues
+				\item operating and physical constraints
+				\item portability and interoperatbility
+				\item reliability
+				\item response time
+				\item storage requirements
+				\item standards \dots
+				\item also: particular system, programming language or development method
+			\end{itemize}
+			\item product requirements (product must behave in particular way (execution time, speed, reliability, \dots))
+			\item organisational requirements (standards used, impelementation requirements, \dots)
+			\item external requirements (interoperatbility/legislative requirements, \dots)
+		\end{itemize}
+		\item[domain requirements:] (if not met, system may be unworkable in that domain)
+			\begin{itemize}
+				\item derived from application domain
+				\item characteristics/features of domain
+				\item constraints on existing requirements
+				\item define specific computations
+				\item may be expressed in domain specific language \follows often hard to understand
+				\item often implicit \follows hard to aquire
+			\end{itemize}
+\end{description}
+
+
+\subsubsection*{Requirement Specification Properties}
+\begin{description}
+	\item[correctness:] facts in requirement specification \follows required properties of the system
+	\item[unambiguity:] all specifications have a single interpretation
+	\item[completeness:] 
+		\begin{enumerate}
+			\item every property required of the system is expressed in the specification\\
+			{\small does this include things that are \emph{not permitted?}}
+			\item the responses of the software system on all types of possible input values are specified
+			\item \dots {\small (more possible)}
+		\end{enumerate}
+	\item[verifiability:] there exists an effective (manual/automatic) process for checking wether a software product satisfies the required properties (formal verification (mathematical proof) or validation (model checking, testing, simulation)), often not possible for every requirement
+	\item[consistency:] no two requirements contradict each other: never $A \wedge \neg A$
+	\item[traced:] origin of every requirement is clear
+	\item[traceable:] requirement specification is edited so it is easy to reference every single requirement (e.g. numbering)
+	\item[design independent:] the requirement specification does not require specific software/architecture/algorithms
+\end{description}
+
+\subsubsection{Activities during the requirement Stage}
+	\begin{description}
+		\item[starting point] 
+			\begin{itemize}
+				\item customer requirements (abstract)
+				\item system specification document (hw \& sw)
+			\end{itemize}
+		\item[Activities (Kotonya+Sommerville)]
+			\begin{itemize}
+				\item requirement elicitation\marginnote{Elicitation \follows Herausholen} (interviews, scenarios, market observation, \dots) \\
+				determine, which of possibly contradictory requirements are important
+				\item requirement documentation and specification (comprehensible requirements document)
+				\item requirement validation (consistency, completeness, correspondence of documented requirements and abstract customer or user requirements)
+			\end{itemize}
+			\input{images/requirementProc.tex}
+			\item[social activity:]
+			Not a single person knows everything about the system \follows communication is needed \follows difficult (technical language, ambiguities, customers not aware of needs, personalities.)
+	\end{description}
+
+	% slide 2-43
+
+\subsection*{Object Oriented Analysis}
+
+\subsection*{Analysis with the UML}
+
+\subsection*{Document Requirements}
 
 \end{document}

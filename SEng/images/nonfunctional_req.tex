@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+	dist0/.style={},
+	dist1/.style={sibling distance=11em},
+	dist2s/.style={sibling distance=5.2em},
+	dist2b/.style={sibling distance=6.4em},
+	down/.style={level distance=7ex},
+	downB/.style={level distance=20ex},
+	level0/.style={draw,rectangle,fill=blue!20,rounded corners=.8ex},
+	level1/.style={draw,rectangle,fill=green!20,rounded corners=.8ex},
+	level2/.style={draw,rectangle,fill=yellow!20,rounded corners=.8ex},
+	level3/.style={draw,rectangle,fill=gray!20,rounded corners=.8ex},
+]
+
+	\coordinate
+	child[grow=down,anchor=south, level distance=0ex] {node[level0] {non-functional}}
+	[edge from parent fork down]
+		child[dist1,down] {node[level1] {product}
+			child[dist2s,down] {node[level2] {usability}
+			}
+			child[dist2s,down] {node[level2] {efficiency}
+				child[dist2s,down] {node[level3] {performance}}
+				child[dist2s,down] {node[level3] {space}}
+			}
+			child[dist2s,down] {node[level2] {reliability}
+			}
+			child[dist2s,down] {node[level2] {portability}
+			}
+		}
+		child[dist1,down] {node[level1] {organisational}
+			child[dist2b,downB] {node[level2] {delivery}
+			}
+			child[dist2b,downB] {node[level2] {implementation}
+			}
+			child[dist2b,downB] {node[level2] {standards}
+			}
+		}
+		child[dist1,down] {node[level1] {external}
+			child[dist2b,down] {node[level2] {interoperability}
+			}
+			child[dist2s,down] {node[level2] {ethical}
+			}
+			child[dist2s,down] {node[level2] {legislative}
+				child[dist2s,down] {node[level3] {privacy}}
+				child[dist2s,down] {node[level3] {safety}}
+			}
+		}
+;
+\end{tikzpicture}
