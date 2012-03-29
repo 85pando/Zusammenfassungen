@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[a4paper, 10pt]{article}
 
 %\usepackage{scalefnt}
 %\usepackage{parcolumns}
@@ -18,8 +18,148 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
 
 \textit{Find any errors? Please send them back, I want to keep them!}
 
-%\section*{something}
+\begin{shaded}
+\textbf{Definitions for Software Engineering} \\
+``Multi-person construction of multi-version software'' (D. Parnas, 1987)\\
+``The application of a systematic, disciplined, quantifiable approach to the development, operation, and maintenance of software; that is, the application of engineering to software.''
+\end{shaded}
 
-%\section*{more}
+\section*{Software Crisis}
+Term from NATO study group in 1967.
+\begin{description}
+	\item[fault] mistake/error made by a human during a software activity (erroneous design, requirements, coding)
+	\item[failure] observed departure of a system from the desired state
+\end{description}
+\subsection*{symptoms}
+\begin{itemize}
+	\item products are delivered late \follows high cost
+	\item projects exceed budgeds \follows high cost \follows waste of resources
+	\item product doesn't do, whats its supposed to do \follows inefficient \follows hight cost
+	\item products are defective \follows high cost (failures, maintenance,\dots), ethical considerations
+	\item projects get abandonded before delivery \follows waste of resources
+\end{itemize}
+
+\subsection*{Characteristics of software}
+\begin{itemize}
+	\item Software is \emph{engineered}, not manufactured (custom built, little to no (mechanical) assembly, human intensive process)
+	\item Software does not wear out (but: change of requirements, changes in environment)
+	\item software is \emph{complex}
+	\item software is \emph{detemining system factor} (up to 80\% of development effort)
+\end{itemize}
+
+\subsection*{Why is software difficult to produce?}
+\begin{itemize}
+	\item no similiar system built so far (problems unknown, assumptions about environment may be wrong)
+	\item \emph{Requirements} are not well understood/phrased
+	\item Requirements \emph{change} during development
+	\item complex \emph{interaction}
+	\item nature of systems:
+		\begin{itemize}
+			\item concurrent systems (races, deadlocks, \dots)
+			\item embedded systems (hardware interaction, timing, \dots)
+			\item information systems (complexity, legacy, \dots)
+		\end{itemize}
+	\item software is \emph{easily changeble} \follows ``code and fix''
+	\item software is \emph{discreet} (either fails, or doesn't)\marginnote{Stimmt auch nicht immer\dots}
+\end{itemize}
+
+\subsection*{Software Debvelopment Myths}
+\begin{itemize}
+	\item Management
+		\begin{itemize}
+			\item standard books, software, tools, \dots \follows software hard to standardize
+			\item behind schedule? add programmers! \follows effort to integrate new people
+		\end{itemize}
+	\item Customer
+		\begin{itemize}
+			\item general statement of objectives sufficient
+			\item change (as in requirements) can easily be implemented
+		\end{itemize}
+	\item Pracitioner
+		\begin{itemize}
+			\item once programm is running, job is done
+			\item until programm is running, no way to check quality
+			\item only deliverable is working programm
+		\end{itemize}
+\end{itemize}
+
+\subsection*{Software Engineering}
+Communication between a huge number of parties (customer, end user, sw designer, developer, \dots) must be maintained. \\
+Highly complex systems: SE has to provide solutions.
+
+\begin{description}
+	\item[\follows] base sw production on engineering approach
+	\item[\follows] design sw as a \emph{process} that supports
+		\begin{itemize}
+			\item correctness \& dependability
+			\item cost-effectivenes
+			\item complexity of project
+			\item longevity of product, life cycle, changes
+			\item communication amongst parties
+		\end{itemize}
+	\item[\follows] software engineering process model
+\end{description}
+
+\subsection*{waterfall model}
+\input{images/waterfall.tex}
+
+\begin{description}
+	\item[System Design] problem \& System requirements, fesability study, define main subsystems (allocate to hw/sw), system design document (\textsc{Sdd}, informal, with customer, somtimes: user manuals, user interfaces, test plans)
+	\item[Requirements] requirement analysis (``what'' the system has to do (not how), software requirements describing observable external behaviour (functional, nonfunctional)), software requirement specification (\textsc{Srs})
+	\item[Design] ``how'' the system is working, architectural (high level) design (decompose problem into components, global data structures, internal interfaces), detailed design (algorithmic design, internal data structures, programming language(s))
+	\item[Implementation] (and Testing) \follows translate design modules into code, test modules in isolation
+	\item[Integration] (and Testing) integrate tested modules to form system, \emph{integration testing}, validation, customer accptance tests
+	\item[maintenance] deploy product, perform maintenance (corrective, adaptive, perfective), retire product
+\end{description}
+\subsubsection*{Benefits}
+\begin{itemize}
+	\item Definition of seperate Tasks (Seperation of concerns)\\dividing complex design problems into smaller units \follows facilitates team work/reproducibility
+	\item specification and documentation  \follows enforces documentation, facilitates testing (against requirements specification)
+	\item further concepts
+		\begin{itemize}
+			\item verification / validation (compare intermediate results with requirements and design)
+			\item prototyping (mock-up available early, reduces risk)
+			\item evolutionary process model (accommodate change)
+		\end{itemize}
+\end{itemize}
+
+\subsubsection*{Defects}
+\begin{itemize}
+	\item no feedback loops
+	\item document driven, inflexible
+	\item large time gap between inception and completion
+\end{itemize}
+
+\subsubsection*{Alternatives}
+\begin{itemize}
+	\item modified waterfall model
+	\item V-Model, V-Model XT
+	\item Evolutionary Process models
+	\item Spiral model
+	\item Rational Unified Process
+	\item Agile Processes
+	\item \dots
+\end{itemize}
+
+\subsection*{Software Qualities}
+\begin{description}
+	\item[Correctness:] the software behaves according to the \emph{requirement specification}
+	\item[Reliability:] the software guarantees a level of quality service ($<$Correctness)
+	\item[Robustness:] the software behaves ``reasonably'' even in unexprected circumstances (e.g. input, power failure, \dots)
+	\item[Maintainability:] software is easy to maintain/extend
+	\item[Performance:] system is usable (e.g. input response)
+	\item[Reusability:] re-use of previously used, tested and verified code
+	\item[Interoperability:] standardisation, interfaces, \dots
+\end{description}
+
+\subsection*{Software Engineering Principles}
+\begin{description}
+	\item[Rigor:] use a method and apply it rigorously to every step
+	\item[Formality:] use (mathematical) formalizable methods and notations
+	\item[Speration of Concerns:] deal with different aspects in seperate steps
+	\item[Abstraction:] seperate the concern of the important aspects from the concern of unimportant ones
+	\item[Modularity:] decompose problem into independent modules \follows separation of concern
+	\item[Generality:] focus on the discovery of more general problems
+\end{description}
 
 \end{document}

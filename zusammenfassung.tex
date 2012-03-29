@@ -4,12 +4,14 @@
 \usepackage{amsthm} % Normaler Mathesatz
 \usepackage{amsfonts} %capital-letter font
 \usepackage{amsthm,amssymb} % Zeichen-Satz
+\usepackage{bigfoot} % komplexe Fußnotenapparate(Fußnoten in Fußnoten und andere Späße)%
 \usepackage{colortbl}
 \usepackage[T1]{fontenc} % normaler erweitere Zeichnesatz
 \usepackage{framed, color}  % Ramenpaket für zum Einfügen von schönen Ramen
 \usepackage{graphicx}
 \usepackage{hyperref} %used for link to creative commons license
 \usepackage{listings} %for code-listings (inkl. Tab-Styling)
+\usepackage{marginnote}
 \usepackage{microtype} % div. Verbesserungen des Schriftsatzes (Grauwert, opt. Randausgleich, Zeilenumbruch)
 %\usepackage{multirow}
 \usepackage[ngerman]{babel} % Neue Rechtschreibung
@@ -64,38 +66,14 @@
 %z.B. : \gruen{Hallo Welt Test!}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\yellow}[1]
-{
-	\textcolor{dYellow}{#1}
-}
-\newcommand{\gray}[1]
-{
-	\textcolor{gray}{#1}
-}
-\newcommand{\red}[1]
-{
-	\textcolor{red}{#1}
-}
-\newcommand{\green}[1]
-{
-	\textcolor{green}{#1}
-}
-\newcommand{\blue}[1]
-{
-	\textcolor{blue}{#1}
-}
-\newcommand{\dGreen}[1]
-{
-	\textcolor{dGreen}{#1}
-}
-\newcommand{\dBlue}[1]
-{
-	\textcolor{dBlue}{#1}
-}
-\newcommand{\dRed}[1]
-{
-	\textcolor{dRed}{#1}
-}
+\newcommand{\yellow}[1]{\textcolor{dYellow}{#1}}
+\newcommand{\gray}[1]{\textcolor{gray}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\dGreen}[1]{\textcolor{dGreen}{#1}}
+\newcommand{\dBlue}[1]{\textcolor{dBlue}{#1}}
+\newcommand{\dRed}[1]{\textcolor{dRed}{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Konfiguration für das darstellen von Quelltext
@@ -169,6 +147,7 @@
 \newcommand{\wrong}{\rot{\text{\ding{56}}}} %for use in text
 \newcommand{\tflash}{$\hellgelb{\lightning}$} %for use in text
 \newcommand{\mflash}{\hellgelb{\lightning}} %for use in math
+\newcommand{\follows}{$\Rightarrow$} %used so often...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % languages for \loadCode
