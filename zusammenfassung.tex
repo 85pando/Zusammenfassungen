@@ -1,0 +1,201 @@
+% Zum Einbinden in die Zusammenfassungs-files
+
+\usepackage{amsmath} % Verbesserter Mathesatz
+\usepackage{amsthm} % Normaler Mathesatz
+\usepackage{amsfonts} %capital-letter font
+\usepackage{amsthm,amssymb} % Zeichen-Satz
+\usepackage{colortbl}
+\usepackage[T1]{fontenc} % normaler erweitere Zeichnesatz
+\usepackage{framed, color}  % Ramenpaket für zum Einfügen von schönen Ramen
+\usepackage{graphicx}
+\usepackage{hyperref} %used for link to creative commons license
+\usepackage{listings} %for code-listings (inkl. Tab-Styling)
+\usepackage{microtype} % div. Verbesserungen des Schriftsatzes (Grauwert, opt. Randausgleich, Zeilenumbruch)
+%\usepackage{multirow}
+\usepackage[ngerman]{babel} % Neue Rechtschreibung
+\usepackage[sans]{dsfont} %für alternative Mengensymbole
+\usepackage{stmaryrd} %u.a. für \lightning
+\usepackage{tikz} % für Diagramme(Dia!) und Bilder (z.B. *.eps)
+\usepackage{units} % z.B. fuer \nicefrac{}{}
+\usepackage[utf8]{inputenc} % utf8 für den Editor
+\usepackage{wasysym} %u.a. für \lightning
+\usepackage{xcolor}
+\usepackage{tikz-er2} % zum E/R-Diagramme zeichnen mit noch mehr funktionen
+
+\usetikzlibrary{shapes,decorations,arrows,fit,backgrounds} %Zum diversen zeichen%
+%\usetikzlibrary{automata} % für den CFlipper, wenn es den soweit ist			%
+\usetikzlibrary{positioning} % positionierung 
+%\usetikzlibrary{shadows} % fuer schoene schlagschatten
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Formatierung der Seite
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}		% für den footer										%
+\renewcommand{\headrulewidth}{0pt} % damit oben kein dummer Strich kommt		%
+\fancyhead{}
+\topmargin -2cm 		% Oberer Rand											%
+\textheight 25cm		% Texthöhe												%
+\textwidth 16.0 cm		% Textbreite											%
+\oddsidemargin -0.1cm 	% Warum?												%
+\newcommand{\Gruppe}[2]
+{
+	\lfoot{#1}
+	\rfoot{#2}
+}
+\colorlet{shadecolor}{gray!25} % Farbe für graue Box definieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Farben die definiert werden zum schreiben und zeichnen							%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\xdefinecolor{schwarz}{HTML}{000000}
+\xdefinecolor{dunkelGruen}{HTML}{007D00}
+\xdefinecolor{dunkelBlau}{HTML}{0000A0}
+\xdefinecolor{dunkelRot}{HTML}{A00000}
+\xdefinecolor{dunkelGelb}{HTML}{FFAA00}
+\xdefinecolor{hellesGelb}{HTML}{FFCC00}
+\colorlet{dGreen}{dunkelGruen}
+\colorlet{dBlue}{dunkelBlau}
+\colorlet{dRed}{dunkelRot}
+\colorlet{dYellow}{dunkelGelb}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Farbliche Ausgaben:
+%Parameter #1: Text oder Mathematische formel...
+%z.B. : \gruen{Hallo Welt Test!}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\yellow}[1]
+{
+	\textcolor{dYellow}{#1}
+}
+\newcommand{\gray}[1]
+{
+	\textcolor{gray}{#1}
+}
+\newcommand{\red}[1]
+{
+	\textcolor{red}{#1}
+}
+\newcommand{\green}[1]
+{
+	\textcolor{green}{#1}
+}
+\newcommand{\blue}[1]
+{
+	\textcolor{blue}{#1}
+}
+\newcommand{\dGreen}[1]
+{
+	\textcolor{dGreen}{#1}
+}
+\newcommand{\dBlue}[1]
+{
+	\textcolor{dBlue}{#1}
+}
+\newcommand{\dRed}[1]
+{
+	\textcolor{dRed}{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Konfiguration für das darstellen von Quelltext
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset
+{
+	language=Java, % oder C++, Pascal, {[77]Fortran}, ...
+	numbers=left, % Position der Zeilennummerierung
+	firstnumber=auto, % Erste Zeilennummer
+	basicstyle=\ttfamily, % Textgröße des Standardtexts
+	keywordstyle=\ttfamily\color{dRot}, % Formattierung Schlüsselwörter
+	commentstyle=\ttfamily\color{dGruen}, % Formattierung Kommentar
+	stringstyle=\ttfamily\color{dBlau}, % Formattierung Strings
+	numberstyle=\tiny, % Textgröße der Zeilennummern
+	stepnumber=1, % Angezeigte Zeilennummern
+	numbersep=5pt, % Abstand zw. Zeilennummern und Code
+	aboveskip=15pt, % Abstand oberhalb des Codes
+	belowskip=11pt, % Abstand unterhalb des Codes
+	captionpos=b, % Position der Überschrift
+	xleftmargin=10pt, % Linke Einrückung
+	frame=single, % Rahmentyp
+	breaklines=true, % Umbruch langer Zeilen
+	showstringspaces=false, % Spezielles Zeichen für Leerzeichen
+	tabsize=2,
+	texcl=true
+}
+
+%%%%%%%%
+% Kopf
+%%%%%%%%
+\newcommand{\Header}[3]
+{
+	{\footnotesize \parindent0em
+		{\sc Universität Konstanz}                \hfill #1 \\
+		{\sc Fachbereich Informatik \& Informationswissenschaft} \hfill #2 \\
+		#3 \hfill \today
+	}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% load some java code
+% \loadJava{file}
+%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\loadJava}[1]
+{
+	\lstinputlisting[language=Java]{#1.java}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% load some cpp code
+% \loadCpp{file.cpp}
+%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\loadCpp}[1]
+{
+	\lstinputlisting[language=C++]{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% load some code
+% \loadCode{Python}{file.py}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\loadCode}[2]
+{
+	\lstinputlisting[language=#1]{#2}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% some symbols
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\correct}{\gruen{\text{\ding{52}}}} %for use in text and math
+\newcommand{\wrong}{\rot{\text{\ding{56}}}} %for use in text
+\newcommand{\tflash}{$\hellgelb{\lightning}$} %for use in text
+\newcommand{\mflash}{\hellgelb{\lightning}} %for use in math
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% languages for \loadCode
+%ABAP		IDL				Plasm
+%ACSL		inform			POV
+%Ada		Java			Prolog
+%Algol		JVMIS			Promela
+%Ant		ksh				Python
+%Assembler	Lisp			R
+%Awk		Logo			Reduce
+%bash		make			Rexx
+%Basic		Mathematica1	RSL
+%C			Matlab			Ruby
+%C++		Mercury			S
+%Caml		MetaPost		SAS
+%Clean		Miranda			Scilab
+%Cobol		Mizar			sh
+%Comal		ML				SHELXL
+%csh		Modula-2		Simula
+%Delphi		MuPAD			SQL
+%Eiffel		NASTRAN			tcl
+%Elan		Oberon-2		TeX
+%erlang		OCL				VBScript
+%Euphoria	Octave			Verilog
+%Fortran	Oz				VHDL
+%GCL		Pascal			VRML
+%Gnuplot	Perl			XML
+%Haskell	PHP				XSLT
+%HTML		PL/I
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
