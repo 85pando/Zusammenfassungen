@@ -1,0 +1,8 @@
+\begin{tikzpicture}[]
+\umlclass[x=-0,y=0]{Staff}{name: String\\SIN: Integer}{calc\_paycheck()}
+\umlclass[x=2,y=-4]{SupportStaff}{hours: Integer \\ overtime: Integer \\ hourly\_rate: Integer}{calc\_paycheck()}
+\umlclass[x=-2,y=-4]{Engineer}{clearance: Boolean\\salary: Integer}{calc\_paycheck()}
+\umlVHVinherit[]{SupportStaff}{Staff}
+\umlVHVinherit[]{Engineer}{Staff}
+
+\end{tikzpicture}

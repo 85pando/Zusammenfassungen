@@ -1,0 +1,17 @@
+\begin{tikzpicture}[]
+\umlclass[x=-3,y=0]{Person}{name: String \\ age: Integer}{}
+\umlclass[x=3,y=0]{Company}{name: String}{}
+\umlassoc[mult1=0..*,mult2=*,name=contract]{Person}{Company}
+\umlclass[x=0,y=2]{WorkContract}{salary: Integer}{terminate()}
+\umlassoc[style=dashed]{WorkContract}{contract-1}
+
+\umlclass[x=-3,y=-2.5]{Person}{name: String \\ age: Integer}{}
+\umlclass[x=3,y=-2.5]{Car}{make: carMakers \\ color: carColors}{}
+\umlassoc[mult1=1,mult2=0..*]{Person}{Car}
+
+\umlclass[x=-3,y=-4.5]{Triangle}{}{}
+\umlclass[x=3,y=-4.5]{Corners}{}{}
+\umlassoc[mult1=1,mult2=3]{Triangle}{Corners}
+
+
+\end{tikzpicture}

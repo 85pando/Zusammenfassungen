@@ -1,0 +1,10 @@
+\begin{tikzpicture}[]
+\umlclass[x=-0,y=0]{Document}{}{}
+\umlclass[x=0,y=-3,name=Toc]{Table of Contents}{}{}
+\umlclass[x=3,y=-3]{Section}{}{}
+\umlclass[x=-3,y=-3]{Index}{}{}
+\umlVHVaggreg[mult2=1,pos=2.5]{Document}{Index}
+\umlaggreg[mult2=1..*]{Document}{Toc}
+\umlVHVaggreg[mult2=0..1,pos=2.5]{Document}{Section}
+
+\end{tikzpicture}

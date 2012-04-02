@@ -1,0 +1,10 @@
+\begin{tikzpicture}[]
+\umlclass[x=-0,y=0]{Company}{}{}
+
+\umlclass[x=2,y=-3]{Departement}{}{}
+\umlclass[x=-2,y=-3]{Office}{}{}
+\umlVHVcompo[mult2=1..*,mult1=1,pos=2.5]{Company}{Departement}
+\umlVHVcompo[mult2=1..*,pos=2.5]{Company}{Office}
+\umlcompo[mult=*, angle1=0, angle2=-90, loopsize=2.5cm]{Departement}{Departement}
+
+\end{tikzpicture}
