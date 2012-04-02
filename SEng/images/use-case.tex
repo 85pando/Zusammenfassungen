@@ -1,0 +1,30 @@
+\begin{tikzpicture}[
+]
+
+\begin{umlsystem}[x=4, fill=red!10]{The system}
+\umlusecase{use case1}
+\umlusecase[y=-2]{use case2}
+\umlusecase[y=-4]{use case3}
+\umlusecase[x=4, y=-2,]{use case4}
+\umlusecase[x=6, fill=green!20]{use case5}
+\umlusecase[x=6, y=-4]{use case6}
+\end{umlsystem} 
+
+\umlactor{user}
+\umlactor[y=-3]{subuser}
+\umlactor[x=14, y=-1.5]{admin}
+
+\umlinherit{subuser}{user}
+\umlassoc{user}{usecase-1}
+\umlassoc{subuser}{usecase-2}
+\umlassoc{subuser}{usecase-3}
+\umlassoc{admin}{usecase-5}
+\umlassoc{admin}{usecase-6}
+\umlinherit{usecase-2}{usecase-1}
+\umlHVextend[name=extd]{usecase-4}{usecase-5}
+\umlinclude[name=incl]{usecase-3}{usecase-4}
+
+\umlnote[x=7, y=-6]{incl-1}{use case3 uses something of use case4}
+\umlnote[x=7,y=2]{extd-1}{use case5 might lead to use case4}
+
+\end{tikzpicture}

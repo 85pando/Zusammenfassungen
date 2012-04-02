@@ -370,9 +370,68 @@ oo swe processes are \emph{more continuous}
 	\item \textsc{Uml} use case, sequence, class diagrams
 \end{itemize}
 
-%2-63
+\begin{shaded}
+\textbf{Object} \marginnote{J. Rumbaugh et al}\\
+``A discrete entity with a well defined boundary and identity that encapsulates state and behaviour; ...'' \\
+``A concept, abstraction or thing with crisp boundaries and meaning for the problem at hand...''\\
+``Objects serve two purposes: The promote understanding of the real world and provide a practical basis for computer implementation'' \\
+``All objects have identity and are distinguishable.''
+\end{shaded}
+
+\subsubsection{Obejct-Oriented Software Engineering}
+\begin{itemize}
+	\item software is defined with
+	\begin{description}
+		\item[objects:] entities, correspondence in real world (identity, attributes, methods)
+		\item[classes:] abstact of objects
+	\end{description}
+	\item objects encapsulate data (interface to data)
+	\item interface is relevant, not implementation
+	\item reuse through inheritance
+	\item abstraction through polymorphism
+\end{itemize}
+
+\subsubsection{Software Models}
+\begin{itemize}
+	\item software systems complex \follows break down into subproblems
+	\item software models \follows abstraction of real world
+	\item usage
+		\begin{description}
+			\item[eary life-cycle stages:] evaluate properties of real-world system (elicitate, document, verify, validate requirements, simulation)
+			\item[design stage:] document architecture, assess performance/behaviour
+			\item[implementation/coding stage:] automatically synthesize code (class skeletons, state machine behaviour)
+			\item[testing stage] what to test (requirements models)
+			\item[maintenance stage:] document existing system for evolution
+		\end{description}
+\end{itemize}
 
 \subsection*{Analysis with the UML}
+\begin{itemize}
+	\item visual notation for analysis and design
+	\item standardized by \emph{Object Management Group} \url{http://www.omg.org}
+\end{itemize}
+
+\subsubsection{Static View}
+\begin{description}
+	\item[Use Case Diagrams]
+	\begin{itemize}
+		\item often first step i OO-dev-process
+		\item a use case represents a usage scenario (atomic)
+		\item documents the functinoalities the system provides to user (``what'' does the system do)
+		\item actors (anything or anyone interacting with the system, provide input/output) and principal use cases (interaction between actor and system)
+		\item \input{images/use-case}
+		\item <<include>> \follows a use case uses functionality from another use case
+		\item <<extend>> \follows exceptional or optional behaviour
+	\end{itemize}
+	\item[Class Diagrams:]
+	\begin{itemize}
+		\item Phenomen (object in the world of a domain as perceived
+		\item Concept (properties iof a phenomen) is a 3-tuple: name (distringuishes it from others), purpose (properties that determine, if phenomen is member of concept), members (phenomena, that are part of concept)
+		\item Type (abstraction in context of programming (name: int)
+		\item Class (abstraction in the context of oo-languages, encapsulates state(variables) and behaviour(methods))
+		\item \input{images/class-diagram}
+	\end{itemize}
+\end{description}
 
 \subsection*{Document Requirements}
 
