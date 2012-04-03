@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+\begin{umlseqdiag}
+%\umlobject[class=simpleWatch,stereo=actor]{myWatch}
+%\umlactor[class=simpleWatch]{myWatch}
+%\umlentity[class=simpleWatch]{myWatch}
+%\umlboundary[class=simpleWatch]{myWatch}
+%\umlcontrol[class=simpleWatch]{myWatch}
+%\umldatabase[class=simpleWatch]{myWatch}
+%\umlmulti[class=simpleWatch]{myWatch}
+%\umlobject[class=simpleWatch]{b}
+
+\umlactor[class=WatchUser]{a}
+\umlobject[class=SimpleWatch]{b}
+\umlobject[class=SomethingElse]{c}
+
+\begin{umlcall}[op={pressButton1()},type=synchron, return=0]{a}{b}
+
+\end{umlcall}
+
+\begin{umlcall}[op={doSomething()}]{a}{c}
+
+\end{umlcall}
+
+\end{umlseqdiag}
+\end{tikzpicture}

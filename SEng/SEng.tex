@@ -411,7 +411,7 @@ oo swe processes are \emph{more continuous}
 	\item standardized by \emph{Object Management Group} \url{http://www.omg.org}
 \end{itemize}
 
-\subsubsection{Static View}
+\subsubsection{Static}
 \begin{description}
 	\item[Use Case Diagrams]
 	\begin{itemize}
@@ -427,12 +427,291 @@ oo swe processes are \emph{more continuous}
 	\begin{itemize}
 		\item Phenomen (object in the world of a domain as perceived
 		\item Concept (properties iof a phenomen) is a 3-tuple: name (distringuishes it from others), purpose (properties that determine, if phenomen is member of concept), members (phenomena, that are part of concept)
-		\item Type (abstraction in context of programming (name: int)
+		\item Type (abstraction in context of programming (name: int) \\
+		\texttt{SimpleWatch} or \texttt{Firefighter}
 		\item Class (abstraction in the context of oo-languages, encapsulates state(variables) and behaviour(methods))
+		\item Instance (existing instance of a class) \underline{\texttt{myWatch:SimpleWatch}} or \underline{\texttt{Joe:Firefighter}}
 		\item \input{images/class-diagram}
+		\item Generality (most general aspect of problem)
+		\item Abstraction (not individual objects, what they have in common)
+		\item 		``The descriptor for a set of objects that share the same attributes, relationships and behavior. A class represents a concept within the system being modeled.''
+		\item used during requirement analysis (model problem domain concepts), system design (model subsystems and interfaces), object design (model prog language classes)
+		\item Association: ``A semantic condition or restriction represented as an expression.'' \\
+		\input{images/class-diagram-assoc}
+		\item Dependencies: \\
+		\input{images/class-diagram-depend}
+		\item Aggregation: \\
+		\input{images/class-diagram-aggr}
+		\item Composition \\
+		\input{images/class-diagram-comp}
+		\item Generalisation \\
+		\input{images/class-diagram-gene}
+		\item Visibility (+ public, - private, \# protected)
 	\end{itemize}
 \end{description}
 
-\subsection*{Document Requirements}
+\subsubsection{Dynamic}
+\begin{description}
+	\item[Sequence Diagrams] used during requirement analysis (refinde dynamic behaviour), design (document subsystem interfaces), good for real-time specifications\\
+	\input{images/sequence-diagram}
+	\begin{itemize}
+		\item classes \follows columns
+		\item messages \follows arrows
+		\item return values  \follows dashed arrows
+		\item activations \follows narrow rectangles
+		\item lifelines \follows dashed lines
+	\end{itemize}
+	\item[State Chart Diagram] state machine description (only for dynamically interesting objects)
+	\item[Dynamic Modeling:] Collection of State Chart Diagrams
+\end{description}
+
+Example Use Case Format \\
+\begin{tabular}{|l|l|}
+\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{use case name}	& ReportEmergency \\
+\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{entry condition}& FieldOfficer activates ``ReportEmergency'' function \\
+\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{flow of events}	& FRIEND responds by presenting form \\
+						& FielOfficer fills out form \\
+						& Dispatcher reviews information \\
+\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Exit condition}	& FieldOfficer receives ack and response \\
+\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{tabular}
+
+\subsubsection{Object Oriented Analysis}
+\begin{itemize}
+	\item use-case driven approach (followed by most UML-based approaches)
+	\item linguistic analysis method (requirements in natural language  \follows cast into OO analysis model, more traditional OO approach
+	\item identify Entity Objects (persistent information tracked by system)
+	\item indentify Boundary Objects (interactions betwen actor/system)
+	\item identify Control Objects (responsible for realizinh use cases)
+	\item identify Associations, Aggregates, Attributes
+	\item Model State-Independent Behaviour of objects
+	\item Mapp Use Cases with Sequence diagrams
+	\item Model Inheritance Relationships
+	\item Review Analysios Model
+\end{itemize}
+
+\subsection*{Document Requirements / SRS}
+\begin{shaded}
+\textbf{Requirement Specification:} ``A specification that sets forth the
+requirements for a system or system component; \dots typically included
+are functional requirements, performance requirements, interface
+requirements, design requirements and development standards.'' \\
+``A \emph{software requirements specification} is a document containing acomplete specification of \textbf{what} the system will do without saying how it will do that.''
+\end{shaded}
+\begin{itemize}
+	\item contractual agreement (\follows litigation)
+	\item shall \follows mandatory
+	\item should \follows desired
+	\item ambiguity \follows to be prevented
+	\item IEEE 830-1998
+	\item DIN 69905 Lastenheft/Pflichtenheft
+	\item SRS by Sommerville \\
+	\begin{tabular}{|p{3cm}|p{8cm}|}
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\textbf{Chapter} & \textbf{Description} \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	Preface & expected readership, version history, rationale for creation of new versions, summary of changes \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	Introduction & need for the system, systems functions, how system works with other systems, how system fits into buisness \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	Glossary & define technical terms, assume no knowledge \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	User requirements definition & services provided for user, nonfunctional also described (natural language, diagrams, understandable notations, process and product standards \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	System architecture & high-level overview of anticipated system architecture, distribution of functions across system modules, reused components highlighted \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	System requirements specification & functional \& nonfunctional requirements in detail, define interfaces \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	System models & graphical system models, relationships between system components, systen and environment, data-flow models, semantic data models \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	System evolution & fundamental assumptions on which system is based, anticipated changes due to hw evolution, changing user needs, \dots \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	Appendices & detailed, specific information related to application, hw/database descriptions \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	Index & alphabetic index, index of diagrams, index of functions, index of tables, \dots \\
+	\hline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\end{tabular}
+	\item IEEE 830-1998 SRS
+	\begin{enumerate}
+		\item Introduction
+		\begin{enumerate}
+			\item Purpose
+			\item scope
+			\item definitions, acronyms, abbreviations
+			\item references
+			\item overview
+		\end{enumerate}
+		\item overall description
+		\begin{enumerate}
+			\item product perspective
+			\item product functions
+			\item user characteristics
+			\item constraints
+			\item assumptions and dependencies
+			\item apportioning of requirements
+		\end{enumerate}
+		\item specific requirements
+		\begin{enumerate}
+			\item external interfaces
+			\item functions
+			\item performance requirements
+			\item logical database Requirements
+			\item design constraints
+			\item software system attributes
+			\item organizing the specific requirements
+			\item additional comments
+		\end{enumerate}
+	\end{enumerate}
+	\item Lastenheft (DIN 69905), vom Auftraggeber erstellt
+	\begin{enumerate}
+		\item Ausgangssituation/Zielsetzung
+		\item Produkteinsatz
+		\item Produktübersicht
+		\item Funtionale Anforderungen
+		\item Nichtfunktionale Anforderungen \\
+			Benutzbarkeit, Zuverlässigkeit, Effizienz, Änderbarkeit, Übertragbarkeit
+		\item Risikoakzeptanz
+		\item Skizze des Entwicklungszyklus und der Systemarchitektur
+		\item Lieferumfang
+		\item Abnahmekriterien
+		%2-201
+	\end{enumerate}
+	\item Pflichtenheft (DIN 69905) \\
+	vertraglich bindend, präzise, detailiert, vollständige Beschreibung der zu erfülenden Leistung, Akzeptanztests\\
+	vom Aufgragnehmer erstellt, vom Auftraggeber bestätigt
+	\begin{enumerate}
+		\item Zielbestimmung (Musskriterien, Wunschkriterien, Abgrenzungskriterien (sollen nicht erreicht werden))
+		\item Produkteinsatz (Anwendungsbereiche, Zielgruppen, Betriebsbedingungen)
+		\item Produktübersicht
+		\item Produktfunktionen (genau, detailiert)
+		\item Produktdaten (langfristig zu speichernde Daten aus Benutzersicht)
+		\item Produktleistungen (Anforderungen Zeit, Genauigkeit)
+		\item Qualitätsanforderungen
+		\item Benutzeroberfläche (grundlegende Anforderungen, Zugriffsrechte)
+		\item Nichtfunktionale Anforderungen (Gesetze, Normen, Sicherheitsanforderungen, Plattformabhängigkeiten)
+		\item technische Produktumgebung (SW und HW, organisatorische Rahmenbedingungen, Schnittstellen)
+	\end{enumerate}
+\end{itemize}
+
+\section*{Design}
+
+\subsection*{Design Objectives}
+What \follows How \\
+Manage Complexity \\
+Design for Change (anticipate change at all stages, reduce cost of changes)
+
+\begin{itemize}
+	\item design process should not suffer from ``tunnel vision''
+	\item design should be traceable to analysis model
+	\item don't reinvent the wheel
+	\item minimize intelectual distance between software and real-world problem
+	\item uniformity and integration
+	\item acommodate change
+	\item degrade gently, when aberrant data/events/\dots encountered
+	\item Design is not coding
+	\item assess design for quality while it is created
+	\item review design
+\end{itemize}
+
+\subsection*{Classical and Object-Oriented Design}
+\subsubsection*{Procedural Design}
+\begin{itemize}
+	\item decomposition of system into modules
+	\item describe module interactions
+	\item structure of procedure definitions/invokations
+	\item no abstract data types/inheritance
+\end{itemize}
+\begin{description}
+	\item[Architectural Design:] determine major elemts (modules) and relationships
+	\item[Interface Design:] how to design interrelation/communiccation/mutural reliance (contracts) of modules
+	\item[Data Design:] data structures
+	\item[Procedural Design:] determine procedural description for elements
+\end{description}
+
+\paragraph*{Module}
+\begin{itemize}
+	\item well defined component of system (provides set of services to other modules, consists of (name, interface, body), information hiding)
+	\item master complexity, facilitate documentation, enable teamwork
+	\item interface descrition (``contract server/client'') languages (CORBA IDL, Eiffel)
+	\item \emph{Cohesion} (intra module bindings, ``degree to which a module performs one and only one function'')
+	\item \emph{coupling} (inter module bindings, ``degree to which a module is connected to other modules'' (direct access, data transfer, \dots))
+	\item desired: hoch cohesion, low coupling
+\end{itemize}
+
+\subsubsection*{Object-Oriented Design}
+\begin{itemize}
+	\item model system als collection of classes + objects
+	\item description of object interfaces
+	\item encapsulation, abstract data types
+	\item reuse through inheritance
+	\item polymorphism
+\end{itemize}
+\paragraph*{Activities}
+\begin{itemize}
+	\item partition model into subsystems
+	\item identify concurrency
+	\item allocate subsystems to processor tasks
+	\item develop ui design
+	\item choose strategy for data management
+	\item identify global resources (and control mechaninsm, task management)
+	\item consider boundary conditions (and how to be handled)
+	\item review, consider trade-offs
+\end{itemize}
+\begin{description}
+	\item[Booch Method:] macro development process (architectural planning, patritioning, layering) + micrp development process (rules for implementing specifics)
+	\item[Rumbaugh Method:] system design (analysis models represent system, layout of components, partitioning into subsystems, taking exec environment into account) + object design (design of algos/data structures)
+	\item[Jacboson Method:] traceability from analysis model, adaptrion of analysis model to real-world env, primary design objects categorized (interface, entity, control), determine communication \follows organize into subsystems
+	\item[Wirfs-Brock Method:] analysis \follows design, def of protocols through inter-object contracts, specification of classes and subsystems
+\end{description}
+\begin{itemize}
+	\item maintenance (objects work standalone), reuse (objects can be used again), reduce semantic gaps (real-world $\leftrightarrow$ software)
+\end{itemize}
+
+\paragraph*{Generalisation \& Inheritance}
+\begin{itemize}
+	\item objects are members of classes (define attributes, operations)
+	\item class hirarchy \follows Generalisation
+	\item generalistaion in UML \follows inheritance in OO
+	\item abstraction \follows classify entities
+	\item inheritance graph \follows organistational knowledge about domain/system
+	\item \emph{Cohesion} how well fits the functionality of a class together
+	\item \emph{Coupling} B subclass of A \follows B inherits from A \follows coupling between A/B, reflects real-world structure (not design decision)
+\end{itemize}
+
+\subsection*{Design with the UML}
+\subsubsection*{types of models}
+\begin{description}
+	\item[design models:] show objects, object classes, relationships
+	\item[static models:] describe static structure, object classes and relationships
+	\item[dynamic models:] describe dynamic interactions between objects
+\end{description}
+
+\subsubsection*{Typically used models}
+\begin{description}
+	\item[subsystem/component diagrams:] structural refinement of objects \\
+	A \textbf{UML component} ``represents a modular part of a system, that encapsulates its content and whose manifestation is replaceable within its environment. A component defines its behavior in terms of provided and required interfaces
+'' \follows subsystem \\
+	\input{images/component-diagram}
+	\item[sequence diagrams:] model order of interactions among objects\\
+	\input{images/sequence-diagram}
+	\item[statechart diagrams:] model state behaviour of object
+	\item[acitivity diagram:] model concurrent behabiour of object
+\end{description}
+
+\begin{description}
+	\item[use-case diagram:] model interactions (include description)
+\end{description}
+
+\subsection*{Interfaces and Contracts}
+
+\subsection*{Software Architecture and Patterns}
+
+\subsection*{From Design to Code}
+
+\subsection*{Documenting Design}
 
 \end{document}

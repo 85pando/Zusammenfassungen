@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+
+
+\begin{umlcomponent}{System1}
+\umlbasiccomponent{SubSystem11}
+\umlbasiccomponent[x=5]{SubSystem12}
+
+\umlassoc{SubSystem11}{SubSystem12}
+\end{umlcomponent}
+
+\begin{umlcomponent}[y=-4]{System2}
+\umlbasiccomponent{SubSystem21}
+
+\end{umlcomponent}
+
+\umlHVassemblyconnector[interface=12]{SubSystem21}{SubSystem12}
+
+%\umlbasiccomponent[y=15]{B}
+%\umlbasiccomponent[y=10]{C}
+
+%\umlprovidedinterface[interface=C-interface]{C}
+%\umlrequiredinterface[interface=B-interface,with port, distance=3cm,padding=2.5cm]{B}
+
+%\umlassemblyconnector[interface=AE,with port]{B}{C}
+
+\end{tikzpicture}
