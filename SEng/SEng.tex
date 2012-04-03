@@ -698,15 +698,25 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\input{images/component-diagram}
 	\item[sequence diagrams:] model order of interactions among objects\\
 	\input{images/sequence-diagram}
-	\item[statechart diagrams:] model state behaviour of object
+	\item[statechart diagrams:] model state behaviour of \underline{one} object, show how objects respond to and state transitions triggered by service requests, concurrency possible (seperate by dashed line) \\
+	\input{images/state-diagram}
 	\item[acitivity diagram:] model concurrent behabiour of object
-\end{description}
-
-\begin{description}
+	\item [Deployment Diagram:] represents alloc of different UML Nodes, HW/SW allocation (``like component diagram in 3D'')
 	\item[use-case diagram:] model interactions (include description)
 \end{description}
 
 \subsection*{Interfaces and Contracts}
+\begin{itemize}
+	\item interfaces must be specified, s.t. other objects can be developed in parallel
+	\item several interfaces per object/module possible
+	\item use UML class diagrams
+	\item operations A,B concurrent, if \dots A\dots B\dots and \dots B\dots A\dots is possible (logical parallelisation, execution on different hw, A/B not data-flow interdependent)
+	\item use inherent concurrency to distribute system
+	\item use \textbf{Activity Diagrams} to model concurrent workflows, like workflows, thick bars are sync-points, ``swim-lanes'' are separation denoting different systems \\
+	\includegraphics[scale=0.4]{images/activity-diagram.png}
+\end{itemize}
+
+%3-59
 
 \subsection*{Software Architecture and Patterns}
 
