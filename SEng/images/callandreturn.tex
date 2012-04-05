@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+>=stealth,
+every path/.style={draw,<->},
+node distance=1.5cm
+]
+
+\node[draw] (root) at (0,0) {M};
+	\node[draw] (b) [below of = root] {b};
+		\node[draw] (f) [below of = b] {f};
+	\node[draw] (a) [left of = b] {a};
+		\node[draw] (e) [below of = a] {e};
+		\node[draw] (d) [left of = e] {d};
+	\node[draw] (c) [right of = b] {c};
+		\node[draw] (g) [below of = c] {g};
+			 \node[draw] (k) [below of = g] {k};
+		\node[draw] (h) [right of = g] {h};
+		\node[draw] (i) [right of = h] {i};
+
+\node (fanout) at (1.5,-0.7) {fan-out};
+\node (fanin) at (3.8,-4) {fan-in};
+
+\path (root) -- (a);
+	\path (a) -- (d);
+	\path (a) -- (e);
+\path (root) -- (b);
+	\path (b) -- (f);
+\path (root) -- (c);
+	\path (c) -- (g);
+	\path (c) -- (h);
+	\path (c) -- (i);
+		\path (g) -- (k);
+		\path (h) -- (k);
+		\path (i) -- (k);
+
+\end{tikzpicture}
