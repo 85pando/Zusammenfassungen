@@ -29,13 +29,13 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
 \tableofcontents
 \newpage
 
-\section*{Software Crisis}
+\section{Software Crisis}
 Term from NATO study group in 1967.
 \begin{description}
 	\item[fault] mistake/error made by a human during a software activity (erroneous design, requirements, coding)
 	\item[failure] observed departure of a system from the desired state
 \end{description}
-\subsection*{symptoms}
+\subsection{symptoms}
 \begin{itemize}
 	\item products are delivered late \follows high cost
 	\item projects exceed budgeds \follows high cost \follows waste of resources
@@ -44,7 +44,7 @@ Term from NATO study group in 1967.
 	\item projects get abandonded before delivery \follows waste of resources
 \end{itemize}
 
-\subsection*{Characteristics of software}
+\subsection{Characteristics of software}
 \begin{itemize}
 	\item Software is \emph{engineered}, not manufactured (custom built, little to no (mechanical) assembly, human intensive process)
 	\item Software does not wear out (but: change of requirements, changes in environment)
@@ -52,7 +52,7 @@ Term from NATO study group in 1967.
 	\item software is \emph{detemining system factor} (up to 80\% of development effort)
 \end{itemize}
 
-\subsection*{Why is software difficult to produce?}
+\subsection{Why is software difficult to produce?}
 \begin{itemize}
 	\item no similiar system built so far (problems unknown, assumptions about environment may be wrong)
 	\item \emph{Requirements} are not well understood/phrased
@@ -68,7 +68,7 @@ Term from NATO study group in 1967.
 	\item software is \emph{discreet} (either fails, or doesn't)\marginnote{Stimmt auch nicht immer\dots}
 \end{itemize}
 
-\subsection*{Software Debvelopment Myths}
+\subsection{Software Debvelopment Myths}
 \begin{itemize}
 	\item Management
 		\begin{itemize}
@@ -88,7 +88,7 @@ Term from NATO study group in 1967.
 		\end{itemize}
 \end{itemize}
 
-\subsection*{Software Engineering}
+\subsection{Software Engineering}
 Communication between a huge number of parties (customer, end user, sw designer, developer, \dots) must be maintained. \\
 Highly complex systems: SE has to provide solutions.
 
@@ -105,7 +105,7 @@ Highly complex systems: SE has to provide solutions.
 	\item[\follows] software engineering process model
 \end{description}
 
-\section*{waterfall model}
+\section{waterfall model}
 \input{images/waterfall.tex}
 
 \begin{description}
@@ -116,7 +116,7 @@ Highly complex systems: SE has to provide solutions.
 	\item[Integration] (and Testing) integrate tested modules to form system, \emph{integration testing}, validation, customer accptance tests
 	\item[maintenance] deploy product, perform maintenance (corrective, adaptive, perfective), retire product
 \end{description}
-\subsubsection*{Benefits}
+\subsubsection{Benefits}
 \begin{itemize}
 	\item Definition of seperate Tasks (Seperation of concerns)\\dividing complex design problems into smaller units \follows facilitates team work/reproducibility
 	\item specification and documentation  \follows enforces documentation, facilitates testing (against requirements specification)
@@ -128,14 +128,14 @@ Highly complex systems: SE has to provide solutions.
 		\end{itemize}
 \end{itemize}
 
-\subsubsection*{Defects}
+\subsubsection{Defects}
 \begin{itemize}
 	\item no feedback loops
 	\item document driven, inflexible
 	\item large time gap between inception and completion
 \end{itemize}
 
-\subsubsection*{Alternatives}
+\subsubsection{Alternatives}
 \begin{itemize}
 	\item modified waterfall model
 	\item V-Model, V-Model XT
@@ -146,7 +146,7 @@ Highly complex systems: SE has to provide solutions.
 	\item \dots
 \end{itemize}
 
-\subsection*{Software Qualities}
+\subsection{Software Qualities}
 \begin{description}
 	\item[Correctness:] the software behaves according to the \emph{requirement specification}
 	\item[Reliability:] the software guarantees a level of quality service ($<$Correctness)
@@ -157,7 +157,7 @@ Highly complex systems: SE has to provide solutions.
 	\item[Interoperability:] standardisation, interfaces, \dots
 \end{description}
 
-\subsection*{Software Engineering Principles}
+\subsection{Software Engineering Principles}
 \begin{description}
 	\item[Rigor:] use a method and apply it rigorously to every step
 	\item[Formality:] use (mathematical) formalizable methods and notations
@@ -167,9 +167,9 @@ Highly complex systems: SE has to provide solutions.
 	\item[Generality:] focus on the discovery of more general problems
 \end{description}
 
-\section*{Requiremnt \& Analysis}
+\section{Requiremnt \& Analysis}
 
-\subsection*{Requirement Elicitation}
+\subsection{Requirement Elicitation}
 \begin{shaded}
 ``A \textbf{requirement} is a condition or capability that must be met or professed by a system component to satisfy a contract, standard, specification or other formally inposed document.'' \\
 (ANSI/IEEE Standard 729-1983)
@@ -226,7 +226,7 @@ Interaction between the system and the system-relevant portion of the envrionmen
 \end{description}
 
 
-\subsubsection*{Requirement Specification Properties}
+\subsubsection{Requirement Specification Properties}
 \begin{description}
 	\item[correctness:] facts in requirement specification \follows required properties of the system
 	\item[unambiguity:] all specifications have a single interpretation
@@ -263,7 +263,7 @@ Interaction between the system and the system-relevant portion of the envrionmen
 			Not a single person knows everything about the system \follows communication is needed \follows difficult (technical language, ambiguities, customers not aware of needs, personalities.)
 	\end{description}
 
-\subsubsection*{Interviewing / Structured Questioning Techniques}
+\subsubsection{Interviewing / Structured Questioning Techniques}
 \begin{enumerate}
 	\item context-of-system (why are we building this system/who are the users/critical functionality/needs)
 	\item open-ended questions (produce large amount of info/use, when not much known yet
@@ -272,7 +272,7 @@ Interaction between the system and the system-relevant portion of the envrionmen
 	\item whom else to interview
 \end{enumerate}
 
-\subsubsection*{Learning from Existing Systems}
+\subsubsection{Learning from Existing Systems}
 \begin{itemize}
 	\item analyse user manuals
 	\item use/play with existing systems
@@ -280,7 +280,7 @@ Interaction between the system and the system-relevant portion of the envrionmen
 	\item reverse engineering)
 \end{itemize}
 
-\subsubsection*{requirement uncertainty}
+\subsubsection{requirement uncertainty}
 When the customer does not know, what he really needs/wants \follows prototype.
 Built prototype early (only if prototype build is faster than system build),
 use prototype for requirement elicitation.
@@ -359,7 +359,7 @@ Prototyping also part of some life cycle and process models (spiral model)
 	\end{itemize}
 \end{itemize}
 
-\subsection*{Object Oriented Analysis}
+\subsection{Object Oriented Analysis}
 mapping onto waterfall process
 \begin{itemize}
 	\item requirements \follows object-oriented \emph{analysis}
@@ -408,7 +408,7 @@ oo swe processes are \emph{more continuous}
 		\end{description}
 \end{itemize}
 
-\subsection*{Analysis with the UML}
+\subsection{Analysis with the UML}
 \begin{itemize}
 	\item visual notation for analysis and design
 	\item standardized by \emph{Object Management Group} \url{http://www.omg.org}
@@ -497,7 +497,7 @@ Example Use Case Format \\
 	\item Review Analysios Model
 \end{itemize}
 
-\subsection*{Document Requirements / SRS}
+\subsection{Document Requirements / SRS}
 \begin{shaded}
 \textbf{Requirement Specification:} ``A specification that sets forth the
 requirements for a system or system component; \dots typically included
@@ -600,9 +600,9 @@ requirements, design requirements and development standards.'' \\
 	\end{enumerate}
 \end{itemize}
 
-\section*{Design}
+\section{Design}
 
-\subsection*{Design Objectives}
+\subsection{Design Objectives}
 What \follows How \\
 Manage Complexity \\
 Design for Change (anticipate change at all stages, reduce cost of changes)
@@ -620,8 +620,8 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item review design
 \end{itemize}
 
-\subsection*{Classical and Object-Oriented Design}
-\subsubsection*{Procedural Design}
+\subsection{Classical and Object-Oriented Design}
+\subsubsection{Procedural Design}
 \begin{itemize}
 	\item decomposition of system into modules
 	\item describe module interactions
@@ -635,7 +635,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[Procedural Design:] determine procedural description for elements
 \end{description}
 
-\paragraph*{Module}
+\paragraph{Module}
 \begin{itemize}
 	\item well defined component of system (provides set of services to other modules, consists of (name, interface, body), information hiding)
 	\item master complexity, facilitate documentation, enable teamwork
@@ -645,7 +645,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item desired: hoch cohesion, low coupling
 \end{itemize}
 
-\subsubsection*{Object-Oriented Design}
+\subsubsection{Object-Oriented Design}
 \begin{itemize}
 	\item model system als collection of classes + objects
 	\item description of object interfaces
@@ -653,7 +653,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item reuse through inheritance
 	\item polymorphism
 \end{itemize}
-\paragraph*{Activities}
+\paragraph{Activities}
 \begin{itemize}
 	\item partition model into subsystems
 	\item identify concurrency
@@ -674,7 +674,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item maintenance (objects work standalone), reuse (objects can be used again), reduce semantic gaps (real-world $\leftrightarrow$ software)
 \end{itemize}
 
-\paragraph*{Generalisation \& Inheritance}
+\paragraph{Generalisation \& Inheritance}
 \begin{itemize}
 	\item objects are members of classes (define attributes, operations)
 	\item class hirarchy \follows Generalisation
@@ -685,15 +685,15 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item \emph{Coupling} B subclass of A \follows B inherits from A \follows coupling between A/B, reflects real-world structure (not design decision)
 \end{itemize}
 
-\subsection*{Design with the UML}
-\subsubsection*{types of models}
+\subsection{Design with the UML}
+\subsubsection{types of models}
 \begin{description}
 	\item[design models:] show objects, object classes, relationships
 	\item[static models:] describe static structure, object classes and relationships
 	\item[dynamic models:] describe dynamic interactions between objects
 \end{description}
 
-\subsubsection*{Typically used models}
+\subsubsection{Typically used models}
 \begin{description}
 	\item[subsystem/component diagrams:] structural refinement of objects \\
 	A \textbf{UML component} ``represents a modular part of a system, that encapsulates its content and whose manifestation is replaceable within its environment. A component defines its behavior in terms of provided and required interfaces
@@ -708,7 +708,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[use-case diagram:] model interactions (include description)
 \end{description}
 
-\subsection*{Interfaces and Contracts}
+\subsection{Interfaces and Contracts}
 \begin{itemize}
 	\item interfaces must be specified, s.t. other objects can be developed in parallel
 	\item several interfaces per object/module possible
@@ -761,14 +761,14 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
  	\end{itemize}
  \end{itemize}
 
-\subsection*{Data Dictionaries}
+\subsection{Data Dictionaries}
 \begin{itemize}
 	\item low level data decisions \follows late in design process
 	\item representation of data structures only known to those with direct data interaction (information hiding)
 	\item \textbf{Data Dictionary} list of all names, entities, realtionships, attributes used (name management, avoid duplication, store organisational knowledge)
 \end{itemize}
 
-\subsection*{Software Architecture and Patterns}
+\subsection{Software Architecture and Patterns}
 \begin{shaded}
 ``The \emph{architecture of a software system} defines that system in terms of computational components and interactions among thos components.'' \\
 ``\dots involves the description of elements from which systems are built, interactions among there elements, patterns that guide their composition, and constraints on these patterns.''
@@ -790,7 +790,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 \begin{shaded}
 ``Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way, that you can use this solution a million times over, without ever doing it the same way twice.'' Christopher Alexander
 \end{shaded}
-\subsection*{Design Patterns}
+\subsection{Design Patterns}
 \begin{itemize}
 	\item improved documentation, more abstract level of programming, improved communication
 	\item patterns as components, classes
@@ -817,8 +817,8 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection*{From Design to Code}
-\subsubsection*{Mapping Design Models to Code}
+\subsection{From Design to Code}
+\subsubsection{Mapping Design Models to Code}
 \begin{description}
 	\item[optimization] meet performance requirements (reduce multiplicity of associationsm redundant associations)
 	\item[realisation of associations] map asociations to source code
@@ -827,7 +827,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[implementation of visibility attributes] private, protected, public
 \end{description}
 
-\subsubsection*{Implementing Interface Contracts}
+\subsubsection{Implementing Interface Contracts}
 \begin{itemize}
 	\item most OO languages no built-in support for contracts (except Eiffel)
 	\item some OO languages have built-in exception handling support (throw-cath in Java)
@@ -836,7 +836,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item check \emph{invariants} before and after method
 \end{itemize}
 
-\subsubsection*{Maping to Relational Databases}
+\subsubsection{Maping to Relational Databases}
 \begin{itemize}
 	\item map UML-constructs to tables (not everything can be mapped)
 	\item class $\to$ table
@@ -847,7 +847,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item no direct mapping $\to$ do something in sql,\dots
 \end{itemize}
 
-\subsection*{Documenting Design}
+\subsection{Documenting Design}
 \subsubsection{System Design Document - \textsc{Sdd}}
 \begin{enumerate}
 	\item Introduction
@@ -872,7 +872,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item 
 \end{enumerate}
 
-\subsubsection*{Object Design Document - \textsc{Odd}}
+\subsubsection{Object Design Document - \textsc{Odd}}
 \begin{enumerate}
 	\item Introduction
 	\begin{enumerate}
@@ -893,7 +893,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 \end{enumerate}
 {\tiny part can be done automatically with e.g. JML/Javadoc}
 
-\section*{Testing and Software Quality Assurance (\textsc{Sqa})}
+\section{Testing and Software Quality Assurance (\textsc{Sqa})}
 \begin{itemize}
 	\item about 1 faults per 1000 lines of code
 	\item verification and validation techniques (code analysis, review, testing, formal verification), the earlier, the better (cost)
@@ -904,9 +904,9 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item code quality assessment (software metrics)
 \end{itemize}
 
-\subsection*{Software Testing and Strategies}
-\subsection*{Reviews and Inspections}
-\subsubsection*{Reviews}
+\subsection{Software Testing and Strategies}
+\subsection{Reviews and Inspections}
+\subsubsection{Reviews}
 \begin{itemize}
 	\item technical meetings (walk-through, inspections)
 	\item objectives: software quality assurance, training
@@ -917,7 +917,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item raise issues, don't resolve them
 \end{itemize}
 
-\subsubsection*{Code walk-through}
+\subsubsection{Code walk-through}
 \begin{itemize}
 	\item ``playing the computer'' \follows ``interpret code''
 	\item 3-5 participants
@@ -925,20 +925,20 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item moderator, secretary, auditors, designer (explain own design)
 \end{itemize}
 
-\subsubsection*{Code Inspections}
+\subsubsection{Code Inspections}
 \begin{itemize}
 	\item similar to code-walkthrough, different goal: look for commonly made mistakes, no simulation of computers behaviour
 	\item unitialized variables, jumps into loops, incompatible assignements, nonterminating loops, array boundaries, storage allocation/deallocation, parameter mismatches
 	\item analysis tools can be helpfull
 \end{itemize}
 
-\subsection*{Test Coverage}
+\subsection{Test Coverage}
 \begin{description}
 	\item[white box testing] source is revealed ((code) structural testing)
 	\item[black box testing] no source available (test against requirements specification)
 	\item[grey box testing] some internal state variables are revealed
 \end{description}
-\subsubsection*{Types of Testing}
+\subsubsection{Types of Testing}
 \input{images/testing}
 \begin{description}
 	\item[unit/module Testing] check that one module meets design specifications (often during programming)
@@ -956,7 +956,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[regression testing] performed during maintenance/when component has changed (ensure that what worked in the past, will work in the future)
 	\item[stress testing] test system under extreme conditions
 \end{description}
-\subsubsection*{formalized testing}
+\subsubsection{formalized testing}
 \begin{description}
 	\item[$D$:] input domain
 	\item[$R$:] arbitrary set, results
@@ -973,7 +973,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[if $C$ complete and consistent:] any test $T$ that satisfies $C$ decides $P$'s correctness
 \end{description}
 
-\subsubsection*{selective testing - how many paths to test?}
+\subsubsection{selective testing - how many paths to test?}
 \begin{description}
 	\item[Statement Coverage] select $T$ s.t. by executing $P(d)$ for every $d\in T$, \textbf{each statement is at least executed once} {\tiny statement \follows square}
 	\item[edge coverage] select $T$ s.t. \textbf{each edge in control flow graph is traversed at least once}
@@ -982,7 +982,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[path coverage] select $T$ s.t. all paths from an inital ndoe to a final node in the control flow graph are traversed at least once
 \end{description}
 
-\subsubsection*{Basis Path Testing}
+\subsubsection{Basis Path Testing}
 \begin{itemize}
 	\item assess how many tests are needed to achieve statement \& path coverage (prog is single entry, single exit, control flow graph available, all decisions binary)
 	\item calculate cyclomatic complexity $V(G)$
@@ -1000,7 +1000,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\end{enumerate}
 \end{itemize}
 
-\subsubsection*{testing based on contracts}
+\subsubsection{testing based on contracts}
 \begin{itemize}
 	\item possible test selection criteria
 	\begin{itemize}
@@ -1011,7 +1011,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\end{itemize}
 \end{itemize}
 
-\subsubsection*{Acceptance Testing}
+\subsubsection{Acceptance Testing}
 \begin{itemize}
 	\item demonstrate system is ready for operational use
 	\item choice of tests by client, is conducted by client
@@ -1019,7 +1019,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item alpha test: tests in devs environment, beta test: tests in clients environment
 \end{itemize}
 
-\subsubsection*{integration testing}
+\subsubsection{integration testing}
 \begin{itemize}
 	\item driver: component that calls the \texttt{testedUnit}, controls test cases
 	\item stub: component that the \texttt{testedUnit} depends on (``fake'')
@@ -1030,8 +1030,8 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item modified sandwich - combination of all other tests
 \end{itemize}
 
-\subsection*{Software Metrics}
-\subsubsection*{McCabe's Cyclomatic Complexity}
+\subsection{Software Metrics}
+\subsubsection{McCabe's Cyclomatic Complexity}
 \begin{itemize}
 	\item determine control flow graph
 	\item Cyclomatic Complexity $C=e-n+2p$ ($e$ - edges, $n$ - nodes, $p$ - number of connected components (1 for totally connected)) \\
@@ -1040,7 +1040,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item $3\leq C\leq 7$ \follows good values, $C=10$ \follows maximum
 \end{itemize}
 
-\subsubsection*{Software Product Metrics}
+\subsubsection{Software Product Metrics}
 \begin{description}
 	\item[fan-in/fan-out] number of functions or methods, that call other functions or methods (X). Fan-out is the number of functions, thar are called by X. High Fan-in shows tight coupling (changes to X not good), high Fan-out suggests high complexity
 	\item[length of code] larger programm \follows more errors
@@ -1050,7 +1050,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[fog index] average length of words and sentences in documents, higher fog is harder to understand
  \end{description}
 
-\subsubsection*{Object-Oriented Software Metrics}
+\subsubsection{Object-Oriented Software Metrics}
 \begin{description}
 	\item[depth of inheritance tree] deeper inheritance tree \follows more complex design
 	\item[Method fan-in/fan-out] distringuish between internal (good) and external (bad) methods, see above
@@ -1058,7 +1058,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[number of overriding operations] high value indicates, superclass not good model for subclass
 \end{description}
 
-\subsection*{Formal verification}
+\subsection{Formal verification}
 das lass ich mal weg, das seh ich als nicht wichtig an
 
 \end{document}
