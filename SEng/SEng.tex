@@ -600,6 +600,38 @@ requirements, design requirements and development standards.'' \\
 	\end{enumerate}
 \end{itemize}
 
+\subsubsection{Funktionale Anforderungen}
+\begin{shaded}
+``funktionale Anforderungen legen fest, welche Dienste (aus Sicht des Benutzers) das System anbieten soll/welche Aufgaben es erfüllen soll''
+\end{shaded}
+\begin{itemize}
+	\item Aufbau: Anforderungsnummer: Bezeichnung, kurze Beschreibung
+	\item was, nicht wie
+	\item eindeutig/widerspruchsfrei
+	\item zentrale Vorgaben für Systementwicklung
+	\item Beschreibung funktionale Anforderungen \follows use-cases
+\end{itemize}
+
+\subsubsection{Nichtfunktionale Anforderungen}
+\begin{shaded}
+"`nichtfunktionale Anforderungen sind Anforderungen, welche die durch das System zu leistenden speziellen Funktionen nicht direkt betreffen"'
+\end{shaded}
+\begin{itemize}
+	\item können sich auf wichtige System-Eigenschaften beziehen
+	\item können Beschränkungen definieren
+	\item sind selten an einzelne Systemfunktionen gebunden
+	\item "`sichtbare"'  Eigenschaften der Software (Geschwindigkeit, Verfügbarkeit, \dots)
+	\item sind of relevanter als funktionale Anforderungen (Unbedienbarkeit, \dots)
+	\item Typen von funktionalen Anforderungen:
+	\begin{description}
+		\item[Produktanforderungen] Geschwindigkeit, Speicherbedarf, akzeptable Fehlerquoten , portierbarkeits-Anforderungen, Anforderungen bezüglich Benutzbarkeit
+		\item[Unternehmensanforderungen] Vorschriften für die Entwicklung (bestehende Standards, spezielle Anwendungen), Umsetzungsanforderungen (Programmiersprache, Entwurfsmethode, Lieferanforderungen)
+		\item[externe Anforderungen] Kompatibilität (ausführbar auf div. Geräten/Betriebssystemen, language-packs), rechtliche Anforderungen (Datenschutz, Speicherung), ethische Anforderungen (Langzeitspeicherung, keine fremden Kundendaten anzeigen, unfreundliches Design)
+	\end{description}
+	\item oft allgemein formuliert \follows kann später zu Problemen führen
+	\item direktes Überprüfen oft schwer \follows Tests und Metriken (festlegen)
+\end{itemize}
+
 \section{Design}
 
 \subsection{Design Objectives}
@@ -662,6 +694,11 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item choose strategy for data management
 	\item identify global resources (and control mechaninsm, task management)
 	\item consider boundary conditions (and how to be handled)
+	\begin{itemize}
+		\item Sonderfälle (Systemstart, Initialisierung, Herunterfahren, Schwere Fehler und Ausnahmen, beschädigte Daten, Netzwerkfehler, \dots)
+		\item \follows \textbf{Boundary Use Case} (für alle Subsysteme und Dauerhafte Objekte: Konfiguration, Start/Herunterfahren, Fehlerbehandlung)
+		\item Für Komponentenfehlertyp (Netzerkausfall, \dots) wird entschieden, wie System reagieren soll \follows Anlegen eines \textbf{Exceptional Use Case}
+	\end{itemize}
 	\item review, consider trade-offs
 \end{itemize}
 \begin{description}
@@ -796,14 +833,18 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item patterns as components, classes
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Adapter - Wrapper}
 \begin{description}
-	\item[Pattern and Name Classification]
-	\item[Intent] (what does pattern do)
-	\item[Also known as]
-	\item[Motivation] (scenario)
+	\item[Pattern and Name Classification] Adapter Wrapper
+	\item[Intent] Anbieten eines alternativen Interfaces für eine Klasse
+	\item[Motivation] fremde Klasse mit unpassendem Interface in 
+\end{description}
+
+\subsubsection{Brücke}
+\begin{description}
+	\item[Pattern and Name Classification] Brücke
+	\item[Intent] Decouple an abstraction from its implementation so that the two can vary independently.
+	\item[Motivation] Eine Brücke kann eine dauerhafte Verbindung zwischen Abstraktion und Implementierung verhindern.
 	\item[Applicability] situation in which design pattern can be applied, how to recognize this situations
 	\item[Structure] abstract graphical representation
 	\item[Participants]
@@ -813,9 +854,44 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[known uses]
 	\item[related patterns]
 \end{description}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Decorator}
+\begin{description}
+	\item[Pattern and Name Classification] Decorator
+	\item[Intent] Fügt individuellen Objekten Zuständigkeiten hinzu, aber nicht der Klasse
+	\item[Motivation] Bspw TextArea einen Rahmen und eine ScrollBar hinzufügen
+\end{description}
+
+\subsubsection{Facade}
+\begin{description}
+	\item[Pattern and Name Classification] Facade
+	\item[Intent] baut eine Klasse als Fassade vor viele andere Klassen, ermöglicht Methoden, die wieder Methoden in hinteren Klassen aufrufen, vereinfacht Schnittstellen
+	\item[Motivation] einfache Klasse für Zugriff von Außen, voller Zugriff auf Methoden des Basissystems
+	\item[related patterns] Wrapper, Mediator
+\end{description}
+
+\subsubsection{Observer}
+\begin{description}
+	\item[Pattern and Name Classification] Observer / publish-subscribe
+	\item[Intent] Abstrakte Kommunikationsmöglichkeit
+	\item[Motivation] Das beobachtete Objekt bietet Anmeldung für Observer an, informiert diese dann über interne Änderungen. Muss Struktur des Observers nicht kennen, meldet einfach jede Änderung weiter \follows Observer muss darauf reagieren können.
+\end{description}
+
+\subsubsection{Proxy/Stellvertreter}
+\begin{description}
+	\item[Pattern and Name Classification]Proxy, Stellvertreter, Surrogat
+	\item[Intent] Kontrollierter Zugriff auf ein Objekt mit Hilfe eines vorgelagerten Stellvertreters
+	\item[Motivation] Proxy hält eine Referenz auf das reale Objekt, stellt gleich Schnittstelle zur Verfügung
+	
+\end{description}
+
+\subsubsection{Singelton}
+\begin{description}
+	\item[Pattern and Name Classification] Singelton
+	\item[Intent] Klasse mit genau einer Instanz, normalerweise globaler Zugriff
+	\item[Motivation] Klasse hat komplette Zugriffskontrolle, 
+	\item[Applicability] Bpsw Druckerbuffer, Filesystem, Window Manager
+\end{description}
 
 \subsection{From Design to Code}
 \subsubsection{Mapping Design Models to Code}
@@ -1029,6 +1105,30 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item sandwich - combination of bottom-up and top-down, converges at target layer \follows does not test individual layers thouroghly
 	\item modified sandwich - combination of all other tests
 \end{itemize}
+
+\subsubsection{Testplan}
+\begin{enumerate}
+	\item Einführung (Beschreibung der Testobjekte)
+	\item Bezug zu anderen Dokumenten (RAD, SDD, \dots)
+	\item Systemübersicht (strukturelle Aspekte des Tests, Übersicht auf die zu testenden Objekte)
+	\item Features zum Testen und Nicht-Testen (funktionale Aspekte, Beschreibung der zu testenden Features)
+	\item Pass/Fail-Kriterien
+	\item Approach (Herangehensweise an Testprozess, Grund für Wahl einer Teststrategie)
+	\item Suspension \& Resumption (Kriterien zum Unterbrechen eines Tests, Spezifizierung der Testabläufe nach Wiederaufnahme)
+	\item Testmaterial (benötigte Resourcen)
+	\item Testfälle (Test Case Specification, Test Incident Report)
+	\item Testing Schedule (Verantwortlichkeiten, Personalbedarf, Risiken, Kosten, Ablaufplan)
+\end{enumerate}
+\paragraph{Test Case Specification}
+\begin{enumerate}
+	\item Testfallbezeichner (Name)
+	\item Test items (Komponenten und Features)
+	\item Eingabespezifikationen
+	\item Ausgabespezifikationen
+	\item Umgebungsanforderungen (HW/SW)
+	\item Besondere prozedurale Anforderungen (Zeitlimits, \dots)
+	\item Abhängigkeit zwischen Fällen
+\end{enumerate}
 
 \subsection{Software Metrics}
 \subsubsection{McCabe's Cyclomatic Complexity}
