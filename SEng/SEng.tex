@@ -10,7 +10,7 @@
 
 \begin{document}
 
-\Gruppe{Stephan Heidinger}{SEng - Zusammenfassung v0.1}
+\Gruppe{Stephan Heidinger}{SEng - Zusammenfassung v1.0}
 \Header{Software Engineering}{Wintersemester 2011/2012}{Stephan Heidinger}
 
 \begin{shaded}
@@ -80,7 +80,7 @@ Term from NATO study group in 1967.
 			\item general statement of objectives sufficient
 			\item change (as in requirements) can easily be implemented
 		\end{itemize}
-	\item Pracitioner
+	\item Practioner
 		\begin{itemize}
 			\item once programm is running, job is done
 			\item until programm is running, no way to check quality
@@ -230,7 +230,7 @@ Interaction between the system and the system-relevant portion of the envrionmen
 \begin{description}
 	\item[correctness:] facts in requirement specification \follows required properties of the system
 	\item[unambiguity:] all specifications have a single interpretation
-	\item[completeness:] 
+	\item[completeness:] \ \\
 		\begin{enumerate}
 			\item every property required of the system is expressed in the specification\\
 			{\small does this include things that are \emph{not permitted?}}
@@ -246,12 +246,12 @@ Interaction between the system and the system-relevant portion of the envrionmen
 
 \subsubsection{Activities during the requirement Stage}
 	\begin{description}
-		\item[starting point] 
+		\item[starting point] \ \\
 			\begin{itemize}
 				\item customer requirements (abstract)
 				\item system specification document (hw \& sw)
 			\end{itemize}
-		\item[Activities (Kotonya+Sommerville)]
+		\item[Activities (Kotonya+Sommerville)] \ \\
 			\begin{itemize}
 				\item requirement elicitation\marginnote{Elicitation \follows Herausholen} (interviews, scenarios, market observation, \dots) \\
 				determine, which of possibly contradictory requirements are important
@@ -276,8 +276,8 @@ Interaction between the system and the system-relevant portion of the envrionmen
 \begin{itemize}
 	\item analyse user manuals
 	\item use/play with existing systems
-	\item market analysis (competing systems, market research, which features to be included
-	\item reverse engineering)
+	\item market analysis (competing systems, market research, which features to be included)
+	\item reverse engineering
 \end{itemize}
 
 \subsubsection{requirement uncertainty}
@@ -295,16 +295,16 @@ Prototyping also part of some life cycle and process models (spiral model)
 
 \subsubsection{\textsc{Fast} (Facilitated Application Specification Technique)}
 \begin{itemize}
-	\item overcome we/then attitude (developer/user/customer)
+	\item overcome we/them attitude (developer/user/customer)
 	\item team oriented
 	\item guidelines:
 		\begin{itemize}
 			\item must participate entire meeting
-			\item participants are queal
+			\item participants are equal
 			\item preparation as important as meeting
 			\item pre-meeting documents are only ``proposed''
 			\item off-site location preferred
-			\item set agenda, maintain ist
+			\item set agenda, maintain it
 			\item no technical details
 		\end{itemize}
 \end{itemize}
@@ -314,17 +314,17 @@ Prototyping also part of some life cycle and process models (spiral model)
 	\item technique to get all participants to aggree on sw requirements and design
 	\item 20\% reduction of life cylce cost, \~15\% functionality less missed
 	\item \textsc{Jad}/Plan \follows software requirement elicitation
-	\item \textsc[Jad]/Design \follows software design
+	\item \textsc{Jad}/Design \follows software design
 	\item Main Objective:
 		\begin{enumerate}
-			\item group dynamics \follows enhace capcabilites ofindividuals
+			\item group dynamics \follows enhace capcabilites of individuals
 			\item communication and understanding \follows use of visual 	aids
 			\item rational, organized process \follows repeatability
 			\item standardized documentations \follows use of standard forms
 		\end{enumerate}
 	\item customisation (prepare tasks for session)
 	\item session (customized, facilitated meetings (developers and user))
-	\item wrap-up (finalize results from sesion)
+	\item wrap-up (finalize results from session)
 	\item participants
 		\begin{description}
 			\item[session leader:] manages sessions, management/communications skills, problem domain competence
@@ -350,12 +350,12 @@ Prototyping also part of some life cycle and process models (spiral model)
 		\item document issues and considerations (problems that affect requirements \follows assign a person for resolution)
 		\item conclusion (review information and decissions, voice remaining concerns, conclude s.t. particip. have sense of ownership/commitment)
 	\end{itemize}
-	\item Warp-Up Phase
+	\item Wrap-Up Phase
 	\begin{itemize}
 		\item transform session documents into formal planning documents (analyst)
 		\item edit \textsc{Jad}/Plan
-		\item review \textsc{Jad}/Plan (all participants \follows changes possible
-		\item sponsor approval)
+		\item review \textsc{Jad}/Plan (all participants \follows changes possible)
+		\item sponsor approval
 	\end{itemize}
 \end{itemize}
 
@@ -416,11 +416,11 @@ oo swe processes are \emph{more continuous}
 
 \subsubsection{Static}
 \begin{description}
-	\item[Use Case Diagrams]
+	\item[Use Case Diagrams] \ \\
 	\begin{itemize}
-		\item often first step i OO-dev-process
+		\item often first step in OO-dev-process
 		\item a use case represents a usage scenario (atomic)
-		\item documents the functinoalities the system provides to user (``what'' does the system do)
+		\item documents the functionalities the system provides to user (``what'' does the system do)
 		\item actors (anything or anyone interacting with the system, provide input/output) and principal use cases (interaction between actor and system)
 		\item \input{images/use-case}
 		\item <<include>> \follows a use case uses functionality from another use case
@@ -486,10 +486,10 @@ Example Use Case Format \\
 \subsubsection{Object Oriented Analysis}
 \begin{itemize}
 	\item use-case driven approach (followed by most UML-based approaches)
-	\item linguistic analysis method (requirements in natural language  \follows cast into OO analysis model, more traditional OO approach
+	\item linguistic analysis method (requirements in natural language  \follows cast into OO analysis model, more traditional OO approach)
 	\item identify Entity Objects (persistent information tracked by system)
 	\item indentify Boundary Objects (interactions betwen actor/system)
-	\item identify Control Objects (responsible for realizinh use cases)
+	\item identify Control Objects (responsible for realizing use cases)
 	\item identify Associations, Aggregates, Attributes
 	\item Model State-Independent Behaviour of objects
 	\item Mapp Use Cases with Sequence diagrams
@@ -674,7 +674,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item interface descrition (``contract server/client'') languages (CORBA IDL, Eiffel)
 	\item \emph{Cohesion} (intra module bindings, ``degree to which a module performs one and only one function'')
 	\item \emph{coupling} (inter module bindings, ``degree to which a module is connected to other modules'' (direct access, data transfer, \dots))
-	\item desired: hoch cohesion, low coupling
+	\item desired: high cohesion, low coupling
 \end{itemize}
 
 \subsubsection{Object-Oriented Design}
@@ -824,10 +824,10 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 		\item[server:] process managing data and shared resources
 	\end{description}
 \end{itemize}
+\subsection{Design Patterns}
 \begin{shaded}
 ``Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way, that you can use this solution a million times over, without ever doing it the same way twice.'' Christopher Alexander
 \end{shaded}
-\subsection{Design Patterns}
 \begin{itemize}
 	\item improved documentation, more abstract level of programming, improved communication
 	\item patterns as components, classes
@@ -837,7 +837,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 \begin{description}
 	\item[Pattern and Name Classification] Adapter Wrapper
 	\item[Intent] Anbieten eines alternativen Interfaces für eine Klasse
-	\item[Motivation] fremde Klasse mit unpassendem Interface in 
+	\item[Motivation] fremde Klasse mit unpassendem Interface in passendes Interface verwandeln
 \end{description}
 
 \subsubsection{Brücke}
@@ -845,14 +845,6 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 	\item[Pattern and Name Classification] Brücke
 	\item[Intent] Decouple an abstraction from its implementation so that the two can vary independently.
 	\item[Motivation] Eine Brücke kann eine dauerhafte Verbindung zwischen Abstraktion und Implementierung verhindern.
-	\item[Applicability] situation in which design pattern can be applied, how to recognize this situations
-	\item[Structure] abstract graphical representation
-	\item[Participants]
-	\item[Collaborations]
-	\item[Implementations]
-	\item[sample code]
-	\item[known uses]
-	\item[related patterns]
 \end{description}
 
 \subsubsection{Decorator}
@@ -906,7 +898,7 @@ Design for Change (anticipate change at all stages, reduce cost of changes)
 \subsubsection{Implementing Interface Contracts}
 \begin{itemize}
 	\item most OO languages no built-in support for contracts (except Eiffel)
-	\item some OO languages have built-in exception handling support (throw-cath in Java)
+	\item some OO languages have built-in exception handling support (throw-catch in Java)
 	\item check each \emph{precondition} before beginning the method
 	\item check each \emph{postcondition} after the method
 	\item check \emph{invariants} before and after method
