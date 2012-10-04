@@ -1,6 +1,8 @@
 \documentclass{scrartcl}
 
-\usepackage{Header}
+% \usepackage{Header}
+\usepackage{newclude}
+\input{../zusammenfassung.tex}
 
 %\usepackage{scalefnt}
 %\usepackage{parcolumns}
@@ -21,14 +23,169 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
 \textit{Find any errors? Please send them back, I want to keep them!}
 
 \section*{Allgemeines}
+\subsection*{Definitionen}
+\begin{description}
+    \item[$\bullet$] $\mathds{N}^0 = \{0,1,2,\dots\}$
+    \item[$\bullet$] $\mathds{N}^{\backslash\{0\}}=\{1,2,\dots\}$
+    \item[Alphabet:] endliche Menge von Zeichen {\tiny $\Sigma=\{a,b\}$}
+    \item[Wort] Zeichenfolge {\tiny $w=abab \in\Sigma^*$}
+    \item[$\Sigma^*$:] Menge der Wörter
+    \item[$\Sigma^+$:] $\Sigma^* \backslash\{\varepsilon\}$ {\tiny $\{\}\not= \varepsilon \not=\{\varepsilon\}$}
+    \item[Operator $\circ$:]Konkatenation {\tiny $\varepsilon \circ w = w, w\circ w=ww=w^2$}
+    \item[$w^n=\underset{n-mal}{\underbrace{www\dots w}}$] $n \in \mathds{N}^0$
+    \item[$|w_1|$:] Wortlänge {\tiny $|w|=5$}
+    \item[$|w|_\sigma, \sigma\in\Sigma$] Anzahl $\sigma$ in $\Sigma$ {\tiny $|w|_a=3$}
+\end{description}
+
+Seiten $A,B$ Mengen (Sprachen): {\tiny $A=\{\varepsilon, a, bba, bbabb, B=\{a,aa,aaa\}$}
+\begin{description}
+    \item[$|A|$] Mächtigkeit = Anzahl der Elemente
+    \item[Sprache:] Teilmenge von $\Sigma^*$
+    \item[Vereinigung] $A\cup B=\{x\in\Sigma^* | x\in A \vee x\in B\}$
+    \item[Schnitt] $A\cap B=\{c\in\Sigma^* | x\in A \wedge x\in B\}$
+    \item[Komplement] $\overline{A}=\{x\in\Sigma^* | x \not\in A\} = \Sigma^*\backslash A$
+    \item[Produkt] $AB=\{xy\in\Sigma^* | x\in A \wedge y\in B\}$
+\end{description}
+
+\subsubsection*{De Morgan Regeln}
+\begin{align*}
+\overline{A \cup B} &= \overline{\overline{A}\cap \overline{B}} \\
+\overline{A\cap B} &= \overline{\overline{A} \cup \overline{B}}
+\end{align*}
+
+\subsubsection*{Klassen}
+Sei $\mathcal{C}$ eine Klasse von Sprachen. $\mathcal{C}$ heisst
+\begin{tabular}[t]{|c|}
+vereinigungs- \\
+schnitt- \\
+komplement- \\
+produkt-
+\end{tabular}
+abgeschlossen $\Leftrightarrow A\in\mathcal{C} \wedge B\in\mathcal{C}$
+\begin{tabular}[t]{|c|}
+$A\cup B \in \mathcal{C}$ \\
+$A\cap B \in \mathcal{C}$ \\
+$\overline{A} \in \mathcal{C}$ \\
+$AB \in \mathcal{C}$
+\end{tabular}. \\
+$A$ ist abgeschlossen gegen Vereinigung und Komplement $\Leftrightarrow A$ ist abgeschlossen gegen Schnitt und Komplement.
+\begin{align*}
+    A^0 &= \{\varepsilon\} \\
+    A^1 &= A\\
+    A^{n+q} &= A^nA\\
+    A^i A^j &= A^{i+j}\\
+    \left( A^i \right)^j &= A^{i \cdot j}\\
+    A^* &= \underset{n\geq0}{\bigcup}A^n &= A^0\cup A^1\cup A^2\cup\dots \\
+    A^+ &= \underset{n > 0}{\bigcup}A^n &= \phantom{A^0\cup\;}A^1\cup A^2\cup\dots \\
+        &= \underset{n\geq0}{\bigcap}A^n &= A^0\cap A^1\cap A^2\cap\dots \\
+    \textrm{Potenzmenge} &= 2^A = \{B | B\subseteq A\} \\
+    M_a &= \{x\in\Sigma^* | x=n^a\} \\
+    M_2 &= \{1,4,9,16,\dots\} \\
+    M_3 &= \{1,8,27,64,\dots\} \\
+    M_4 &= \{1,16,81\dots\} \\
+    \bigcup^4_{i=2}M_i &= \{1,4,8,9,16,\dots\} \\
+    \bigcap^4_{i=2}M_i &= \{1^12,2^12,3^12,\dots\} \\
+    M &= \{1,2,3\} \\
+    2^M &= \left\{\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}, \{2,3\}, \{1,2,3\} \right\}
+\end{align*}
+
+Kreuzprodukt: \\
+Seien $A_i$ Mengen,
+\begin{align*}
+A_1 \times A_2 \times A_3 \times \dots \times A_n &= \{ \left(a_1,a_2,a_3,\dots,a_n\right) | a_i\in A_i, i\in \mathds{N}^n\} \\
+\chi^n_i\leq1 A_i &=
+\begin{cases}
+\emptyset & i<1 \\
+A_1 & n=1 \\
+\chi^{n-1}_{i=1} A_i \times A_n & n>1
+\end{cases}
+\end{align*}
+
+\subsubsection*{Relationen}
+Relationen, $\tau_{A_i} \subseteq \chi^n_{i=1} A_i$ setzen Elemente von Mengen zueinander in Beziehung. \\
+Bsp:
+\begin{align*}
+    \{a,b,\dots,z\} \tau \{1,2,\dots,26\} &= \{(a,1),(b,2),\dots,(z,26)\} \\
+    \mathds{N}^0 \leq \mathds{N}^0 &= \{(a,b) | a+c=b,\; a,b,c\in \mathds{N}^0\}
+\end{align*}
+Eigenschaften von Relationen auf gleichen Mengen $A$:
+\begin{description}
+    \item[reflexiv:] $\forall a\in A: a\tau a$
+    \item[irreflexiv:]$\forall a\in A: \overline{a\tau a}$
+    \item[symmetrisch:]$\forall a,b\in A: a\tau b \Rightarrow b\tau a$
+    \item[antisymmetrisch:] $\forall a,b\in A: \left(a\tau b\wedge b\tau a\right) \Rightarrow a=b$ {\tiny (antisymmetrisch $\Rightarrow$ reflexiv)}
+    \item[asymmetrisch:] $\forall a,b\in A: a\tau b \Rightarrow \overline{b\tau a}$
+    \item[transitiv:] $\forall a,b,c\in A: \left(a\tau b\wedge b\tau c\right) \Rightarrow a\tau c$
+    \item[äquivalent:]
+    \item[Ordnungsrelationen Typ "`$\leq$"':] reflexiv, transitiv, antisymmetrisch
+    \item[Ordnungsrelationen Typ "`$<$"':] irreflexiv, transitiv, antisymmetrisch
+    \item[$\tau^+$] transitive Hülle
+    \item[$\tau^*$] reflexive, transitive Hülle
+\end{description}
+\paragraph{Satz:}
+$\tau^*$ ist die kleinste, reflexive und transitive Relation (Hülle), die $\tau$ selbst umfasst.
+\begin{align*}
+geg \; A = \{1,2,3,4,5\} \\
+& & R,S &\subseteq A\times A \\
+& & R &= \{(1,2), (2,3), (2,5), (3,4), (5,4)\} \\
+& & S &= \{(1,3), (3,5), (5,1)\} \\
+ges \; R^+, S^+, R^*, S^* \\
+& & R^+ &= R \cup   \{(1,3), (1,4), (2,4), (1,5)\} \\
+& & R^* &= R^+ \cup \{(1,1),(2,2),(3,3),(5,5) \} \\
+& & S^+ &= S^+ \cup \{(1,5),(1,1),(3,1),(3,3),(4,5),(5,3) \} \\
+& & S^* &= S^* \cup \{(2,2),(4,4) \} \\
+\end{align*}
+
+\paragraph{Bsp}
+\begin{description}
+    \item[a] "`ist blutsverwandt"' auf Menge der Personen
+    \item[b] "`$x$ ist Teiler von $y$"', d.h. $\exists z$ mit $x\cdot z=y\; x,y,z\in \mathds{Z}$
+    \item[c] $R\subseteq \mathds{Z} \times \mathds{Z}$ mit $R=\{(x,y) | xy > 0\}$
+    \item[d] "`$w$ ist Präfix von $v$"', d.h. $\exists u$ mit $v=wu$,\; $u,v,w\in\Sigma^*,\;\Sigma$ sei Menge
+\end{description}
+
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|}
+\hline
+& refl. & irrefl. & symm. & antiymm. & asymm. & trans. & äquiv. & "`<"' & "`$\leq$"' \\
+\hline
+a & \correct & \wrong & \correct & \wrong & \wrong & \wrong & \wrong & \wrong & \wrong \\
+\hline
+b & \correct & \wrong & \wrong & \wrong & \wrong & \correct & \wrong & \wrong & \wrong \\
+\hline
+c & \wrong   & \wrong & \correct & \wrong & \wrong & \correct & \wrong & \wrong & \wrong \\
+\hline
+d & \correct & \wrong & \wrong & \correct & \wrong & \correct & \wrong & \correct & \wrong \\
+\hline
+\end{tabular}
+
+\begin{description}
+    \item[Äquivalenzklasse:] Sei $R \subseteq A\times A$ eine ÄR, dann heissen für $a\in A$ die Mengen $[a]_R:=\{b\in A | aRb\}$ Äquivalenzklassen von R.
+    \item[Partitionierung:] Menge aller ÄK $A/_R:=\{[a]_R | a\in A\}$
+    \item[Index] Anzahl der ÄK $|A/_R|$ \\
+    Bsp $R=\{(x,y) | x \mod 2 = y \mod 2\}$ partitioniert $\mathds{N}^0$ in 2 ÄK:
+    \begin{itemize}
+        \item $[0]_a = \{0,2,3,\dots\}$
+        \item $[1]_a = \{1,3,5,\dots\}$
+    \end{itemize}
+\end{description}
+
 \subsection*{Grammatik}
-$G=(V,\Sigma,P,S)$ \\
+Eine Grammatik ist ein 4-Tupel $G=(V,\Sigma,P,S)$ \\[.5cm]
+\begin{minipage}[t]{4.5cm}
 \begin{description}
 \item[V -] Variblen
 \item[$\Sigma$ -] Terminalalphabet
 \item[P -] Regeln/Produktionen
 \item[S -] Startvariable
 \end{description}
+\end{minipage}
+\begin{minipage}[t]{10cm}
+    \begin{align*}
+        |V|         & < \infty \\
+        |\Sigma|    & < \infty \\
+        |P|         & < \infty
+    \end{align*}
+\end{minipage}
 
 \subsection*{Chomsky-Hirarchie}
 \begin{description}
@@ -72,9 +229,9 @@ Für $i=1,2,\ldots,n\; A\to z\in P\Rightarrow\vert z\vert\textrm{ viele Söhne }
 Metaregeln für selbe linke Seite
 \[
 \left. \begin{array}{ccc}
-A & \to    & \beta_1 \\ 
-A & \to    & \beta_2 \\ 
-  & \vdots &         \\ 
+A & \to    & \beta_1 \\
+A & \to    & \beta_2 \\
+  & \vdots &         \\
 A & \to    & \beta_3
 \end{array} \right\rbrace A\to\beta_1\vert\beta_2\vert\ldots\beta_n
 \]
