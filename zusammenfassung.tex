@@ -11,7 +11,10 @@
 \usepackage{marginnote}
 \usepackage{microtype} % div. Verbesserungen des Schriftsatzes (Grauwert, opt. Randausgleich, Zeilenumbruch)
 %\usepackage{multirow}
+%\usepackage{multicol} %use this with next line for vertical divided environment
+%\setlength\columnseprule{.4pt}
 \usepackage[ngerman]{babel} % Neue Rechtschreibung
+\usepackage{pifont}
 \usepackage[sans]{dsfont} %für alternative Mengensymbole
 \usepackage{stmaryrd} %u.a. für \lightning
 \usepackage{tikz,tikz-er2,tikz-uml} % für Diagramme(Dia!) und Bilder (z.B. *.eps)/für ER-Diagramme/für UML-Diagramme
@@ -23,7 +26,7 @@
 
 \usetikzlibrary{shapes,decorations,arrows,fit,backgrounds} %Zum diversen zeichen%
 %\usetikzlibrary{automata} % für den CFlipper, wenn es den soweit ist			%
-\usetikzlibrary{positioning} % positionierung 
+\usetikzlibrary{positioning} % positionierung
 %\usetikzlibrary{shadows} % fuer schoene schlagschatten
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,10 +143,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % some symbols
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\correct}{\gruen{\text{\ding{52}}}} %for use in text and math
-\newcommand{\wrong}{\rot{\text{\ding{56}}}} %for use in text
-\newcommand{\tflash}{$\hellgelb{\lightning}$} %for use in text
-\newcommand{\mflash}{\hellgelb{\lightning}} %for use in math
+\newcommand{\correct}{\green{\text{\ding{52}}}} %for use in text and math
+\newcommand{\wrong}{\red{\text{\ding{56}}}} %for use in text
+\newcommand{\tflash}{$\yellow{\lightning}$} %for use in text
+\newcommand{\mflash}{\yellow{\lightning}} %for use in math
 \newcommand{\follows}{$\Rightarrow$} %used so often...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

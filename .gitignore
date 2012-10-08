@@ -1,6 +1,8 @@
 .DS_Store
 .aux
-.synctex
+.synctex.gz
 .pdf
 .log
 .out
+.fdb_latexmk
+.thumbnails

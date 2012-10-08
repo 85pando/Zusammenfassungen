@@ -255,5 +255,130 @@ B & \to & \beta B
 \end{align*}
 
 \section*{Reguläre Sprachen}
+\subsection*{Endliche (deterministische) Automaten DFA}
+\begin{minipage}{6cm}
+    $M = \left(Z,\Sigma,\delta,z_0,E\right)$
+    \begin{description}
+        \item[$\Sigma$] Eingabealphabet
+        \item[$z_0$] Startzustand
+        \item[$z\cap\Sigma = \emptyset$]
+    \end{description}
+\end{minipage}
+\begin{minipage}{5.5cm}
+\begin{description}
+    \item[$Z$] Menge der Zustände
+    \item[$E\subseteq Z$] Menge der Endzustände
+    \item[$\delta: z\times E\to z$] Überführungsfunktion
+    \item[$|z|< \infty,\; |\Sigma |<\infty$]
+\end{description}
+\end{minipage}\\
+$\to$ Zustandsgraphen
+
+\subsection*{akzeptierte Sprache}
+Die von $M$ akzeptierte Sprache ist:
+\begin{align*}
+    T(M) &= \{x\in\Sigma^* \vert \hat\delta(z,e)\} \\
+    & \textrm{wobei} & \hat\delta(z,\varepsilon)&=z \\
+    & & \hat\delta(z,ax) &= \hat\delta\left(\delta(z,a),x\right)
+\end{align*}
+
+\begin{shaded}
+    \ \\ Jede durch Endliche Automaten erkennbare Sprache ist Regulär (Typ 3).\\
+    Jede Reguläre Sprache ist durch einen Endlichen Autoamten erkennbar.
+\end{shaded}
+
+\subsection*{Nichtdeterministische Automaten} % (fold)
+Ein \emph{nichtdeterministischer, endlicher Automat} (\textsc{Nfa}) wird spezifiziert durch ein 5-Tupel: \\
+\begin{minipage}{6cm}
+    $M = \left(Z,\Sigma,\delta,S,E\right)$
+    \begin{description}
+        \item[$\Sigma$] Eingabealphabet
+        \item[$S\subseteq Z$] Menge der Startzustände
+        \item[$z\cap\Sigma = \emptyset$]
+    \end{description}
+\end{minipage}
+\begin{minipage}{7cm}
+\begin{description}
+    \item[$Z$] Menge der Zustände
+    \item[$E\subseteq Z$] Menge der Endzustände
+    \item[$\delta: Z\times E\to \mathcal{P}(z)$] Überführungsfunktion
+    \item[$|z|< \infty,\; |\Sigma |<\infty$]
+\end{description}
+\end{minipage}\\
+
+\begin{shaded}
+    Jede durch einen \textsc{Nfa} akzeptierbare Sprache ist auch durch einen \textsc{Dfa} akzeptierbar.
+\end{shaded}
+
+\begin{shaded}
+    Für jede Reguläre Grammatik $G$ gibt es einen \textsc{Nfa} $M$ mit $L(G)=T(M)$.
+\end{shaded}
+
+\subsection*{regulärer Ausdruck} % (fold)
+\begin{description}
+    \item[$\emptyset$] ist regulärer Ausdruck.
+    \item[$\varepsilon$] ist regulärer Audruck.
+    \item[$a\in\Sigma$] ist regulärer Audruck.
+    \item[$\alpha\beta, \left(\alpha\vert\beta\right), \left(\alpha\right)^* $] sind reguläre Ausdrücke, wenn $\alpha,\beta$ reguläre Ausrdücke sind.
+\end{description}
+
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{align*}
+        \gamma &:= \emptyset & \Rightarrow L(\gamma) &= \emptyset \\
+        \gamma &:=\varepsilon & \Rightarrow L(\gamma) &= \{\varepsilon\} \\
+        \gamma &:=\alpha & \Rightarrow L(\gamma) &= \{\alpha\} \\
+        \gamma &:=\alpha\beta & \Rightarrow L(\gamma) &= L\{\alpha\}L\{\beta\}
+    \end{align*}
+\end{minipage}
+\hfill \vrule \hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{align*}
+        \gamma &:= \left(\alpha\vert\beta\right) & \Rightarrow L\left(\gamma\right)&=L(\alpha)\cup L(\beta) \\
+        \gamma &:= \left(\alpha\right)^* & \Rightarrow L(\gamma) &= L(\gamma)^* \\
+        \gamma &:= \alpha\alpha = \alpha^2
+    \end{align*}
+\end{minipage}
+
+\begin{shaded}
+    Die Menge der durch Reguläre Ausdrücke beschreibbaren Sprachen ist genau die Menge der Regulären Sprachen.
+\end{shaded}
+
+\subsection*{Pumping-Lemma {\tiny Schleifenlemma, Iterationslemma, Lemma von Bar-Hillel, $uvw-$Theorem}} % (fold)
+\begin{shaded}
+    Sei $L$ eine Reguläre Sprache. Dann gibt es eine Zahl $n$ so, dass sich alle Wörter $x\in L$ mit $|x|\geq n$ zerlegen lasen in $x=uwv$, so dass folgende Eigenschaften erfüllt sind:
+    \begin{itemize}
+        \item $|v|\geq1$
+        \item $|uv|\leq n$
+        \item $\forall i\in\{0,1,\dots\}$ gilt: $uv^iw\in L$
+    \end{itemize}
+\end{shaded}
+\begin{description}
+    \item[$\to$] Zum Erkennen von nicht regulären Sprachen (geht nicht bei allen).
+    \item[$\to$] $v^i$-Schleifen
+\end{description}
+Anwendung: Annehmen, $L$ sei regulär \follows Wenn Widerspruch, $L$ nicht regulär.
+
+\subsection{Äquivalenzrelationen und Minimalautomaten}
+$xR_Ly$ gdw für alle $z\in\Sigma^*: xz\in L$
+\begin{shaded}
+    Eine Sprache $L$ ist genau dann Regulär, wenn der Index von $R_L$ endlich ist:
+    \[L \textrm{ regulär } \Leftrightarrow Index(R_L) < \infty \]
+    {\tiny $Index$: Anzahl erzeugbarer Äquivalenzklassen}
+\end{shaded}
+
+Äquivalenzklassenautomat $\equiv$ Minimalautomat (nur DFA!) \\
+Minimalautomat $\to$ Minimalautomat mit min Zustandszahl
+
+\subsubsection*{Algorithmus Minimalautomat $\mathcal{O}(n^2)$}
+\textbf{Eingabe:} \textsc{Dfa}, alle Zustände erreichbar.
+\textbf{Ausgabe:} zu verschmelzende Zustände
+\begin{enumerate}
+    \item Tabelle mit Zustandspaaren $\{z,z'\}, z\not= z'$
+    \item Markiere Paare $\{z,z'\}$ mit $z\in E$ und $z'\not\in E$ und umgekehrt
+    \item unmarkierte Felder: Teste, ob $\underset{1\textrm{ hop!}}{\underbrace{\{\delta(z,a),\delta(z',a)\}}}$ markiert ist, wenn ja, markiere $\{z,z'\}$
+    \item Punkt $3$ widerholen, bis keine Änderung mehr in der Tabelle passiert.
+    \item Verschmelze unmarkierte Paare.
+\end{enumerate}
+
 
 \end{document}
