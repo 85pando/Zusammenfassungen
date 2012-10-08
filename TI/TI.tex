@@ -380,5 +380,102 @@ Minimalautomat $\to$ Minimalautomat mit min Zustandszahl
     \item Verschmelze unmarkierte Paare.
 \end{enumerate}
 
+\subsubsection*{Abschlusseigenschaften}
+\begin{shaded}
+    Reguläre Sprachen sind abgeschlossen unter:
+    \begin{itemize}
+        \item Vereinigung
+        \item Schnitt
+        \item Komplement
+        \item Produkt
+        \item Stern
+    \end{itemize}
+\end{shaded}
+
+\subsubsection*{Entscheidbarkeit}
+\begin{description}
+    \item[Wortproblem:] Linearer Aufwand bei bekanntem \textsc{Dfa}
+    \item[Leerheitsproblem:] Entscheidbar (\textsc{Dfa}, kein Weg $S\to E$)
+    \item[Endlichkeitsproblem:] $T(M) = \infty \Leftrightarrow S\to\circlearrowright\to E$
+    \item[Schnittproblem:] $\to$ Leerheitsproblem
+    \item[Äquivalenzproblem] \textsc{Dfa} $\to$ Minimalautomat $\to$ Isomorphie checken $\to \mathcal{O}(n)$
+    \[ L_1 = L_2 \Leftrightarrow \left(L_1 \cap \overline{L_2}\right) \cup \left(L_2 \cap L_1\right) = \emptyset \]
+    $\to$ Leerheitsproblem $\to$ NP-hart
+\end{description}
+
+\subsection*{Kontextfreie Sprachen}
+{\tiny korrekt geklammerte Ausdrücke}
+\subsubsection*{Normalformen}
+\begin{description}
+    \item[Chromsky-Normalform:] (\textsc{Cnf}) Alle Regeln haben die Form $A\to BC$ oder $A\to a$
+    \begin{shaded}
+        Zu jeder Kontextfreien Grammatik $G$ mit $\varepsilon\not\in L(G)$ gibt es eine Chromsky-Normalform-Grammatik $G'$ mit $L(G) = L(G')$.
+    \end{shaded}
+    \item[Greibach-Normalform:] (\textsc{Gnf}) Alle Regeln haben die Form $A\to aB_1B_2\dots B_k\; (K\geq0)$ \\ {\tiny Erweiterung der Regulären Sprachen, hier nur $k=0$ und $k=1$}
+    \begin{shaded}
+        Zu jeder Kontextfreien Grammatik $G$ mit $\varepsilon\not\in L(G)$ gibt es eine Greibach-Normalform-Grammatik $G'$ mit $L(G) = L(G')$.
+    \end{shaded}
+\end{description}
+
+\subsection*{Pumpinglemma}
+\begin{shaded}
+    Sei $L$ eine kontextfreie Sprache. Dann gibt es eine Zahl $n\in \mathds{N}$, so adss sich alle Wörter $z\in L$ mit $|z|\geq n$ zerlegen lassen in $z=uvwxy$ mit folgenden Eigenschaften:
+    \begin{itemize}
+        \item $|vx|\geq 1$
+        \item $|vwx|\leq n$
+        \item $\forall i\geq0$ gilt $uv^iwx^iy\in L$
+    \end{itemize}
+    Jede kontextfreie Sprache über einem einelementigen Alphabet ist bereits regulär.
+\end{shaded}
+
+\subsection*{Abschlusseigenschaften}
+\begin{shaded}
+Die Kontextfreien Sprachen sind\dots \\
+\begin{minipage}[t]{0.48\textwidth}
+\dots abgeschlossen unter
+\begin{itemize}
+    \item Vereinigung
+    \item Produkt
+    \item Stern
+\end{itemize}
+\end{minipage}
+\hfill \vrule \hfill
+\begin{minipage}[t]{0.48\textwidth}
+\dots nicht abgeschlossen unter
+\begin{itemize}
+    \item Schnitt
+    \item Komplement
+\end{itemize}
+\end{minipage}
+\end{shaded}
+
+\subsection*{Der CYK-Algorithmus}
+\begin{algorithm}[H]
+    \caption{CYK}
+    \SetAlgoLined
+    \LinesNumbered
+    \PrintSemicolon
+    \KwData{$x=a_1a_2\dots a_n$}
+    %\KwResult{}
+    initialisation\;
+    \For{$i:=1$ \KwTo $n$ {\tiny ($j=1$)}}{
+        $T[i,1]:=\{A\in V | A\to a_i \in P\}$
+    }
+     \For{$j:=2$ \KwTo n {\tiny ($j>1$)}}{
+         \For{$i:=1$ \KwTo $n+1-j$}{
+             $T[i,j]:=\emptyset$
+             \For{$k:=1$ \KwTo $j-1$}{
+                $T[i,j] := T[i,j]\cup \{A\in V | A\to BC\in P\wedge B\in T[i,k]\wedge C\in T[i+k,j-k]\}$
+             }
+         }
+     }
+     \eIf{$S\in T[1,n]$}{
+     "`$x$ liegt in $L(G)$"'
+     }{
+     "`$x$ liegt nicht in $L(G)$"'
+     }
+\end{algorithm}
+
+\subsection*{Kellerautomaten}
 
 \end{document}
