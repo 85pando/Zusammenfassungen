@@ -476,6 +476,32 @@ Die Kontextfreien Sprachen sind\dots \\
      }
 \end{algorithm}
 
-\subsection*{Kellerautomaten}
+\subsection*{Kellerautomaten (PDA)}
+\begin{shaded}
+    Ein \emph{(nichtdeterministischer) Kellerautomat} (\emph{pushdown automaton}) wird angegeben durch ein 6-Tupel: $M=\left(Z,\Sigma,\Gamma,\delta,z_0,\#\right) $ \\
+    \begin{minipage}[t]{0.48\textwidth}
+        \begin{itemize}
+            \item $Z$ - endliche Zustandsmenge
+            \item $\Sigma$ - Eingabealphabet
+            \item $\Gamma$ - Kelleralphabet
+        \end{itemize}
+    \end{minipage}
+    \hfill \vrule \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \begin{itemize}
+            \item $ \delta:Z\times(\Sigma\cup\{\varepsilon\})\times\Gamma\to\mathcal{P}_e (Z\times\Gamma^* $ - die Überfühungsfunktion
+            \item $z_0\in Z$ Startzustand
+            \item $\#\in\Gamma$ unterstes Kellerzeichen
+        \end{itemize}
+    \end{minipage}
+\end{shaded}
+
+Um Schreibarbeit zu sparen, schreibt man statt $(z',x)\in\delta(z,a,A)$ einfach $zaA\to z'x$.
+
+\begin{shaded}
+    Eine Sprache $L$ ist kontextfrei genau dann, wenn $L$ von einem nichtdeterministischen Kellerautomaten erkannt wird.
+\end{shaded}
+
+\subsection*{Deterministisch kontextfreie Sprachen}
 
 \end{document}
