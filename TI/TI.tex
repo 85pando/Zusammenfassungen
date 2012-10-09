@@ -169,7 +169,8 @@ d & \correct & \wrong & \wrong & \correct & \wrong & \correct & \wrong & \correc
     \end{itemize}
 \end{description}
 
-\subsection*{Grammatik}
+\part{Automatentheorie und formale Sprachen}
+\section*{Grammatik}
 Eine Grammatik ist ein 4-Tupel $G=(V,\Sigma,P,S)$ \\[.5cm]
 \begin{minipage}[t]{4.5cm}
 \begin{description}
@@ -358,7 +359,7 @@ Ein \emph{nichtdeterministischer, endlicher Automat} (\textsc{Nfa}) wird spezifi
 \end{description}
 Anwendung: Annehmen, $L$ sei regulär \follows Wenn Widerspruch, $L$ nicht regulär.
 
-\subsection{Äquivalenzrelationen und Minimalautomaten}
+\subsection*{Äquivalenzrelationen und Minimalautomaten}
 $xR_Ly$ gdw für alle $z\in\Sigma^*: xz\in L$
 \begin{shaded}
     Eine Sprache $L$ ist genau dann Regulär, wenn der Index von $R_L$ endlich ist:
@@ -403,7 +404,7 @@ Minimalautomat $\to$ Minimalautomat mit min Zustandszahl
     $\to$ Leerheitsproblem $\to$ NP-hart
 \end{description}
 
-\subsection*{Kontextfreie Sprachen}
+\section*{Kontextfreie Sprachen}
 {\tiny korrekt geklammerte Ausdrücke}
 \subsubsection*{Normalformen}
 \begin{description}
@@ -461,19 +462,19 @@ Die Kontextfreien Sprachen sind\dots \\
     \For{$i:=1$ \KwTo $n$ {\tiny ($j=1$)}}{
         $T[i,1]:=\{A\in V | A\to a_i \in P\}$
     }
-     \For{$j:=2$ \KwTo n {\tiny ($j>1$)}}{
-         \For{$i:=1$ \KwTo $n+1-j$}{
-             $T[i,j]:=\emptyset$
-             \For{$k:=1$ \KwTo $j-1$}{
+    \For{$j:=2$ \KwTo n {\tiny ($j>1$)}}{
+        \For{$i:=1$ \KwTo $n+1-j$}{
+            $T[i,j]:=\emptyset$
+            \For{$k:=1$ \KwTo $j-1$}{
                 $T[i,j] := T[i,j]\cup \{A\in V | A\to BC\in P\wedge B\in T[i,k]\wedge C\in T[i+k,j-k]\}$
-             }
-         }
-     }
-     \eIf{$S\in T[1,n]$}{
-     "`$x$ liegt in $L(G)$"'
-     }{
-     "`$x$ liegt nicht in $L(G)$"'
-     }
+            }
+        }
+    }
+    \eIf{$S\in T[1,n]$}{
+    "`$x$ liegt in $L(G)$"'
+    }{
+    "`$x$ liegt nicht in $L(G)$"'
+    }
 \end{algorithm}
 
 \subsection*{Kellerautomaten (PDA)}
@@ -502,6 +503,218 @@ Um Schreibarbeit zu sparen, schreibt man statt $(z',x)\in\delta(z,a,A)$ einfach 
     Eine Sprache $L$ ist kontextfrei genau dann, wenn $L$ von einem nichtdeterministischen Kellerautomaten erkannt wird.
 \end{shaded}
 
-\subsection*{Deterministisch kontextfreie Sprachen}
+\section*{Deterministisch kontextfreie Sprachen}
+\begin{shaded}
+    Ein Kellerautomat $M$ heisst \emph{deterministisch}, falls für alle $z\in Z,a\in \Sigma, A\in\Gamma$ gilt: $|\delta(z,a,A)| + |\delta(z,\varepsilon,A|\leq 1$. \\
+    Hinzu kommt, dass deterministisch kontextfreie Kellerautomaten \emph{per Endzustand} akzeptieren, nicht per leerem Keller.
+\end{shaded}
+
+\begin{shaded}
+    Eine Sprache heisst \emph{deterministisch kontextfrei}, falls sie von einem deterministischen Kellerautomaten erkannt wird.
+\end{shaded}
+
+\subsubsection*{Abgeschlossenheit}
+Deterministisch kontextfreie Sprachen sind\dots
+\begin{minipage}[t]{0.48\textwidth}
+\dots abgeschlossen unter:
+\begin{itemize}
+    \item Komplement
+\end{itemize}
+\end{minipage}
+\hfill \vrule \hfill
+\begin{minipage}[t]{0.48\textwidth}
+\dots nicht abgeschlossen unter:
+\begin{itemize}
+    \item Schnitt
+    \item Vereinigung
+\end{itemize}
+\end{minipage}
+
+Zudem ist der \emph{Schnitt} einer deterministisch kontextfreien Sprache mit einer regulären Sprache wieder deterministisch kontextfrei.
+
+\subsubsection*{Entscheidbarkeit}
+\begin{description}
+    \item[Wortproblem] \textsc{Cyk}
+    \item[Leerheitsproblem] \textsc{Cnf} $\to$
+    \begin{enumerate}
+        \item Markiere Variablen, die auf Terminale ableiten $A\to a$
+        \item markiere sukzessive alle Variablen, die auf diese führen $A\to BC$ ($B,C$ bereits markiert)
+        \item Wenn die Startvariable nicht markiert ist, ist die Sprache leer.
+    \end{enumerate}
+    \item[Endlichkeitsproblem] Pumping Lemma
+    \item Äquivalenzproblem
+\end{description}
+
+\section*{Kontextsensitive und Typ-0-Sprachen}
+\subsection*{Kuroda-Normalform}
+{\tiny Vergleichbar mit \emph{Chromsky-Normalform}}
+\begin{shaded}
+    Eine Typ 1-Grammatik ist in \emph{Kuroda-Normalform}, falls alle Regeln eine der $4$ Formen haben: \[ A\to a, A\to B, A\to BC, AB\to CD \]
+    hierbei stehen $A,B,C,D$ für Variablen und $a$ für ein Terminalsymbol.
+\end{shaded}
+
+\begin{shaded}
+    Für jede Typ-1 Grammatik $G$ mit $\varepsilon \not\in L(G)$ gibt es eine Grammatik $G'$ in Kuroda-Normalform mit $L(G) = L(G')$.
+\end{shaded}
+
+\subsection*{Turingmaschine}
+{\tiny Turingmaschinen sind grundsätzlich nichtdeterministisch.}
+\begin{shaded}
+    Eine \emph{Turingmaschine} ist gegeben durch ein 7-Tupel $M=(Z,\Sigma,\Gamma,\delta,z_0,\square,E)$
+    \begin{minipage}[t]{0.48\textwidth}
+    \begin{itemize}
+        \item $Z$ endliche Zustandsmenge
+        \item $\Sigma$ Eingabealphabet
+        \item $\Gamma\supset\Sigma$ Arbeitsalphabet
+        \item $\delta:Z\times\Gamma\to Z\times\Gamma\times\{L,R,N\}$ im deterministischen Fall (bzw. $\delta:Z\times\Gamma\to\mathcal{P}(Z\times\Gamma\times\{L,R,N\})$ im nichtdeterministischen Fall) die Überführungsfunktion
+    \end{itemize}
+    \end{minipage}
+    \hfill \vrule \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+    \begin{itemize}
+        \item $z_0\in Z$ der Startzustand
+        \item $\square\in\Gamma-\Sigma$ das Blank
+        \item $E\subseteq Z$ Menge der Endzustände
+    \end{itemize}
+    \end{minipage}
+\end{shaded}
+Dabei bedeutet $\delta(z,a)=(z',b,x)$: Wenn sich $M$ im Zustand $z$ befindet und unter dem Schreib-Lesekopf das Zeichen $a$ steht, so geht $M$ im nächsten Schritt in den Zustand $z'$ über, schreibt (auf den Platz von $a$) $b$ auf das Band und führt danach die Kopfbewegeung $x\in\{L,R,N\}$ aus.
+
+\begin{shaded}
+    Eine \emph{Konfiguration} einer Turingmaschine ist ein Wort $k\in\Gamma^* Z\Gamma^*$.
+\end{shaded}
+{\tiny Konfiguration = Momentaufnahme $k=\alpha z\beta$ mit $z$ aktueller Zustand.}
+\begin{shaded}
+    Definieren auf Menge der Konfigurationen zweistellige Relation $\vdash$
+    {\tiny $\vdash$ 1 Schritt \\ $\vdash^*$ mehrere Schritte }
+    \[ a_1\dots a_mzb_1\dots b_n\vdash
+    \begin{cases}
+        a_1\dots a_mz'cb_2\dots b_n, & \delta(z,b_1)=(z',c,N), m\geq0, n\geq1 \\
+        a_1\dots a_mcz'b_2\dots b_n, & \delta(z,b_1)=(z',c,R), m\geq0, n\geq2 \\
+        a_1\dots a_mz'cb_2\dots b_n, & \delta(z,b_1)=(z',c,L), m\geq1, n\geq1
+    \end{cases}
+     \]
+\end{shaded}
+
+\begin{shaded}
+    Die von einer Turingmascheine $M$ \emph{akzeptierte Sprache} ist wie folgt definiert: \[ T(M)=\{x\in\Sigma^* | z_0x\vdash^*\alpha z\beta; \alpha,\beta\in\Gamma^*; z\in E\} \]
+\end{shaded}
+
+\subsubsection*{linear beschränkte Turingmaschine (LBA)}
+\begin{shaded}
+    Eine nichteterministische Turingmaschine heisst \emph{linear beschränkt}, wenn für alle $a_1a_2\dots a_{n-1}a_n\in\Gamma^+$ und alle Konfigurationen $\alpha z\beta$ mit $z_0a_1a_2\dots a_{n-1}\hat{a_n}\vdash^*\alpha z\beta$ gilt $|\alpha\beta|=n$.\\
+    Die von einer linear beschränkten Turingmaschine $m$ \emph{akzeptierte Sprache} ist wie folgt definiert.
+    \[
+    T(M) = \{a_1a_2\dots a_{n-1}\in\Sigma^* | z_0a_1a_2\dots a_{n-1}\hat{a_n}\vdash^*\alpha z\beta,\; \alpha,\beta\in\Gamma^*; \;z,\in E\}
+    \]
+\end{shaded}
+
+\begin{shaded}
+    Die von linear beschränkten, nichtdeterministischen Turingmaschine (\textsc{Lba}s) akzeptierten Sprachen sind genau die kontextsensitiven (\textsc{Typ} 1) Sprachen.
+\end{shaded}
+
+\begin{shaded}
+    Die durch algemeine Turingmaschinen akzeptierbaren Sprachen sind genau die \textsc{Typ} 0-Sprachen.
+\end{shaded}
+
+\section*{Überblick}
+\subsection*{Beschreibungsmittel}
+\begin{tabular}{c|c}
+\hline
+Typ 3&
+\begin{minipage}[t]{6cm}
+reguläre Grammatik \\
+\textsc{Dfa} \\
+\textsc{Nfa} \\
+regulärer Ausdruck
+\end{minipage}
+\\
+\hline
+Deterministisch kontextfrei & deterministische Kellerautomaten (\textsc{Dpda})\\
+\hline
+Typ 2 &
+\begin{minipage}[t]{6cm}
+kontextfreie Gramatik \\
+Kellerautomat \textsc{Pda}
+\end{minipage}\\
+\hline
+Typ 1 &
+\begin{minipage}[t]{6cm}
+kontextsensitive Grammatik
+linear beschränkter Automat \textsc{Lba}
+\end{minipage}\\
+\hline
+Typ 0 &
+\begin{minipage}[t]{6cm}
+Typ 0-Grammatik \\
+Turingmaschine \textsc{TM}
+\end{minipage}
+\\
+\hline
+\end{tabular}
+
+\subsection*{Determinismus und Nichtdeterminismus}
+\begin{tabular}{c|c|c}
+nichtdet. Automat & determ. Automat & äquivalent? \\
+\hline
+\textsc{Nfa} & \textsc{Dfa} & \correct \\
+\hline
+\textsc{Pda} & \textsc{Dpda} & \wrong \\
+\hline
+\textsc{Lba} & \textsc{Dlba} & ? {\tiny \textsc{Lba}-Problem} \\
+\hline
+\textsc{Tm} & \textsc{Dtm} & \correct
+\end{tabular}
+
+\subsection*{Abschlusseigenschaften}
+\begin{tabular}{c|c|c|c|c|c|}
+ & Schnitt & Vereinigung & Komplement & Produkt & Stern \\
+\hline
+Typ 3 & \correct & \correct & \correct & \correct & \correct \\
+\hline
+Det. kf. & \wrong & \wrong & \correct & \wrong & \wrong \\
+\hline
+Typ 2 & \wrong & \correct & \wrong & \correct & \correct \\
+\hline
+Typ 1 & \correct & \correct & \correct & \correct & \correct \\
+\hline
+Typ 0 & \correct & \correct & \wrong & \correct & \correct \\
+\hline
+\end{tabular}
+
+\subsection*{Entscheidbarkeit}
+\begin{tabular}{c|c|c|c|c|}
+& Wort- & Leerheits- & Äquivalenz- & Schnitt- \\
+\hline
+Typ 3 & \correct & \correct & \correct & \correct \\
+\hline
+Det. kf. & \correct & \correct & \correct & \wrong \\
+\hline
+Typ 2 & \correct & \correct & \wrong & \wrong \\
+\hline
+Typ 1 & \correct & \wrong & \wrong & \wrong \\
+\hline
+Typ 0 & \wrong & \wrong & \wrong & \wrong \\
+\end{tabular}
+
+\subsection*{Wortproblem (Komplexität)}
+\begin{tabular}{c|c}
+\hline
+Typ 3 (\textsc{Dfa gegeben}) & lineare Komplexität \\
+\hline
+Det.kf. & lineare Komplexität \\
+\hline
+Typ 2 (\textsc{Cnf gegeben}) & $\mathcal{O}(n^3)$ \\
+\hline
+Typ 1 & exponentielle Komplexität, NP-hart \\
+\hline
+Typ 0 & unlösbar \\
+\hline
+\end{tabular}
+
+
+
+
+
 
 \end{document}
