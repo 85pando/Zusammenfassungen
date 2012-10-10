@@ -1,0 +1,17 @@
+\begin{tikzpicture}[
+every node/.style={node distance=55},
+field/.style={rounded corners=20},
+]
+\node (p) at (0,0) {\textsf{P}};
+\node (np) at (1,1.5) {\textsf{NP}};
+\node (np-v) at (1,3) {\textsf{NP}-vollst\"
+andig};
+
+% P
+\draw[field] (-.5,-.5) rectangle (3,.8);
+% NP
+\draw[field] (-1,-1) rectangle (3.5,4.5);
+% np-v
+\draw[field] (-.5,2.3) rectangle (3,3.8);
+
+\end{tikzpicture}

@@ -1,0 +1,39 @@
+\begin{tikzpicture}[
+every path/.style={draw,thick,-stealth},
+every node/.style={node distance=50},
+side/.style={node distance=100},
+]
+
+\node (sat) at (0,0) {\textsc{Sat}};
+\node (3knf) [below of = sat] {\textsc{3Knf-Sat}};
+\node[side] (cli) [below left of = 3knf] {Clique};
+\node (knot) [below of = cli] {Knoten\"uberdeckung};
+\node (ruck) [below of = 3knf] {Rucksack};
+\node[side] (men) [below left of = cli] {Mengen\"uberdeckung};
+\node (part) [below of = ruck] {Partition};
+\node (binpack) [below of = part] {Bin Packing};
+\node[side] (gerham) [below right of = 3knf] {ger. ham. Kreis};
+\node (ham) [below of = gerham] {unger. ham. Kreis};
+\node (sales) [below of = ham] {Trav. Salesman};
+\node[side] (faerb) [below right of = gerham] {F\"arbbarkeit};
+
+
+
+\path (sat) -- (3knf);
+
+\path (3knf) .. controls (-3,-2) and (-5,-3) .. (men);
+
+\path (3knf) -- (cli);
+\path (cli) -- (knot);
+
+\path (3knf) -- (ruck);
+\path (ruck) -- (part);
+\path (part) -- (binpack);
+
+\path (3knf) -- (gerham);
+\path (gerham) -- (ham);
+\path (ham) -- (sales);
+
+\path (3knf) .. controls (4,-2) and (5,-3) .. (faerb);
+
+\end{tikzpicture}

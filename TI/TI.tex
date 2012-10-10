@@ -814,9 +814,9 @@ Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schle
     \]
 \end{shaded}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\red{hier vllt noch Grafiken von S.115 einfügen.}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+\scalebox{0.75}{\input{images/entscheid.tikz}}
+\end{center}
 
 \begin{shaded}
     Eine Sprache $A$ ist genau dann entscheidbar, wenn sowohl $A$, als auch $\overline{A}$ semi-entscheidbar sind.
@@ -928,10 +928,84 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 
 \part*{Komplexitätstheorie}
 \subsection*{Komplexitätsklasse und P-NP-Problem}
-\subsection*{NP-Vollständigkeit}
-\subsection*{weitere NP-vollständige Probleme}
+\begin{shaded}
+    Sei $f:\mathds{N}\to \mathds{N}$ eine Funktion. Die Klasse $TIME(f(n))$ besteht aus allen Sprachen $A$, für die es eine deterministische Mehrbandturingmaschine $M$ gibt mit $A=T(M)$ und $time_M(x)\leq f(|x|)$.\\
+    Hierbei bedeutet $time_M:\Sigma^*\to \mathds{N}$ die Anzahl der Rechenschritte von $M$ bei Eingabe $x$.
+\end{shaded}
 
+\begin{shaded}
+    Ein \emph{Polynom} ist eine Funktion $p:\mathds{N}\to \mathds{N} $ der Form \[ p(n)=a_kn^k+a_{k-1}n^{k-1}+\dots+a_1n+a_0, a_i\in \mathds{N}, k\in \mathds{N} \]
+    Die \emph{Komplexitätsklasse $\mathsf{P}$} ist wie folgt definiert:
+    \begin{align*}
+        \mathsf{P} &= \{A | \textrm{ es gibt eine Turingmaschine } M \textrm{ und ein Polynom } p \textrm{ mit } T(M)=A \textrm{ und } time_M(x)\leq p(|x|) \} \\
+        &= \underset{p \textrm{ Polynom}}{\bigcup} TIME(p(n))
+    \end{align*}
+\end{shaded}
 
+\begin{shaded}
+    Die Klasse $\mathsf{P}$ (ebenso wie größere Komplexitätsklassen wie $TIME(2^n)$ oder $TIME\left(\left.2^{2^{\dots^{2^2}}}\right\}n\textrm{-mal}\right) $ ) sind immer noch in der Klasse der primitiv rekursiv bzw \textsc{Loop}-berechenbaren Sprachen enthalten
+\end{shaded}
 
+\begin{shaded}
+    Für nichtdeterministische Turingmaschinen $M$ sei
+    \[ ntime_M(x)=
+    \begin{cases}
+        min \textrm{ Länge einer akzeptierenden Rechnung von } M \textrm{ auf } x, & x\in T(M) \\
+        0, & x\not\in T(M) \\
+    \end{cases}
+     \]
+     Sei $f:\mathds{N}\to \mathds{N}$ eine Funktion. Die Klasse $NTIME(f(n))$ besteht aus allen Sprachen $A$, für die es eine \emph{nichtdeterministische} Mehrband-Turingmaschine $M$ gibt mit $A=T(M)$ und $ntime_M(x)\leq f(|x|)$. \\
+     Weiter definieren wir
+     \[ \mathsf{NP} = \underset{p \textrm{ Polynom}}{\bigcup} NTIME(p(n)) \]
+\end{shaded}
+
+\subsubsection*{\textsf{P-NP}-Problem}
+\begin{description}
+    \item[bekannt:] $\textsf{P} \subseteq \textsf{NP}$
+    \item[erhofft:] $\textsf{P} = \textsf{NP}$
+    \item[vermutet:] $\textsf{P} \not= \textsf{NP}$
+\end{description}
+
+\begin{center}
+\scalebox{.75}{\input{images/komplexitaet.tikz}}
+\end{center}
+
+\subsection*{\textsf{NP}-Vollständigkeit}
+\begin{shaded}
+    Seien $A\subseteq\Sigma^*$ und $B\subseteq\Gamma^*$ Sprachen. Dann heisst \emph{$A$ auf $B$ polynomial reduzierbar} - symbolisch mit $A\leq_p B$ bezeichnet - falls es eine totale und mit polynomieller Komplexität berechenbare Funktion $f:\Sigma^*\to\Gamma^*$ gibt, so dass für alle $x\in\Sigma^*$ gilt:
+    \[ x\in A\Longleftrightarrow f(x)\in B \]
+    Falls $A\leq_p B$ und $B\in\mathsf{P}$ (bzw. $B\in\mathsf{NP}$), so ist auch $A\in\mathsf{P}$ (bzw. $A\in\mathsf{NP}$)
+\end{shaded}
+
+\begin{shaded}
+\ \\
+    Eine Sprache $A$ heisst \emph{\textsf{NP}-hart}, falls für alle Sprachen $L\in\mathsf{NP}$ gilt: $L\leq_p A$. \\[.5cm]
+    Eine Sprache $A$ heisst \emph{\textsf{NP}-vollständig}, falls $A$ \textsf{NP}-hart ist und $A\in\mathsf{NP}$ gilt.
+\end{shaded}
+
+\begin{shaded}
+    Sei $A$ \textsf{NP} vollständig. Dann gilt $A\in P \Leftrightarrow \mathsf{P} = \mathsf{NP}$. {\tiny falls es einnmal so wäre\dots}
+\end{shaded}
+
+\begin{center}
+\scalebox{.75}{\input{images/np-vollst.tikz}}
+\end{center}
+
+\subsubsection*{\textsf{NP}-vollständige Probleme}
+\begin{shaded}
+    Das \emph{Erfüllbarkeitsproblem der Aussagenlogik}, kurz \textsc{Sat}, ist das Folgende:
+    \begin{description}
+        \item[gegeben:] eine Formel $F$ der Aussagenlogik
+        \item[gefragt:] Ist $F$ erfüllbar, d.h. gibt es eine Belegung der Variablen mit Konstanten $\in\{0,1\}$, so dass $F$ den Wert $1$ erhält?
+    \end{description}
+    \[\textsc{Sat}=\{code(F)\in\Sigma^* | F \textrm{ ist eine erfüllbare Formel der Aussagenlogik} \}\]
+    \[\Sigma=\{(,),\neg, \wedge,\vee,\times,0,1 \} \]
+    Das Erfüllbarkeitsproblem derAussagenlogik, \textsc{Sat} , ist \textsf{NP}-vollständig.
+
+\end{shaded}
+
+\begin{center}
+\scalebox{.75}{\input{images/np-probs.tikz}}
+\end{center}
 
 \end{document}

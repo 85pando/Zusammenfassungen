@@ -1,0 +1,22 @@
+\begin{tikzpicture}[
+every node/.style={node distance=55},
+field/.style={rounded corners=20},
+]
+\node (p) at (0,0) {\textsf{P}};
+\node (np) at (1,1.5) {\textsf{NP}};
+\node (loop) at (2,3) {\textsc{Loop}-berechenbar};
+\node (ent) at (3,4.5){entscheidbar};
+\node (semi) at (4,6) {semi-entscheidbar};
+
+% P
+\draw[field] (-.5,-.5) rectangle (1,.9);
+% NP
+\draw[field] (-.8,-.8) rectangle (2,2.3);
+% loop
+\draw[field] (-1.1,-1.1) rectangle (4,3.8);
+%entsch
+\draw[field] (-1.4,-1.4) rectangle (5,5.3);
+%semi
+\draw[field] (-1.7,-1.7) rectangle (6,6.8);
+
+\end{tikzpicture}
