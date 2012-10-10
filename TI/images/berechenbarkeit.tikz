@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+every node/.style={node distance=80},
+line/.style={draw,thick},
+single/.style={line,->},
+dual/.style={line,<->},
+]
+\node (goto) at (0,0) {\textsc{Goto}};
+\node (while) [right of = goto] {\textsc{While}};
+\node (tm) [right of = while] {\textsc{Tm}};
+\node[node distance=50] (loop) [below of = while] {\textsc{Loop}};
+\node[node distance=50] (helper1) [above left of = while] {};
+\node[node distance=50] (helper2) [above right of = while] {};
+
+\path[single] (loop) -- (while);
+
+\path[dual] (goto) -- (while);
+\path[dual] (tm) -- (while);
+\path[dual] (goto) .. controls (helper1) and (helper2) .. (tm);
+\end{tikzpicture}

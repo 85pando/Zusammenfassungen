@@ -169,7 +169,7 @@ d & \correct & \wrong & \wrong & \correct & \wrong & \correct & \wrong & \correc
     \end{itemize}
 \end{description}
 
-\part{Automatentheorie und formale Sprachen}
+\part*{Automatentheorie und formale Sprachen}
 \section*{Grammatik}
 Eine Grammatik ist ein 4-Tupel $G=(V,\Sigma,P,S)$ \\[.5cm]
 \begin{minipage}[t]{4.5cm}
@@ -617,6 +617,11 @@ Dabei bedeutet $\delta(z,a)=(z',b,x)$: Wenn sich $M$ im Zustand $z$ befindet und
     Die durch algemeine Turingmaschinen akzeptierbaren Sprachen sind genau die \textsc{Typ} 0-Sprachen.
 \end{shaded}
 
+\begin{shaded}
+    Eine \emph{Mehrband-Turingmaschine} ist eine Maschine mit $k\geq1$ Bändern und $k$ Schreib-Leseköpfen. Sie kann daher auf jedem Band unabhängig agieren.\\[1cm]
+    Zu jeder Mehrbandturingmaschine $M$ gibt es eine (Einband-)Turingmaschine $M'$ mit $T(M)=T(M')$, bzw so, dass $M'$ dieselbe Funktion berechnet wie $M$.
+\end{shaded}
+
 \section*{Überblick}
 \subsection*{Beschreibungsmittel}
 \begin{tabular}{c|c}
@@ -712,7 +717,219 @@ Typ 0 & unlösbar \\
 \hline
 \end{tabular}
 
+\part*{Berechenbarkeitstheorie}
+\begin{shaded}
+    \textbf{Churchse These} \\
+    Die durch die formale Definition der \emph{Turing-Berechenbarkeit} (äquivalent: \emph{\textsc{While}-Berechenbarkeit, \textsc{Goto}-Berechenbarkeit, $\mu$-Rekursivität}) erfasste Klasse von Funktionen stimmt genau mit der im intuitiven Sinne berechenbaren Funktionen überein.
+\end{shaded}
 
+\section*{Turing-Berechenbarkeit}
+\begin{shaded}
+    Eine Funktion $f:\mathds{N}^k\to \mathds{N}$ heisst \emph{Turingberechenbar}, falls es eine (deterministische) Turingmaschine $M$ gibt, so dass für alle $n_1,\dots,n_k,m\in \mathds{N}$ gilt:
+    \[ f(n_1,\dots n_k) = m \] \textbf{genau dann, wenn} \[ z_0 bin(n_1)\#bin(n_2)\#\dots\#bin(n_k)\vdash^* \square\dots\square z_e bin(m)\square\dots\square \] wobei $z_e\in E$, $bin(n)$ ist die binäre Darstellung der Zahl $n\in \mathds{N}$.
+\end{shaded}
+\begin{shaded}
+    Eine Funktion $f:\Sigma^*\to\Sigma^*$ heisst \emph{Turingberechenbar}, falls es eine (deterministische) Turingmaschine $M$ gibt, so dass für alle $x,y\in\Sigma^*$ gilt:
+    \[ f(x)=y \] genau dann wenn \[ z_0x\vdash^*\square\dots\square z_e\square\dots\square\] wobei $z_e\in E$
+\end{shaded}
+
+Man beachte, dass beide Definitionen die Turingmaschine in eine Endlosschleife übergehen kann, wenn $f(x)=undefiniert$.
+
+\section*{LOOP-, WHILE- und GOTO-Berechenbarkeit}
+\subsection*{LOOP-Programme}
+\begin{description}
+    \item[Variablen:] $x_0\;x_1\;x_2\;\dots$
+    \item[Konstanten:] $0\;1\;2\;\dots$
+    \item[Trennsymbole:] $;\; :=$
+    \item[Operationszeichen] $+\;-$
+    \item[Schlüsselwörter:] \textsc{Loop}, \textsc{Do}, \textsc{End}
+\end{description}
+
+\begin{shaded}
+    Eine Funktion $f: \mathds{N}^k\to \mathds{N}$ heisst \textsc{Loop}-berechenbar, falls es ein \textsc{Loop}-Programm $P$ gibt, dass $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\dots,n_k$ in den Variablen $x_1,\dots,x_k$ (und $0$ in den restlichen Variablen) stoppt mit dem Wert $f(n_1,\dots,n_k)$ in der Variablen $x_0$.
+\end{shaded}
+
+\subsection*{WHILE-Programme}
+Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schleife: \[ WHILE x_i\not=0 DO P END \]
+
+\begin{shaded}
+    Eine Funktion $f:\mathds{N}^k\to \mathds{N}$ heisst \textsc{While}-berechenbar, falls es ein \textsc{While}-Programm gibt $P$ gibt, das $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\dots,n_k$ in den Variablen $x_1,\dots,x_k$ (und 0 in den restlichen Fällen) stoppt mit dem Wert $f(n_1,\dots,n_k)$ in der Variablen $x_0$, sofern $f(n_1,\dots,n_k)$ definiert ist, ansonsten stoppt $P$ nicht.
+\end{shaded}
+
+\begin{shaded}
+    Turingmaschinen können \textsc{While}-Programme simulieren. Dass heisst, jede \textsc{While}-berechenbare Funktion ist auch Turing-berechenbar.
+\end{shaded}
+
+\subsection*{GOTO-Programme}
+\textsc{Goto}-Programme bestehen aus Sequenzen von Anweisungen $A_i$, die jeweils durch eine Marke $M_i$ eingeleitet werden: \[ M_1:A_1;\;M_2:A_2;\;\dots;\;M_k:A_k \] Als mögliche Anweisungen $A_i$ sind zugelassen:
+\begin{description}
+    \item[Wertzuweisungen:]  $x_i:=x_j\pm c$
+    \item[unbedingter Sprung:] \textsc{Goto} $M_i$
+    \item[bedingter Sprung:] \textsc{If} $x_i=c$ \textsc{Then Goto} $M_j$
+    \item[Stopanweisung] \textsc{Halt}
+\end{description}
+
+\begin{shaded}
+    Jedes \textsc{While}-Programm kann durch ein \textsc{Goto}-Programm simuliert werden. Das heisst, jede \textsc{While}-berechenbare Funktion ist auch \textsc{Goto}-berechenbar.
+\end{shaded}
+
+\begin{shaded}
+    Jedes \textsc{Goto}-Programm kann durch ein \textsc{While}-Programm (mit nur einer \textsc{While}-Schleife) simuliert werden. Also ist jede \textsc{Goto}-berechenbare Funktion auch \textsc{While}-berechenbar
+\end{shaded}
+
+\begin{shaded}
+    \textbf{Kleensche Normalform für \textsc{While}-Programme} \\
+    Jede \textsc{While}-berechenbare Funktion kann durch ein \textsc{While}-Programm mit nur einer \textsc{While}-Schleife berechnet werden.
+\end{shaded}
+
+\begin{shaded}
+    \textsc{Goto}-Programme können Turingmaschinen simulieren. Also ist jede Turingberechenbare Funktion auch \textsc{Goto}-berechenbar.
+\end{shaded}
+\begin{center}
+\input{images/berechenbarkeit.tikz}
+\end{center}
+
+\subsection*{Primitiv und $\mu$-rekursive Funktionen}
+\red{Prüfungsrelevant?}
+
+\subsection*{Halteproblem, Unentscheidbarkeit, Reduzierbarkeit}
+
+\begin{shaded}
+    Eine Menge $A\subseteq\Sigma^*$ heisst \emph{entscheidbar}, falls die \emph{charakteristische Funktion} von $A$, nämlich $\chi_A:\Sigma^*\to\{0,1\}$, berechenbar ist. Hierbei gilt für alle $w\in\Sigma^*$:
+    \[
+    \chi_A(w)=
+    \begin{cases}
+        1, & w\in A \\
+        0, & w\not\in A
+    \end{cases}
+    \]
+
+    Eine Menge $A\subseteq\Sigma^*$ heisst \emph{semi-entscheidbar}, falls die \emph{"`halbe"' charakteristische Funktion} von $A$, nämlich $\chi_A:\Sigma^*\to\{0,1\}$, berechenbar ist. Hierbei gilt für alle $w\in\Sigma^*$:
+    \[
+    \chi_A(w)=
+    \begin{cases}
+        1, & w\in A \\
+        undefiniert, & w\not\in A
+    \end{cases}
+    \]
+\end{shaded}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\red{hier vllt noch Grafiken von S.115 einfügen.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{shaded}
+    Eine Sprache $A$ ist genau dann entscheidbar, wenn sowohl $A$, als auch $\overline{A}$ semi-entscheidbar sind.
+\end{shaded}
+\begin{shaded}
+    Eine Sprache ist genau dann semi-entscheidbar, wenn sie rekursiv aufzählbar ist.
+\end{shaded}
+
+Äquivalente Aussagen:
+\begin{itemize}
+    \item $A$ ist rekursiv aufzählbar.
+    \item $A$ ist semi-entscheidbar.
+    \item $A$ ist vom Typ 0.
+    \item $A=T(M)$ für Turingmaschine $M$
+    \item $\chi'_A$ ist (Turing-, \textsc{While}-, \textsc{Goto-}) berechenbar.
+    \item $A$ ist Definitionsbereich einer berechenbaren Funktion.
+    \item $A$ ist Wertebereich einer berechenbaren Funktion.
+\end{itemize}
+
+\subsubsection*{Halteproblem}
+Turingmaschinen sind als Wort schreibbar. Dazu nummerieren wir Elemente von $\Gamma$ und $Z$ durch. Hierbei sei festgelegt, welche Nummern die Symbole $\square,0,1,\#$ sowie Start- und Endzustände erhalten.
+\begin{align*}
+\Gamma &= \{a_0,a_1,\dots,a_k\} \\
+Z &= \{z_0,z_1,\dots,z_k\}
+\end{align*}
+Jeder $\delta$-Regel ordnen wir ein Wort zu
+\[
+\delta(z_i,a_j) = (z_{i'},a_{j'},y)
+\Rightarrow w_{i,j,i',j',y} = \#\#bin(i)\#bin(j)\#bin(i')\#bin(j')\#bin(m)
+\]
+wobei
+\[
+m=
+\begin{cases}
+    0, & y=R \\
+    1, & y=L \\
+    2, & y=N
+\end{cases}
+\]
+Somit erhalten wir einen Code für die Turingmaschine über dem Alphabet $\{0,1,\#\}$. Sei $\hat M$ eine beliebige, feste Turingmaschine. Dann können wir für jedes Wort $w\in\{0,1\}^*$ festlegen, dass $M_w$ eine Turingmaschine bezeichnet:
+\[
+M_w=
+\begin{cases}
+    M, &\text{ falls } w \textrm{ Codewort von } M \textrm{ ist}\\
+    \hat M, & \textrm{sonst}
+\end{cases}
+\]
+
+\begin{shaded}
+    Unter dem \emph{speziellen Halteproblem} oder \emph{Selbstanwendbarkeitsproblem} verstehen wir die Sprache
+    \[ K=\{w\in\{0,1\}^* | M_w \textrm{ angesetzt auf } w \textrm{ hält (im Endzustand)}\} \]
+\end{shaded}
+
+\begin{shaded}
+    Das spezielle Halteproblem ist nicht entscheidbar.
+\end{shaded}
+
+\subsubsection*{Reduktion}
+\begin{shaded}
+    Seien $A\subseteq\Sigma^*$ und $B\subseteq\Gamma^*$ Sprachen. Dann heisst \emph{$A$ auf $B$ reduzierbar} - symbolisch mit $A\leq B$ bezeichnet - falls es eine totale und berechenbare Funktion $f:\Sigma^*\to\Gamma^*$ gibt, so dass für alle $x\in\Sigma^*$ gilt:
+    \[ x\in A \Longleftrightarrow f(x)\in B \]
+\end{shaded}
+
+\begin{shaded}
+    Falls $A\leq B$ und $B$ entscheidbar (bzw. semi-entscheidbar), dann ist auch $A$ entscheidbar (bzw- semi-entscheidbar).
+\end{shaded}
+
+\begin{shaded}
+    Das (allgemeine) Halteproblem ist die Sprache \[H=\{w\#x | M_w \textrm{ angesetzt auf } w \textrm{ hält}\} \]
+    Das allgemeine Halteproblem $H$ ist nicht entscheidbar.\\
+    {\tiny $K\leq H$, da K Spezialfall von H}
+\end{shaded}
+
+\begin{shaded}
+    Das Halteproblem auf leerem Band ist die Sprache \[H=\{w\#x | M_w \textrm{ angesetzt auf } w \textrm{ hält}\} \] \\
+    Das Halteproblem auf leerem Band $H_0$ ist nicht entscheidbar. \\
+    {\tiny $H\leq H_0$, da Turingmaschine einfach das nichtleere Band von $H$ auf das leere Band von $H_0$ schreiben kann.}
+
+    \begin{shaded}
+        \textbf{Satz von Rice}\\
+        Sei $\mathcal{R}$ die Klasse aller Turing-berechenbaren Funktionen. Sei $\mathcal{S}$ eine \emph{beliebige} Teilmenge hiervon (ausgenommen $\mathcal{S}=\emptyset$ und $\mathcal{S}=\mathcal{R}$). Dann ist die Sprache \[ C(\mathcal{S} = \{w | \textrm{ die von } M_w \textrm{ berechnete Funktion liegt in } \mathcal{S}\} \] unentscheidbar.
+    \end{shaded}
+\end{shaded}
+
+\subsection*{Das Postsche Korrespondenzproblem (PCP)}
+\begin{description}
+    \item[gegeben:] Eine endliche Folge von Wortpaaren $(x_1,y_1), (x_2,y_2),\dots,(x_k,y_k)$, wobei $x_i,y_i\in\Sigma^+$.
+    \item[gefragt:] Gibt es eine Folge von Indizes $i_1,i_2,\dots,i_n\in\{1,2,\dots,k\},n\geq1$, mit $x_{i_1},x_{i_2},\dots,x_{i_n} = y_{i_1},y_{i_2},\dots,y_{i_n}$?
+\end{description}
+Das \textsc{Pcp} ist semi-entscheidbar {\tiny Immer längere Indexfolgen daraufhin untersuchen, ob sie Lösung sind.}.
+\subsubsection*{modifiziertes Postsches Korrespondenzproblem (MPCP)}
+\begin{description}
+    \item[gegeben:] wie \textsc{Pcp}
+    \item[gefragt:] Gibt es eine Lösung $i_1,i_2,\dots,i_n$ mit $i_1=1$
+\end{description}
+
+$\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
+
+\begin{shaded}
+\ \\
+    Das Postsche Korrespondenzproblem ist untentscheidbar.\\[.5cm]
+    Das Postsche Korrespondenzproblem ist bereits untentscheidbar, wenn man sich auf das Eingabealphabet $\{0,1\}$ beschränkt.
+\end{shaded}
+
+\subsection*{Unentscheidbare Grammatik-Probleme}
+\red{nicht Prüfungsrelevant}
+\subsection*{Der Gödelsche Satz}
+\red{nicht Prüfungsrelevant}
+
+\part*{Komplexitätstheorie}
+\subsection*{Komplexitätsklasse und P-NP-Problem}
+\subsection*{NP-Vollständigkeit}
+\subsection*{weitere NP-vollständige Probleme}
 
 
 
