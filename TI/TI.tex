@@ -28,7 +28,7 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
     \item[$\bullet$] $\mathds{N}^0 = \{0,1,2,\dots\}$
     \item[$\bullet$] $\mathds{N}^{\backslash\{0\}}=\{1,2,\dots\}$
     \item[Alphabet:] endliche Menge von Zeichen {\tiny $\Sigma=\{a,b\}$}
-    \item[Wort] Zeichenfolge {\tiny $w=abab \in\Sigma^*$}
+    \item[Wort] Zeichenfolge {\tiny $w=ababa \in\Sigma^*$}
     \item[$\Sigma^*$:] Menge der Wörter
     \item[$\Sigma^+$:] $\Sigma^* \backslash\{\varepsilon\}$ {\tiny $\{\}\not= \varepsilon \not=\{\varepsilon\}$}
     \item[Operator $\circ$:]Konkatenation {\tiny $\varepsilon \circ w = w, w\circ w=ww=w^2$}
@@ -37,7 +37,7 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
     \item[$|w|_\sigma, \sigma\in\Sigma$] Anzahl $\sigma$ in $\Sigma$ {\tiny $|w|_a=3$}
 \end{description}
 
-Seiten $A,B$ Mengen (Sprachen): {\tiny $A=\{\varepsilon, a, bba, bbabb, B=\{a,aa,aaa\}$}
+Seien $A,B$ Mengen (Sprachen): {\tiny $A=\{\varepsilon, a, bba, bbabb\} B=\{a,aa,aaa\}$}
 \begin{description}
     \item[$|A|$] Mächtigkeit = Anzahl der Elemente
     \item[Sprache:] Teilmenge von $\Sigma^*$
@@ -116,7 +116,7 @@ Eigenschaften von Relationen auf gleichen Mengen $A$:
     \item[antisymmetrisch:] $\forall a,b\in A: \left(a\tau b\wedge b\tau a\right) \Rightarrow a=b$ {\tiny (antisymmetrisch $\Rightarrow$ reflexiv)}
     \item[asymmetrisch:] $\forall a,b\in A: a\tau b \Rightarrow \overline{b\tau a}$
     \item[transitiv:] $\forall a,b,c\in A: \left(a\tau b\wedge b\tau c\right) \Rightarrow a\tau c$
-    \item[äquivalent:]
+    \item[äquivalent:] \red{Wenn mir jemand sagen kann, was hier rein kommt, bitte zuschicken {\tiny ist aber auch nicht so wichtig$\dots$} }
     \item[Ordnungsrelationen Typ "`$\leq$"':] reflexiv, transitiv, antisymmetrisch
     \item[Ordnungsrelationen Typ "`$<$"':] irreflexiv, transitiv, antisymmetrisch
     \item[$\tau^+$] transitive Hülle
@@ -150,9 +150,9 @@ ges \; R^+, S^+, R^*, S^* \\
 \hline
 a & \correct & \wrong & \correct & \wrong & \wrong & \wrong & \wrong & \wrong & \wrong \\
 \hline
-b & \correct & \wrong & \wrong & \wrong & \wrong & \correct & \wrong & \wrong & \wrong \\
+b & \correct & \wrong & \wrong & \correct & \wrong & \correct & \wrong & \wrong & \correct \\
 \hline
-c & \wrong   & \wrong & \correct & \wrong & \wrong & \correct & \wrong & \wrong & \wrong \\
+c & \correct & \wrong & \correct & \wrong & \wrong & \correct & \wrong & \wrong & \wrong \\
 \hline
 d & \correct & \wrong & \wrong & \correct & \wrong & \correct & \wrong & \correct & \wrong \\
 \hline
@@ -189,12 +189,14 @@ Eine Grammatik ist ein 4-Tupel $G=(V,\Sigma,P,S)$ \\[.5cm]
 \end{minipage}
 
 \subsection*{Chomsky-Hirarchie}
+\begin{shaded}
 \begin{description}
 \item[Typ 0:] (Phrasenstrukturgrammatik) - keine Einschränkungen
 \item[Typ 1:] (kontextsensitiv) - $(w_1\to w_2) \Rightarrow (\vert w_1 \vert \leq \vert w_2 \vert)$ {\tiny (Wort wird nicht kürzer)}
-\item[Typ 2:] (kontextfrei) - $(w_1\to w_2 \Rightarrow (w_1\in V)$ {\tiny $w_1$ ist einzelne Variable}
+\item[Typ 2:] (kontextfrei) - $(w_1\to w_2) \Rightarrow (w_1\in V)$ {\tiny $w_1$ ist einzelne Variable}
 \item[Typ 3:] (regulär) - $w_2\in\Sigma\cup\Sigma V$ {\tiny "`rechte Seiten"' von Regeln Terminalsymbol oder Terminalsymbole gefolgt von Variablen}
 \end{description}
+\end{shaded}
 Alle Sprachen der Typen 1,2 und 3 sind \emph{entscheidbar}.
 
 \subsection*{$\varepsilon$-Sonderregelung {\tiny (Zulassen des leeren Wortes $\varepsilon$ in Typ 1,2 oder 3)}}
@@ -210,7 +212,7 @@ Algorithmus:
 \end{itemize}
 
 \subsection*{Wortproblem {\tiny (Gehört ein Wort zu einer Sprache?)}}
-$(\exists \textrm{Algorithmus})[(\textrm{Algo terminiert in endl. Zeit}\wedge(Algo entscheidet (x\in\mathcal{L}(G))\vee(x\not\in\mathcal{L}(G)))]$ \\
+$(\exists \textrm{Algorithmus})[(\textrm{Algo terminiert in endl. Zeit}\wedge(\textrm{Algo entscheidet } (x\in\mathcal{L}(G))\vee(x\not\in\mathcal{L}(G)))]$ \\
 $\Rightarrow$ das Wortproblem ist für Typ 1,2 und 3 entscheidbar (aber NP-hart für Typ 1)
 
 \subsection*{Syntaxbäume}
@@ -255,7 +257,7 @@ B & \to & \beta B
 \right.
 \end{align*}
 
-\section*{Reguläre Sprachen}
+\section*{Reguläre Sprachen (Typ 3)}
 \subsection*{Endliche (deterministische) Automaten DFA}
 \begin{minipage}{6cm}
     $M = \left(Z,\Sigma,\delta,z_0,E\right)$
@@ -278,8 +280,8 @@ $\to$ Zustandsgraphen
 \subsection*{akzeptierte Sprache}
 Die von $M$ akzeptierte Sprache ist:
 \begin{align*}
-    T(M) &= \{x\in\Sigma^* \vert \hat\delta(z,e)\} \\
-    & \textrm{wobei} & \hat\delta(z,\varepsilon)&=z \\
+    T(M) &= \{x\in\Sigma^* \vert \hat\delta(z,e)\} \textrm{, wobei}\\
+    & & \hat\delta(z,\varepsilon)&=z \\
     & & \hat\delta(z,ax) &= \hat\delta\left(\delta(z,a),x\right)
 \end{align*}
 
@@ -308,11 +310,11 @@ Ein \emph{nichtdeterministischer, endlicher Automat} (\textsc{Nfa}) wird spezifi
 \end{minipage}\\
 
 \begin{shaded}
-    Jede durch einen \textsc{Nfa} akzeptierbare Sprache ist auch durch einen \textsc{Dfa} akzeptierbar.
+    \ \\Jede durch einen \textsc{Nfa} akzeptierbare Sprache ist auch durch einen \textsc{Dfa} akzeptierbar.
 \end{shaded}
 
 \begin{shaded}
-    Für jede Reguläre Grammatik $G$ gibt es einen \textsc{Nfa} $M$ mit $L(G)=T(M)$.
+    \ \\Für jede Reguläre Grammatik $G$ gibt es einen \textsc{Nfa} $M$ mit $L(G)=T(M)$.
 \end{shaded}
 
 \subsection*{regulärer Ausdruck} % (fold)
@@ -341,17 +343,26 @@ Ein \emph{nichtdeterministischer, endlicher Automat} (\textsc{Nfa}) wird spezifi
 \end{minipage}
 
 \begin{shaded}
-    Die Menge der durch Reguläre Ausdrücke beschreibbaren Sprachen ist genau die Menge der Regulären Sprachen.
+    \ \\Die Menge der durch Reguläre Ausdrücke beschreibbaren Sprachen ist genau die Menge der Regulären Sprachen.
 \end{shaded}
 
 \subsection*{Pumping-Lemma {\tiny Schleifenlemma, Iterationslemma, Lemma von Bar-Hillel, $uvw-$Theorem}} % (fold)
 \begin{shaded}
-    Sei $L$ eine Reguläre Sprache. Dann gibt es eine Zahl $n$ so, dass sich alle Wörter $x\in L$ mit $|x|\geq n$ zerlegen lasen in $x=uwv$, so dass folgende Eigenschaften erfüllt sind:
-    \begin{itemize}
-        \item $|v|\geq1$
-        \item $|uv|\leq n$
-        \item $\forall i\in\{0,1,\dots\}$ gilt: $uv^iw\in L$
-    \end{itemize}
+    \ \\Sei $L$ eine Reguläre Sprache. Dann gibt es eine Zahl $n$ so, dass sich alle Wörter $x\in L$ mit $|x|\geq n$ zerlegen lasen in $x=uvw$, so dass folgende Eigenschaften erfüllt sind:
+    \begin{minipage}{0.48\textwidth}
+        \begin{itemize}
+            \item $|v|\geq1$
+            \item $|uv|\leq n$
+            \item $\forall i\in\{0,1,\dots\}$ gilt: $uv^iw\in L$
+        \end{itemize}
+    \end{minipage}
+    \hfill \vrule \hfill
+    \begin{minipage}{0.48\textwidth}
+        \begin{center}
+        \ \\[.5cm]
+        \scalebox{0.75}{\input{images/pumping-reg.tikz}}
+        \end{center}
+    \end{minipage}
 \end{shaded}
 \begin{description}
     \item[$\to$] Zum Erkennen von nicht regulären Sprachen (geht nicht bei allen).
@@ -362,13 +373,13 @@ Anwendung: Annehmen, $L$ sei regulär \follows Wenn Widerspruch, $L$ nicht regul
 \subsection*{Äquivalenzrelationen und Minimalautomaten}
 $xR_Ly$ gdw für alle $z\in\Sigma^*: xz\in L$
 \begin{shaded}
+    \ \\\textbf{Satz von Myhill-Nerode} \\
     Eine Sprache $L$ ist genau dann Regulär, wenn der Index von $R_L$ endlich ist:
     \[L \textrm{ regulär } \Leftrightarrow Index(R_L) < \infty \]
     {\tiny $Index$: Anzahl erzeugbarer Äquivalenzklassen}
 \end{shaded}
-
 Äquivalenzklassenautomat $\equiv$ Minimalautomat (nur DFA!) \\
-Minimalautomat $\to$ Minimalautomat mit min Zustandszahl
+Minimalautomat $\to$ Automat mit min Zustandszahl
 
 \subsubsection*{Algorithmus Minimalautomat $\mathcal{O}(n^2)$}
 \textbf{Eingabe:} \textsc{Dfa}, alle Zustände erreichbar.
@@ -410,28 +421,39 @@ Minimalautomat $\to$ Minimalautomat mit min Zustandszahl
 \begin{description}
     \item[Chromsky-Normalform:] (\textsc{Cnf}) Alle Regeln haben die Form $A\to BC$ oder $A\to a$
     \begin{shaded}
-        Zu jeder Kontextfreien Grammatik $G$ mit $\varepsilon\not\in L(G)$ gibt es eine Chromsky-Normalform-Grammatik $G'$ mit $L(G) = L(G')$.
+        \ \\Zu jeder Kontextfreien Grammatik $G$ mit $\varepsilon\not\in L(G)$ gibt es eine Chromsky-Normalform-Grammatik $G'$ mit $L(G) = L(G')$.
     \end{shaded}
     \item[Greibach-Normalform:] (\textsc{Gnf}) Alle Regeln haben die Form $A\to aB_1B_2\dots B_k\; (K\geq0)$ \\ {\tiny Erweiterung der Regulären Sprachen, hier nur $k=0$ und $k=1$}
     \begin{shaded}
-        Zu jeder Kontextfreien Grammatik $G$ mit $\varepsilon\not\in L(G)$ gibt es eine Greibach-Normalform-Grammatik $G'$ mit $L(G) = L(G')$.
+        \ \\Zu jeder Kontextfreien Grammatik $G$ mit $\varepsilon\not\in L(G)$ gibt es eine Greibach-Normalform-Grammatik $G'$ mit $L(G) = L(G')$.
     \end{shaded}
 \end{description}
 
 \subsection*{Pumpinglemma}
 \begin{shaded}
-    Sei $L$ eine kontextfreie Sprache. Dann gibt es eine Zahl $n\in \mathds{N}$, so adss sich alle Wörter $z\in L$ mit $|z|\geq n$ zerlegen lassen in $z=uvwxy$ mit folgenden Eigenschaften:
-    \begin{itemize}
-        \item $|vx|\geq 1$
-        \item $|vwx|\leq n$
-        \item $\forall i\geq0$ gilt $uv^iwx^iy\in L$
-    \end{itemize}
-    Jede kontextfreie Sprache über einem einelementigen Alphabet ist bereits regulär.
+    \ \\Sei $L$ eine kontextfreie Sprache. Dann gibt es eine Zahl $n\in \mathds{N}$, so dass sich alle Wörter $z\in L$ mit $|z|\geq n$ zerlegen lassen in $z=uvwxy$ mit folgenden Eigenschaften:
+    \begin{minipage}{0.48\textwidth}
+        \begin{itemize}
+            \item $|vx|\geq 1$
+            \item $|vwx|\leq n$
+            \item $\forall i\geq0$ gilt $uv^iwx^iy\in L$
+        \end{itemize}
+    \end{minipage}
+    \hfill \vrule \hfill
+    \begin{minipage}{0.48\textwidth}
+        \begin{center}
+        \ \\[.5cm]
+        \scalebox{0.75}{\input{images/pumping-kf.tikz}}
+        \end{center}
+    \end{minipage}
 \end{shaded}
+
+Jede kontextfreie Sprache über einem einelementigen Alphabet ist bereits regulär.
 
 \subsection*{Abschlusseigenschaften}
 \begin{shaded}
 Die Kontextfreien Sprachen sind\dots \\
+
 \begin{minipage}[t]{0.48\textwidth}
 \dots abgeschlossen unter
 \begin{itemize}
@@ -450,7 +472,7 @@ Die Kontextfreien Sprachen sind\dots \\
 \end{minipage}
 \end{shaded}
 
-\subsection*{Der CYK-Algorithmus}
+\subsection*{Der CYK-Algorithmus - Lösung des Wortproblems für kontextfreie Sprachen}
 \begin{algorithm}[H]
     \caption{CYK}
     \SetAlgoLined
@@ -458,7 +480,7 @@ Die Kontextfreien Sprachen sind\dots \\
     \PrintSemicolon
     \KwData{$x=a_1a_2\dots a_n$}
     %\KwResult{}
-    initialisation\;
+%    initialisation\;
     \For{$i:=1$ \KwTo $n$ {\tiny ($j=1$)}}{
         $T[i,1]:=\{A\in V | A\to a_i \in P\}$
     }
@@ -476,10 +498,11 @@ Die Kontextfreien Sprachen sind\dots \\
     "`$x$ liegt nicht in $L(G)$"'
     }
 \end{algorithm}
+\red{Bild}
 
 \subsection*{Kellerautomaten (PDA)}
 \begin{shaded}
-    Ein \emph{(nichtdeterministischer) Kellerautomat} (\emph{pushdown automaton}) wird angegeben durch ein 6-Tupel: $M=\left(Z,\Sigma,\Gamma,\delta,z_0,\#\right) $ \\
+    \ \\Ein \emph{(nichtdeterministischer) Kellerautomat} (\emph{pushdown automaton}) wird angegeben durch ein 6-Tupel: $M=\left(Z,\Sigma,\Gamma,\delta,z_0,\#\right) $ \\
     \begin{minipage}[t]{0.48\textwidth}
         \begin{itemize}
             \item $Z$ - endliche Zustandsmenge
@@ -495,26 +518,27 @@ Die Kontextfreien Sprachen sind\dots \\
             \item $\#\in\Gamma$ unterstes Kellerzeichen
         \end{itemize}
     \end{minipage}
+    Akzeptieren ist per leerem Keller oder Endzustand möglich.
 \end{shaded}
 
 Um Schreibarbeit zu sparen, schreibt man statt $(z',x)\in\delta(z,a,A)$ einfach $zaA\to z'x$.
 
 \begin{shaded}
-    Eine Sprache $L$ ist kontextfrei genau dann, wenn $L$ von einem nichtdeterministischen Kellerautomaten erkannt wird.
+    \ \\Eine Sprache $L$ ist kontextfrei genau dann, wenn $L$ von einem nichtdeterministischen Kellerautomaten erkannt wird.
 \end{shaded}
 
 \section*{Deterministisch kontextfreie Sprachen}
 \begin{shaded}
-    Ein Kellerautomat $M$ heisst \emph{deterministisch}, falls für alle $z\in Z,a\in \Sigma, A\in\Gamma$ gilt: $|\delta(z,a,A)| + |\delta(z,\varepsilon,A|\leq 1$. \\
+    \ \\Ein Kellerautomat $M$ heisst \emph{deterministisch}, falls für alle $z\in Z,a\in \Sigma, A\in\Gamma$ gilt: $|\delta(z,a,A)| + |\delta(z,\varepsilon,A|\leq 1$. \\
     Hinzu kommt, dass deterministisch kontextfreie Kellerautomaten \emph{per Endzustand} akzeptieren, nicht per leerem Keller.
 \end{shaded}
 
 \begin{shaded}
-    Eine Sprache heisst \emph{deterministisch kontextfrei}, falls sie von einem deterministischen Kellerautomaten erkannt wird.
+    \ \\Eine Sprache heisst \emph{deterministisch kontextfrei}, falls sie von einem deterministischen Kellerautomaten erkannt wird.
 \end{shaded}
 
 \subsubsection*{Abgeschlossenheit}
-Deterministisch kontextfreie Sprachen sind\dots
+Deterministisch kontextfreie Sprachen sind\dots \\
 \begin{minipage}[t]{0.48\textwidth}
 \dots abgeschlossen unter:
 \begin{itemize}
@@ -542,19 +566,19 @@ Zudem ist der \emph{Schnitt} einer deterministisch kontextfreien Sprache mit ein
         \item Wenn die Startvariable nicht markiert ist, ist die Sprache leer.
     \end{enumerate}
     \item[Endlichkeitsproblem] Pumping Lemma
-    \item Äquivalenzproblem
+    \item[Äquivalenzproblem] \red{WAS MUSS HIER HIN}
 \end{description}
 
 \section*{Kontextsensitive und Typ-0-Sprachen}
 \subsection*{Kuroda-Normalform}
 {\tiny Vergleichbar mit \emph{Chromsky-Normalform}}
 \begin{shaded}
+    \ \\
     Eine Typ 1-Grammatik ist in \emph{Kuroda-Normalform}, falls alle Regeln eine der $4$ Formen haben: \[ A\to a, A\to B, A\to BC, AB\to CD \]
     hierbei stehen $A,B,C,D$ für Variablen und $a$ für ein Terminalsymbol.
 \end{shaded}
-
 \begin{shaded}
-    Für jede Typ-1 Grammatik $G$ mit $\varepsilon \not\in L(G)$ gibt es eine Grammatik $G'$ in Kuroda-Normalform mit $L(G) = L(G')$.
+    \ \\Für jede Typ-1 Grammatik $G$ mit $\varepsilon \not\in L(G)$ gibt es eine Grammatik $G'$ in Kuroda-Normalform mit $L(G) = L(G')$.
 \end{shaded}
 
 \subsection*{Turingmaschine}
@@ -578,14 +602,14 @@ Zudem ist der \emph{Schnitt} einer deterministisch kontextfreien Sprache mit ein
     \end{itemize}
     \end{minipage}
 \end{shaded}
-Dabei bedeutet $\delta(z,a)=(z',b,x)$: Wenn sich $M$ im Zustand $z$ befindet und unter dem Schreib-Lesekopf das Zeichen $a$ steht, so geht $M$ im nächsten Schritt in den Zustand $z'$ über, schreibt (auf den Platz von $a$) $b$ auf das Band und führt danach die Kopfbewegeung $x\in\{L,R,N\}$ aus.
+Dabei bedeutet $\delta(z,a)=(z',b,x)$: Wenn sich $M$ im Zustand $z$ befindet und unter dem Schreib-Lesekopf das Zeichen $a$ steht, so geht $M$ im nächsten Schritt in den Zustand $z'$ über, schreibt (auf den Platz von $a$) $b$ auf das Band und führt danach die Kopfbewegeung $x\in\{\underset{left}{L},\underset{right}{R},\underset{nothing}{N}\}$ aus.
 
 \begin{shaded}
-    Eine \emph{Konfiguration} einer Turingmaschine ist ein Wort $k\in\Gamma^* Z\Gamma^*$.
+    \ \\Eine \emph{Konfiguration} einer Turingmaschine ist ein Wort $k\in\Gamma^* Z\Gamma^*$.
 \end{shaded}
 {\tiny Konfiguration = Momentaufnahme $k=\alpha z\beta$ mit $z$ aktueller Zustand.}
 \begin{shaded}
-    Definieren auf Menge der Konfigurationen zweistellige Relation $\vdash$
+    \ \\Definieren auf Menge der Konfigurationen zweistellige Relation $\vdash$
     {\tiny $\vdash$ 1 Schritt \\ $\vdash^*$ mehrere Schritte }
     \[ a_1\dots a_mzb_1\dots b_n\vdash
     \begin{cases}
@@ -597,28 +621,29 @@ Dabei bedeutet $\delta(z,a)=(z',b,x)$: Wenn sich $M$ im Zustand $z$ befindet und
 \end{shaded}
 
 \begin{shaded}
-    Die von einer Turingmascheine $M$ \emph{akzeptierte Sprache} ist wie folgt definiert: \[ T(M)=\{x\in\Sigma^* | z_0x\vdash^*\alpha z\beta; \alpha,\beta\in\Gamma^*; z\in E\} \]
+    \ \\Die von einer Turingmascheine $M$ \emph{akzeptierte Sprache} ist wie folgt definiert: \[ T(M)=\{x\in\Sigma^* | z_0x\vdash^*\alpha z\beta; \alpha,\beta\in\Gamma^*; z\in E\} \]
 \end{shaded}
 
 \subsubsection*{linear beschränkte Turingmaschine (LBA)}
 \begin{shaded}
-    Eine nichteterministische Turingmaschine heisst \emph{linear beschränkt}, wenn für alle $a_1a_2\dots a_{n-1}a_n\in\Gamma^+$ und alle Konfigurationen $\alpha z\beta$ mit $z_0a_1a_2\dots a_{n-1}\hat{a_n}\vdash^*\alpha z\beta$ gilt $|\alpha\beta|=n$.\\
+    \ \\Eine nichteterministische Turingmaschine heisst \emph{linear beschränkt}, wenn für alle $a_1a_2\dots a_{n-1}a_n\in\Gamma^+$ und alle Konfigurationen $\alpha z\beta$ mit $z_0a_1a_2\dots a_{n-1}\hat{a_n}\vdash^*\alpha z\beta$ gilt $|\alpha\beta|=n$.\\
     Die von einer linear beschränkten Turingmaschine $m$ \emph{akzeptierte Sprache} ist wie folgt definiert.
     \[
     T(M) = \{a_1a_2\dots a_{n-1}\in\Sigma^* | z_0a_1a_2\dots a_{n-1}\hat{a_n}\vdash^*\alpha z\beta,\; \alpha,\beta\in\Gamma^*; \;z,\in E\}
     \]
+    \\ {\tiny Der Eingabebereich wird nicht verlassen.}
 \end{shaded}
 
 \begin{shaded}
-    Die von linear beschränkten, nichtdeterministischen Turingmaschine (\textsc{Lba}s) akzeptierten Sprachen sind genau die kontextsensitiven (\textsc{Typ} 1) Sprachen.
+    \ \\Die von linear beschränkten, nichtdeterministischen Turingmaschine (\textsc{Lba}s) akzeptierten Sprachen sind genau die kontextsensitiven (\textsc{Typ} 1) Sprachen.
 \end{shaded}
 
 \begin{shaded}
-    Die durch algemeine Turingmaschinen akzeptierbaren Sprachen sind genau die \textsc{Typ} 0-Sprachen.
+    \ \\Die durch algemeine Turingmaschinen akzeptierbaren Sprachen sind genau die \textsc{Typ} 0-Sprachen.
 \end{shaded}
 
 \begin{shaded}
-    Eine \emph{Mehrband-Turingmaschine} ist eine Maschine mit $k\geq1$ Bändern und $k$ Schreib-Leseköpfen. Sie kann daher auf jedem Band unabhängig agieren.\\[1cm]
+    \ \\Eine \emph{Mehrband-Turingmaschine} ist eine Maschine mit $k\geq1$ Bändern und $k$ Schreib-Leseköpfen. Sie kann daher auf jedem Band unabhängig agieren.\\[1cm]
     Zu jeder Mehrbandturingmaschine $M$ gibt es eine (Einband-)Turingmaschine $M'$ mit $T(M)=T(M')$, bzw so, dass $M'$ dieselbe Funktion berechnet wie $M$.
 \end{shaded}
 
@@ -725,15 +750,15 @@ Typ 0 & unlösbar \\
 
 \section*{Turing-Berechenbarkeit}
 \begin{shaded}
-    Eine Funktion $f:\mathds{N}^k\to \mathds{N}$ heisst \emph{Turingberechenbar}, falls es eine (deterministische) Turingmaschine $M$ gibt, so dass für alle $n_1,\dots,n_k,m\in \mathds{N}$ gilt:
+    \ \\Eine Funktion $f:\mathds{N}^k\to \mathds{N}$ heisst \emph{Turingberechenbar}, falls es eine (deterministische) Turingmaschine $M$ gibt, so dass für alle $n_1,\dots,n_k,m\in \mathds{N}$ gilt:
     \[ f(n_1,\dots n_k) = m \] \textbf{genau dann, wenn} \[ z_0 bin(n_1)\#bin(n_2)\#\dots\#bin(n_k)\vdash^* \square\dots\square z_e bin(m)\square\dots\square \] wobei $z_e\in E$, $bin(n)$ ist die binäre Darstellung der Zahl $n\in \mathds{N}$.
 \end{shaded}
 \begin{shaded}
-    Eine Funktion $f:\Sigma^*\to\Sigma^*$ heisst \emph{Turingberechenbar}, falls es eine (deterministische) Turingmaschine $M$ gibt, so dass für alle $x,y\in\Sigma^*$ gilt:
+    \ \\Eine Funktion $f:\Sigma^*\to\Sigma^*$ heisst \emph{Turingberechenbar}, falls es eine (deterministische) Turingmaschine $M$ gibt, so dass für alle $x,y\in\Sigma^*$ gilt:
     \[ f(x)=y \] genau dann wenn \[ z_0x\vdash^*\square\dots\square z_e\square\dots\square\] wobei $z_e\in E$
 \end{shaded}
 
-Man beachte, dass beide Definitionen die Turingmaschine in eine Endlosschleife übergehen kann, wenn $f(x)=undefiniert$.
+Man beachte, dass bei beiden Definitionen die Turingmaschine in eine Endlosschleife übergehen kann, wenn $f(x)=undefiniert$.
 
 \section*{LOOP-, WHILE- und GOTO-Berechenbarkeit}
 \subsection*{LOOP-Programme}
@@ -744,20 +769,21 @@ Man beachte, dass beide Definitionen die Turingmaschine in eine Endlosschleife �
     \item[Operationszeichen] $+\;-$
     \item[Schlüsselwörter:] \textsc{Loop}, \textsc{Do}, \textsc{End}
 \end{description}
+\red{Bsp für Loop}
 
 \begin{shaded}
-    Eine Funktion $f: \mathds{N}^k\to \mathds{N}$ heisst \textsc{Loop}-berechenbar, falls es ein \textsc{Loop}-Programm $P$ gibt, dass $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\dots,n_k$ in den Variablen $x_1,\dots,x_k$ (und $0$ in den restlichen Variablen) stoppt mit dem Wert $f(n_1,\dots,n_k)$ in der Variablen $x_0$.
+    \ \\Eine Funktion $f: \mathds{N}^k\to \mathds{N}$ heisst \textsc{Loop}-berechenbar, falls es ein \textsc{Loop}-Programm $P$ gibt, dass $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\dots,n_k$ in den Variablen $x_1,\dots,x_k$ (und $0$ in den restlichen Variablen) stoppt mit dem Wert $f(n_1,\dots,n_k)$ in der Variablen $x_0$.
 \end{shaded}
 
 \subsection*{WHILE-Programme}
-Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schleife: \[ WHILE x_i\not=0 DO P END \]
+Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schleife: \[ WHILE x_i\not=0\; DO\; P\; END \]
 
 \begin{shaded}
-    Eine Funktion $f:\mathds{N}^k\to \mathds{N}$ heisst \textsc{While}-berechenbar, falls es ein \textsc{While}-Programm gibt $P$ gibt, das $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\dots,n_k$ in den Variablen $x_1,\dots,x_k$ (und 0 in den restlichen Fällen) stoppt mit dem Wert $f(n_1,\dots,n_k)$ in der Variablen $x_0$, sofern $f(n_1,\dots,n_k)$ definiert ist, ansonsten stoppt $P$ nicht.
+    \ \\Eine Funktion $f:\mathds{N}^k\to \mathds{N}$ heisst \textsc{While}-berechenbar, falls es ein \textsc{While}-Programm gibt $P$ gibt, das $f$ in dem Sinne berechnet, dass $P$, gestartet mit $n_1,\dots,n_k$ in den Variablen $x_1,\dots,x_k$ (und 0 in den restlichen Fällen) stoppt mit dem Wert $f(n_1,\dots,n_k)$ in der Variablen $x_0$, sofern $f(n_1,\dots,n_k)$ definiert ist, ansonsten stoppt $P$ nicht.
 \end{shaded}
 
 \begin{shaded}
-    Turingmaschinen können \textsc{While}-Programme simulieren. Dass heisst, jede \textsc{While}-berechenbare Funktion ist auch Turing-berechenbar.
+    \ \\Turingmaschinen können \textsc{While}-Programme simulieren. Dass heisst, jede \textsc{While}-berechenbare Funktion ist auch Turing-berechenbar.
 \end{shaded}
 
 \subsection*{GOTO-Programme}
@@ -770,11 +796,11 @@ Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schle
 \end{description}
 
 \begin{shaded}
-    Jedes \textsc{While}-Programm kann durch ein \textsc{Goto}-Programm simuliert werden. Das heisst, jede \textsc{While}-berechenbare Funktion ist auch \textsc{Goto}-berechenbar.
+    \ \\Jedes \textsc{While}-Programm kann durch ein \textsc{Goto}-Programm simuliert werden. Das heisst, jede \textsc{While}-berechenbare Funktion ist auch \textsc{Goto}-berechenbar.
 \end{shaded}
 
 \begin{shaded}
-    Jedes \textsc{Goto}-Programm kann durch ein \textsc{While}-Programm (mit nur einer \textsc{While}-Schleife) simuliert werden. Also ist jede \textsc{Goto}-berechenbare Funktion auch \textsc{While}-berechenbar
+    \ \\Jedes \textsc{Goto}-Programm kann durch ein \textsc{While}-Programm (mit nur einer \textsc{While}-Schleife) simuliert werden. Also ist jede \textsc{Goto}-berechenbare Funktion auch \textsc{While}-berechenbar
 \end{shaded}
 
 \begin{shaded}
@@ -783,7 +809,7 @@ Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schle
 \end{shaded}
 
 \begin{shaded}
-    \textsc{Goto}-Programme können Turingmaschinen simulieren. Also ist jede Turingberechenbare Funktion auch \textsc{Goto}-berechenbar.
+    \ \\\textsc{Goto}-Programme können Turingmaschinen simulieren. Also ist jede Turingberechenbare Funktion auch \textsc{Goto}-berechenbar.
 \end{shaded}
 \begin{center}
 \input{images/berechenbarkeit.tikz}
@@ -795,7 +821,7 @@ Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schle
 \subsection*{Halteproblem, Unentscheidbarkeit, Reduzierbarkeit}
 
 \begin{shaded}
-    Eine Menge $A\subseteq\Sigma^*$ heisst \emph{entscheidbar}, falls die \emph{charakteristische Funktion} von $A$, nämlich $\chi_A:\Sigma^*\to\{0,1\}$, berechenbar ist. Hierbei gilt für alle $w\in\Sigma^*$:
+    \ \\Eine Menge $A\subseteq\Sigma^*$ heisst \emph{entscheidbar}, falls die \emph{charakteristische Funktion} von $A$, nämlich $\chi_A:\Sigma^*\to\{0,1\}$, berechenbar ist. Hierbei gilt für alle $w\in\Sigma^*$:
     \[
     \chi_A(w)=
     \begin{cases}
@@ -819,10 +845,10 @@ Wir erweitern \textsc{Loop}-Programme durch das Konzept der \textsc{While}-Schle
 \end{center}
 
 \begin{shaded}
-    Eine Sprache $A$ ist genau dann entscheidbar, wenn sowohl $A$, als auch $\overline{A}$ semi-entscheidbar sind.
+    \ \\Eine Sprache $A$ ist genau dann entscheidbar, wenn sowohl $A$, als auch $\overline{A}$ semi-entscheidbar sind.
 \end{shaded}
 \begin{shaded}
-    Eine Sprache ist genau dann semi-entscheidbar, wenn sie rekursiv aufzählbar ist.
+    \ \\Eine Sprache ist genau dann semi-entscheidbar, wenn sie rekursiv aufzählbar ist.
 \end{shaded}
 
 Äquivalente Aussagen:
@@ -866,7 +892,7 @@ M_w=
 \]
 
 \begin{shaded}
-    Unter dem \emph{speziellen Halteproblem} oder \emph{Selbstanwendbarkeitsproblem} verstehen wir die Sprache
+    \ \\Unter dem \emph{speziellen Halteproblem} oder \emph{Selbstanwendbarkeitsproblem} verstehen wir die Sprache
     \[ K=\{w\in\{0,1\}^* | M_w \textrm{ angesetzt auf } w \textrm{ hält (im Endzustand)}\} \]
 \end{shaded}
 
@@ -876,29 +902,26 @@ M_w=
 
 \subsubsection*{Reduktion}
 \begin{shaded}
-    Seien $A\subseteq\Sigma^*$ und $B\subseteq\Gamma^*$ Sprachen. Dann heisst \emph{$A$ auf $B$ reduzierbar} - symbolisch mit $A\leq B$ bezeichnet - falls es eine totale und berechenbare Funktion $f:\Sigma^*\to\Gamma^*$ gibt, so dass für alle $x\in\Sigma^*$ gilt:
+    \ \\Seien $A\subseteq\Sigma^*$ und $B\subseteq\Gamma^*$ Sprachen. Dann heisst \emph{$A$ auf $B$ reduzierbar} - symbolisch mit $A\leq B$ bezeichnet - falls es eine totale und berechenbare Funktion $f:\Sigma^*\to\Gamma^*$ gibt, so dass für alle $x\in\Sigma^*$ gilt:
     \[ x\in A \Longleftrightarrow f(x)\in B \]
-\end{shaded}
-
-\begin{shaded}
     Falls $A\leq B$ und $B$ entscheidbar (bzw. semi-entscheidbar), dann ist auch $A$ entscheidbar (bzw- semi-entscheidbar).
 \end{shaded}
 
 \begin{shaded}
-    Das (allgemeine) Halteproblem ist die Sprache \[H=\{w\#x | M_w \textrm{ angesetzt auf } w \textrm{ hält}\} \]
+    \ \\Das (allgemeine) Halteproblem ist die Sprache \[H=\{w\#x | M_w \textrm{ angesetzt auf } w \textrm{ hält}\} \]
     Das allgemeine Halteproblem $H$ ist nicht entscheidbar.\\
     {\tiny $K\leq H$, da K Spezialfall von H}
 \end{shaded}
 
 \begin{shaded}
-    Das Halteproblem auf leerem Band ist die Sprache \[H=\{w\#x | M_w \textrm{ angesetzt auf } w \textrm{ hält}\} \] \\
+    \ \\Das Halteproblem auf leerem Band ist die Sprache \[H=\{w\#x | M_w \textrm{ angesetzt auf leerem Band hält}\} \] \\
     Das Halteproblem auf leerem Band $H_0$ ist nicht entscheidbar. \\
     {\tiny $H\leq H_0$, da Turingmaschine einfach das nichtleere Band von $H$ auf das leere Band von $H_0$ schreiben kann.}
+\end{shaded}
 
-    \begin{shaded}
-        \textbf{Satz von Rice}\\
-        Sei $\mathcal{R}$ die Klasse aller Turing-berechenbaren Funktionen. Sei $\mathcal{S}$ eine \emph{beliebige} Teilmenge hiervon (ausgenommen $\mathcal{S}=\emptyset$ und $\mathcal{S}=\mathcal{R}$). Dann ist die Sprache \[ C(\mathcal{S} = \{w | \textrm{ die von } M_w \textrm{ berechnete Funktion liegt in } \mathcal{S}\} \] unentscheidbar.
-    \end{shaded}
+\begin{shaded}
+    \textbf{Satz von Rice}\\
+    Sei $\mathcal{R}$ die Klasse aller Turing-berechenbaren Funktionen. Sei $\mathcal{S}$ eine \emph{beliebige} Teilmenge hiervon (ausgenommen $\mathcal{S}=\emptyset$ und $\mathcal{S}=\mathcal{R}$). Dann ist die Sprache \[ C(\mathcal{S} = \{w | \textrm{ die von } M_w \textrm{ berechnete Funktion liegt in } \mathcal{S}\} \] unentscheidbar.
 \end{shaded}
 
 \subsection*{Das Postsche Korrespondenzproblem (PCP)}
@@ -917,7 +940,7 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 
 \begin{shaded}
 \ \\
-    Das Postsche Korrespondenzproblem ist untentscheidbar.\\[.5cm]
+    Das Modifizierte Postsche Korrespondenzproblem ist untentscheidbar.\\[.5cm]
     Das Postsche Korrespondenzproblem ist bereits untentscheidbar, wenn man sich auf das Eingabealphabet $\{0,1\}$ beschränkt.
 \end{shaded}
 
@@ -929,12 +952,12 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 \part*{Komplexitätstheorie}
 \subsection*{Komplexitätsklasse und P-NP-Problem}
 \begin{shaded}
-    Sei $f:\mathds{N}\to \mathds{N}$ eine Funktion. Die Klasse $TIME(f(n))$ besteht aus allen Sprachen $A$, für die es eine deterministische Mehrbandturingmaschine $M$ gibt mit $A=T(M)$ und $time_M(x)\leq f(|x|)$.\\
+    \ \\Sei $f:\mathds{N}\to \mathds{N}$ eine Funktion. Die Klasse $TIME(f(n))$ besteht aus allen Sprachen $A$, für die es eine deterministische Mehrbandturingmaschine $M$ gibt mit $A=T(M)$ und $time_M(x)\leq f(|x|)$.\\
     Hierbei bedeutet $time_M:\Sigma^*\to \mathds{N}$ die Anzahl der Rechenschritte von $M$ bei Eingabe $x$.
 \end{shaded}
 
 \begin{shaded}
-    Ein \emph{Polynom} ist eine Funktion $p:\mathds{N}\to \mathds{N} $ der Form \[ p(n)=a_kn^k+a_{k-1}n^{k-1}+\dots+a_1n+a_0, a_i\in \mathds{N}, k\in \mathds{N} \]
+    \ \\Ein \emph{Polynom} ist eine Funktion $p:\mathds{N}\to \mathds{N} $ der Form \[ p(n)=a_kn^k+a_{k-1}n^{k-1}+\dots+a_1n+a_0, a_i\in \mathds{N}, k\in \mathds{N} \]
     Die \emph{Komplexitätsklasse $\mathsf{P}$} ist wie folgt definiert:
     \begin{align*}
         \mathsf{P} &= \{A | \textrm{ es gibt eine Turingmaschine } M \textrm{ und ein Polynom } p \textrm{ mit } T(M)=A \textrm{ und } time_M(x)\leq p(|x|) \} \\
@@ -943,11 +966,11 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 \end{shaded}
 
 \begin{shaded}
-    Die Klasse $\mathsf{P}$ (ebenso wie größere Komplexitätsklassen wie $TIME(2^n)$ oder $TIME\left(\left.2^{2^{\dots^{2^2}}}\right\}n\textrm{-mal}\right) $ ) sind immer noch in der Klasse der primitiv rekursiv bzw \textsc{Loop}-berechenbaren Sprachen enthalten
+    \ \\Die Klasse $\mathsf{P}$ (ebenso wie größere Komplexitätsklassen wie $TIME(2^n)$ oder $TIME\left(\left.2^{2^{\dots^{2^2}}}\right\}n\textrm{-mal}\right) $ ) sind immer noch in der Klasse der primitiv rekursiv bzw \textsc{Loop}-berechenbaren Sprachen enthalten
 \end{shaded}
 
 \begin{shaded}
-    Für nichtdeterministische Turingmaschinen $M$ sei
+    \ \\Für nichtdeterministische Turingmaschinen $M$ sei
     \[ ntime_M(x)=
     \begin{cases}
         min \textrm{ Länge einer akzeptierenden Rechnung von } M \textrm{ auf } x, & x\in T(M) \\
@@ -972,7 +995,7 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 
 \subsection*{\textsf{NP}-Vollständigkeit}
 \begin{shaded}
-    Seien $A\subseteq\Sigma^*$ und $B\subseteq\Gamma^*$ Sprachen. Dann heisst \emph{$A$ auf $B$ polynomial reduzierbar} - symbolisch mit $A\leq_p B$ bezeichnet - falls es eine totale und mit polynomieller Komplexität berechenbare Funktion $f:\Sigma^*\to\Gamma^*$ gibt, so dass für alle $x\in\Sigma^*$ gilt:
+    \ \\Seien $A\subseteq\Sigma^*$ und $B\subseteq\Gamma^*$ Sprachen. Dann heisst \emph{$A$ auf $B$ polynomial reduzierbar} - symbolisch mit $A\leq_p B$ bezeichnet - falls es eine totale und mit polynomieller Komplexität berechenbare Funktion $f:\Sigma^*\to\Gamma^*$ gibt, so dass für alle $x\in\Sigma^*$ gilt:
     \[ x\in A\Longleftrightarrow f(x)\in B \]
     Falls $A\leq_p B$ und $B\in\mathsf{P}$ (bzw. $B\in\mathsf{NP}$), so ist auch $A\in\mathsf{P}$ (bzw. $A\in\mathsf{NP}$)
 \end{shaded}
@@ -984,7 +1007,7 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 \end{shaded}
 
 \begin{shaded}
-    Sei $A$ \textsf{NP} vollständig. Dann gilt $A\in P \Leftrightarrow \mathsf{P} = \mathsf{NP}$. {\tiny falls es einnmal so wäre\dots}
+    \ \\Sei $A$ \textsf{NP} vollständig. Dann gilt $A\in P \Leftrightarrow \mathsf{P} = \mathsf{NP}$. {\tiny (falls es einnmal so wäre\dots)}
 \end{shaded}
 
 \begin{center}
@@ -993,7 +1016,7 @@ $\textsc{Mpcp} \leq \textsc{Pcp}$ und $H\leq \textsc{Mpcp} $
 
 \subsubsection*{\textsf{NP}-vollständige Probleme}
 \begin{shaded}
-    Das \emph{Erfüllbarkeitsproblem der Aussagenlogik}, kurz \textsc{Sat}, ist das Folgende:
+    \ \\Das \emph{Erfüllbarkeitsproblem der Aussagenlogik}, kurz \textsc{Sat}, ist das Folgende:
     \begin{description}
         \item[gegeben:] eine Formel $F$ der Aussagenlogik
         \item[gefragt:] Ist $F$ erfüllbar, d.h. gibt es eine Belegung der Variablen mit Konstanten $\in\{0,1\}$, so dass $F$ den Wert $1$ erhält?

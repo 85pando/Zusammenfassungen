@@ -5,10 +5,10 @@ every path/.style={draw,thick,-stealth}
 \node (w) at (0,0) {$w$};
 \node (wend) at (2,0) {};
 
-\node (ja) at (8,.5) {"'ja"`};
+\node (ja) at (8,.5) {"`ja"'};
 \node (jas) at (6,.5) {};
 
-\node (nein) at (8,-.5) {"'nein"`};
+\node (nein) at (8,-.5) {"`nein"'};
 \node (neins) at (6,-.5) {};
 
 \path (w) -- (wend);
@@ -22,7 +22,7 @@ every path/.style={draw,thick,-stealth}
 \node (w) at (10,0) {$w$};
 \node (wend) at (12,0) {};
 
-\node (ja) at (18,.5) {"'ja"`};
+\node (ja) at (18,.5) {"`ja"'};
 \node (jas) at (16,.5) {};
 
 \node (woot) at (16.5,-.5) {???};
