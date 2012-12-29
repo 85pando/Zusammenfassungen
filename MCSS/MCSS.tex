@@ -1,0 +1,364 @@
+\documentclass[a4paper, 10pt]{article}
+
+%\usepackage{scalefnt}
+%\usepackage{parcolumns}
+
+\usepackage{newclude}
+\include{../zusammenfassung}
+
+\begin{document}
+
+\Gruppe{Stephan Heidinger}{MCSS - Zusammenfassung v0.1}
+\Header{Modell Checking in Software Systems}{WS 12/13}{Stephan Heidinger}
+
+\begin{shaded}
+Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziell-Weitergabe unter gleichen Bedingungen (\textbf{CC by-nc-sa}) veröffentlicht. Die Bedingungen finden sich unter \href{http://creativecommons.org/licenses/by-nc-sa/3.0/de}{diesem Link}. \\
+\centerline{./../cc-by-nc-sa.png}
+\end{shaded}
+
+\textit{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}
+Find any errors? Please send them back, I want to keep them!}
+
+\section*{Basic Principle}
+\begin{multicols}{2}
+given:
+\begin{itemize}
+    \item Software Model $M$
+    \item Property Specification $S$
+\end{itemize}
+does $M\models S$
+\columnbreak
+\begin{center}
+\scalebox{0.75}{\input{images/basic_principle.tikz}}
+\end{center}
+\end{multicols}
+
+\section*{Classification of Software Systems}
+\begin{description}
+    \item[Transformational Systems] transforms set of (empty) input data into output data, function from state $S_i$ to $S_k$ \\ correctness:
+    \begin{itemize}
+        \item termination
+        \item correctness of function $S_i\to S_k$
+        \item correctness of input - output transformation
+    \end{itemize}
+    \item[Reactive Systems] ongoing interaction with environment, driven by environment \\ correctness:
+    \begin{itemize}
+        \item non-termination (normally)
+        \item correctness of stimuli-response pairs
+    \end{itemize}
+    \item[Embedded Systems] usually reactive, directly connected to hardware
+    \item[Cyber-Physical Systems] integration of computation and physical processes
+    \item[Real-Time Systems] systems, where correctness depends on time a result is delivered
+    \begin{description}
+        \item[Soft Real-Time Systems] missed deadlines will decrease result, not lead to failure, propabilities
+        \item[Hard Real-Time Systems] missed deadlines will lead to failure
+    \end{description}
+    \item[Hybrid Systems] state is characterized by discrete and continuous variables
+    \item[Safety-Critical Systems] systems failure may entail, death, serious injury, environmental harm, damage to property/assets
+\end{description}
+
+\section*{Requirement Specification}
+\begin{description}
+    \item[Natural Language] \ \\
+    \begin{itemize}
+        \good very expressive
+        \good understood by all parties
+        \bad ambiguous
+    \end{itemize}
+    \item[Formal Language] \ \\
+    \begin{itemize}
+        \good unambigous
+        \good machine-analyzeable
+        \bad limited expressiveness
+        \bad hard to understand
+    \end{itemize}
+\end{description}
+
+\section*{Software Verification Method}
+\subsection*{Requirements}
+\begin{itemize}
+    \item formal foundation (automatic procedures)
+    \item should be capable of relating artifacts from different stages in design cycle (formal vs informal req, design vs req, \dots)
+    \item should be easy to integrate in design cycle (high degree of automation, low degree of interaction)
+    \item scalable
+\end{itemize}
+
+\subsection*{Model Checking Process}
+\begin{enumerate}
+    \item provide model (e.g. Promela), involves abstraction
+    \item simulate (check if model does, what you want)
+    \item elicit and formalize requirements $\Rightarrow$ property specification
+    \item model execution: run model checker with model and specification\\ outcome:
+    \begin{itemize}
+        \item property is valid (check next property)
+        \item property is invalid (counterexample, check model for errors, check properties for errors, rethink design)
+        \item exhaust of memory (use more abstraction, state space reduction, incomplete methods)
+        \item exhaust of time (smaller model, faster computer)
+    \end{itemize}
+\end{enumerate}
+
+\section*{\textsc{Spin}}
+\begin{itemize}
+    \item designed for communication protocols
+    \item Open Source
+    \item still in development
+    \item Promela (\textsc{PROtocol/PROcess MEta LAnguage})
+    \begin{itemize}
+        \item concurrent modeling language
+        \item guarded commands
+        \item modeling of reactive systems
+    \end{itemize}
+\end{itemize}
+
+\subsection*{State-Based Modeling}
+\subsubsection*{State}
+\begin{itemize}
+    \item salient features of a system at given point of observation
+    \item states can be observed, as long as features of interest unchanged
+    \item features of interest
+    \begin{description}
+        \item[point of control] ``program counter'' (of all processes)
+        \item[values] of local and global variables
+        \item[communication channels] (messages sent but not received)
+    \end{description}
+    \item state vector (byte-wise representation of features of interest) \\
+    % \begin{center}
+    \scalebox{1}{\input{images/state-vector.tikz}}
+    % \end{center}
+\end{itemize}
+
+\subsubsection*{State Transition}
+\begin{itemize}
+    \item instantaneous change of observed features of the system (``something happens'')
+    \item represents computation step
+    \item sequence of state transitions characterize system computation \\
+    % \begin{center}
+    \scalebox{1}{\input{images/transition.tikz}}
+    % \end{center}
+    \item in real-time systems, time passes in states
+    \item in stochastic systems, transitions are labeled with probability distributions
+    \item in hybrid systems, continuous and discrete state variables change during state transition
+    \item transitions show the possible events
+    \item transition sequences are valid computations sequences
+    \item transitions encode history ($S_0$ has been visited before $S_1$)
+\end{itemize}
+
+\subsubsection*{Devising State-Machines}
+\begin{itemize}
+    \item ``programm a model''
+    \item abstraction: focus on relevant, can lead to non-determinism
+    \item simplicity: find most simple abstraction that still reveals phenomena
+\end{itemize}
+
+\subsubsection*{Deadlock}
+\begin{itemize}
+    \item concurrent processes wait for each other in a circular wait with no pre-emption
+    \item highly undesired
+\end{itemize}
+
+\subsubsection*{Closed System Modeling}
+\begin{itemize}
+    \item model checker can only validate all possible system executions under assumed environment
+    \item model includes also environment
+\end{itemize}
+
+\subsection*{Transition Systems}
+\begin{shaded}
+Transition System $TS$ is a tuple $(S,Act,\to,I,AP,L$ where \\
+\begin{minipage}{0.48\textwidth}
+\begin{tabular}{ll}
+$S$ & is a set of states \\
+$Act$ & is a set of actions \\
+$\to\subseteq S\times Act\times S$ & is a transition relation \\
+$I\subseteq S$ & is a set of initial states \\
+$AP$ & is a set of atomic propositions \\
+$L:S\to2^AP$ & is a labeling function \\
+\end{tabular}
+\end{minipage}
+\hfill \vrule \hfill
+\begin{minipage}{0.48\textwidth}
+\begin{itemize}
+    \item where $S$ and $Act$ are finite or countably infinte
+    \item we write $s\to^\alpha s'$ for $\left(s,\alpha,s'\right)\in\to$
+    \item Atomic Propositions: Facts that we want to observer/that are observable in the system in any given state.
+    \item Labeling Function: shows, which atomic propositions hold in given state.
+\end{itemize}
+\end{minipage}
+\end{shaded}
+
+\begin{shaded}
+    \begin{align*}
+        Post(s,\alpha) &= \left\{ s'\in S | s\overset{\alpha}{\longrightarrow} s' \right\}
+        & Post(s)&=\bigcup_{\alpha\in Act} Post(s,\alpha)
+        \\
+        Pre(s,\alpha) &= \left\{ s'\in S | s'\overset{\alpha}{\longrightarrow} s \right\}
+        & Pre(s)&=\bigcup_{\alpha\in Act} Pre(s,\alpha)
+        \\
+        Post(C,\alpha) &= \bigcup_{s\in C} Post(s,\alpha),
+        & Post(C) &= \bigcup_{s\in C} Post(s)\textrm{ for } C\subseteq S
+        \\
+        Pre(C,\alpha) &= \bigcup_{s\in C} Pre(s,\alpha),
+        & Pre(C) &= \bigcup_{s\in C} Pre(s)\textrm{ for } C\subseteq S
+        \\
+    \end{align*}
+    \begin{center}
+    a state is \emph{terminal} or \emph{final} iff $Post(s)=\varnothing$
+    \end{center}
+\end{shaded}
+
+\subsubsection{(Non)Determinism}
+\begin{shaded}
+    A transition system $TS=\left(S,Act,\to,I,AP,L\right)$ is \emph{action-deterministic}, iff for all $s,\alpha$
+    \begin{itemize}
+        \item $|I|\leq1$ and
+        \item $|Post(s),\alpha)|\leq1$
+    \end{itemize}
+    else it is \emph{action-nondeterministic} \\
+    {\tiny there is at most one outgoing transition from each state labeled $\alpha$}
+\end{shaded}
+
+\begin{shaded}
+    A transition system $TS=\left(S,Act,\to,I,AP,L\right)$ is \emph{AP-deterministic}, iff for all $s,A\in2^{AP}$
+    \begin{itemize}
+        \item $|I|\leq1$ and
+        \item $|Post(s)\cap \left\{s'\in S | L(s')=A\right\}|\leq1$
+    \end{itemize}
+    else it is \emph{AP-nondeterministic} \\
+    {\tiny every successor of a state $s$ has a unique $AP$ labeling}
+\end{shaded}
+
+\begin{itemize}
+    \item Nondeterminism can lead to potentially smaller representation.
+    \item in Software Engineering/Modeling: Abstraction
+    \begin{itemize}
+        \item avoid overspecification
+        \item what does the system do, not how is it done
+    \end{itemize}
+    \begin{itemize}
+        \item concurrency
+        \begin{itemize}
+            \item simulate concurrency by nondeterminsm
+            \item either nondeterministic action can be executed first
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection*{System Execution}
+Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
+\begin{description}
+    \item[finite execution fragment] $\varrho$ of $TS$ is an alternating sequence of states and actions ending with a state:
+    \[ \varrho = s_0\alpha_1 s_1\alpha_2\dots\alpha_n s_n \textrm{ s.t. } s_i\to^{\alpha_{i+1}} s_{i+1} \textrm{ for all } 0\leq i<n \]
+    \item[infinite execution fragment] $\varrho$ of $TS$ is an infinite, alternating sequence of states and actions:
+    \[ \varrho = s_0\alpha_1 s_1\alpha_2\dots\alpha_n s_n \textrm{ s.t. } s_i\to^{\alpha_{i+1}} s_{i+1} \textrm{ for all } 0\leq i \]
+    \item[execution] of TS is an inital, maximal execution fragment
+    \begin{itemize}
+        \item an execution fragment is maximal, iff it is either
+        \begin{itemize}
+            \item finite and ending in a terminal state
+            \item[or]
+            \item infinite
+        \end{itemize}
+        \item an execution fragment is initial, iff $s_0\in I$
+    \end{itemize}
+    \item[reachable state] is a state $s\in S$ if there exists an initial, finite execution fragment $s_0\alpha_1s_1\dots\alpha_ns_n$ so that $s_n=s$
+    \item[$Reach(TS)$] denotes the set of all reachable states in $TS$ \\
+    % \begin{center}
+    \scalebox{1}{\input{images/reach.tikz}}
+    % \end{center}
+\end{description}
+
+\section*{Program Graphs \textsc{Pg}}
+\begin{itemize}
+    \item want to include things like variables, assignements, etc $\Rightarrow$ Program Graphs
+    \item introduce conditional transitions (transition can only be exectured, if condition is true) \[ s \overset{\red g:\blue\alpha}{\longrightarrow}s' \]
+    \begin{itemize}
+        \item $\red g$: a boolean condition on data variables (``guard'')
+        \item $\blue\alpha$: an action, that is possible, if g is satisfied
+    \end{itemize}
+    \item assume domain of variables as infinite
+    \begin{itemize}
+        \item practical implementations use variables over finite domains
+    \end{itemize}
+    \item Stepwise unfolding of $PG$s lead to $TS$
+\end{itemize}
+
+\begin{description}
+    \item[valuation:] assign values to variables (e.g. $\eta(x)=17$)
+    \item[propositional logic formulae]
+    \item[effect] of actions: \[ Effect: Act\times Eval(Var)\to Eval(Var) \]
+    Effects define \emph{operational semantics}
+\end{description}
+
+\begin{shaded}
+    A \emph{program graph} $PG$ over set $Var$ of typed variables is a tuple $\left( Loc, Act, Effect, \to, Loc_0, g_0 \right)$ where
+    \begin{itemize}
+        \item $Loc$ is a set of locations with initial locations $Loc_0\subseteq Loc$
+        \item $Act$ is a set of actions
+        \item $Effect: Act\times Eval(Var)\to Eval(Var)$ is the effect function
+        \item $\to \subseteq Loc\times \left(Cond(Var) \times Act\right) \times Loc $, transition relation {\tiny cond = boolean condition}
+        \item $g_0\in Cond(Var)$ is the inital condition
+    \end{itemize}
+    Notation $\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'$ denotes $\left(\ell,\red g, \blue\alpha,\ell'\right)\in \longrightarrow$
+\end{shaded}
+\subsection*{Semantics for Program Graphs}
+\begin{itemize}
+    \item Unfolding: Transformation of $PG$ to equivalent $TS$
+    \begin{itemize}
+        \item states:
+        \begin{itemize}
+            \item state $<l,\eta>$: current control location $l$ + data valuation $\eta$
+            \item initial state: initial location satisfying condition $g_0$
+        \end{itemize}
+        \item propositions:
+        \begin{itemize}
+            \item $at\_l$: control is at location $l$
+            \item $x\in D$ iff $D\subseteq dom(x)$
+        \end{itemize}
+        \item labeling
+        \begin{itemize}
+            \item $<l,\eta>$ is labeled with $at\_l$ and all conditions that hold in $\eta$
+        \end{itemize}
+    \end{itemize}
+    \item from transitions in $PG$ to transitions in $TS$
+    \begin{itemize}
+        \item if $\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'$ and $g$ holds in $\eta$, then $<l,\eta>\to^\alpha<l',Effect(\alpha,\eta)>$
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Structured Operational Semantics \textsc{Sos}}
+\begin{itemize}
+    \item definition of \emph{operational semantics} of a program in terms f computations steps defined by a transition system
+    \item whether a step happens is determined by inference rules: \[ \frac{premise}{conclusion} \]
+    \begin{itemize}
+        \item if the premise holds, the conclusion holds (and can trigger further inference rules)
+        \item if the premise is a \emph{tautology}, it may be omited\\
+        the rule is then called an \emph{axiom}
+    \end{itemize}
+    \item semantics is structural, because it applies inference rules recursively to syntactic structure
+\end{itemize}
+
+\subsection*{Transition Systems for Program Graphs}
+\begin{shaded}
+    The transition system $TS(PG)$ of program graph \[PG=(Loc, \blue{Act}, Effect,\longrightarrow, Loc_0,g_0)\] over set $Var$ of variables is the tuple \[ (S,\blue{Act},\longrightarrow,I,AP,L) \] where
+    \begin{itemize}
+        \item $S=Loc\times Eval(Var)$
+        \item $\longrightarrow\subseteq S\times Act\times S$ is defined by $\displaystyle\frac{\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'\; \wedge \; \eta\models \red g}{<\ell,\eta>\overset{\blue\alpha}{\longrightarrow}<\ell',Effect(\blue\alpha,\eta)>}$
+        \item $I=\left\{<\ell,\eta> | \ell \in Loc_0,\eta \models g_0\right\}$
+        \item $AP=Loc \cup Cond(Var)$ and $L\left(<\ell,\eta>\right)=\{\ell\} \cup \left\{ g\in Cond(Var) | \eta \models g \right\} $
+    \end{itemize}
+\end{shaded}
+
+\subsubsection*{Data in Transition Systems}
+\begin{itemize}
+    \item $TS$ do not possess data variables, data values and their changes need to be encoded in states
+    \item assume $i=1,\dots,n$ variables of domain $s_i$ \follows $\Pi^n_{i=1}s_i$ \\
+    \emph{combinatorial, exponential state space explosion}
+    \item variables over infinite domains \follows infinite number of states
+\end{itemize}
+
+
+
+
+
+
+\end{document}

@@ -12,7 +12,7 @@
 \usepackage{marginnote}
 \usepackage{microtype} % div. Verbesserungen des Schriftsatzes (Grauwert, opt. Randausgleich, Zeilenumbruch)
 %\usepackage{multirow}
-%\usepackage{multicol} %use this with next line for vertical divided environment
+\usepackage{multicol} %use this with next line for vertical divided environment
 %\setlength\columnseprule{.4pt}:465
 \usepackage[ngerman]{babel} % Neue Rechtschreibung
 \usepackage{pifont}
@@ -149,6 +149,17 @@
 \newcommand{\tflash}{$\yellow{\lightning}$} %for use in text
 \newcommand{\mflash}{\yellow{\lightning}} %for use in math
 \newcommand{\follows}{$\Rightarrow$} %used so often...
+\newcommand{\good}{\item[\green{\ding{58}}]} %an item with a green plus as bullet point
+\newcommand{\bad}{\item[\red{\ding{216}}]} %an item with a red downwards sloping arrow, maybe find something better
+
+%%%%%% make emph bold instead of italic %%%%%
+\makeatletter
+\DeclareRobustCommand{\em}{%
+  \@nomath\em \if b\expandafter\@car\f@series\@nil
+  \normalfont \else \bfseries \fi}
+\makeatother
+
+%\DeclareTextFontCommand{\emph}{\bfseries}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % languages for \loadCode
