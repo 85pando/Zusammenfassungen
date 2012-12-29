@@ -1,0 +1,13 @@
+\begin{tikzpicture}[
+]
+
+\draw[thick,fill=gray!50] (1,0) rectangle (2,1);
+\node (pc) at (1.5,.5) {PC};
+
+\draw[thick,fill=blue!50] (2,0) rectangle (6,1);
+\node (var) at (4,.5) {variables};
+
+\draw[thick,fill=orange!50] (6,0) rectangle (10,1);
+\node (chan) at (8,.5) {communication channels};
+
+\end{tikzpicture}

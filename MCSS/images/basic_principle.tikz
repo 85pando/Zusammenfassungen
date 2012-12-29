@@ -1,0 +1,12 @@
+\begin{tikzpicture}[
+]
+
+\tikzstyle{nome}=[draw, anchor=west,text width=3.5cm]
+
+\draw[thick,fill=red!70]    (0,0) circle (2.5);
+\draw[thick,fill=violet!70] (0,0) circle (2);
+
+\node[nome,text=violet!70] at (3,.26) {Software Model};
+\node[nome,text=red!70]    at (3,-.25) {Property Specification};
+
+\end{tikzpicture}

@@ -1,0 +1,24 @@
+\begin{tikzpicture}[
+state/.style={draw,rounded corners},
+every node/.style={node distance = 70},
+every path/.style={draw,->, >=stealth, thick, minimum width=1cm},
+]
+
+\node[state] (zero) at (0,0) {$S_0$};
+
+\node[state] (one) [right of = zero] {$S_1$};
+
+\node (ff1) [above right of = one] {$\dots$};
+\node (ff2) [below right of = one] {$\dots$};
+
+\node[state] (fin) [below right of = ff1] {$S_{fin}$};
+
+\path
+	(zero) edge (one)
+	(one) edge (ff1)
+	(ff1) edge (fin)
+	(one) edge (ff2)
+	(ff2) edge (fin)
+;
+
+\end{tikzpicture}
