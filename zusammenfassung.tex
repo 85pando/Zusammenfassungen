@@ -18,7 +18,9 @@
 \usepackage{pifont}
 \usepackage[sans]{dsfont} %für alternative Mengensymbole
 \usepackage{stmaryrd} %u.a. für \lightning
-\usepackage{tikz,tikz-er2,tikz-uml} % für Diagramme(Dia!) und Bilder (z.B. *.eps)/für ER-Diagramme/für UML-Diagramme
+\usepackage{tikz} % für Diagramme(Dia!) und Bilder (z.B. *.eps)/für ER-Diagramme/für UML-Diagramme
+%\usepackage{tikz-er2} %  er-diagramme
+\usepackage{tikz-uml} % uml-Diagramme
 \usepackage{units} % z.B. fuer \nicefrac{}{}
 \usepackage[utf8]{inputenc} % utf8 für den Editor
 \usepackage{wasysym} %u.a. für \lightning
@@ -149,15 +151,16 @@
 \newcommand{\tflash}{$\yellow{\lightning}$} %for use in text
 \newcommand{\mflash}{\yellow{\lightning}} %for use in math
 \newcommand{\follows}{$\Rightarrow$} %used so often...
-\newcommand{\good}{\item[\green{\ding{58}}]} %an item with a green plus as bullet point
+\newcommand{\good}{\item[\dGreen{\ding{58}}]} %an item with a green plus as bullet point
 \newcommand{\bad}{\item[\red{\ding{216}}]} %an item with a red downwards sloping arrow, maybe find something better
+\newcommand{\hm}{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}}
 
 %%%%%% make emph bold instead of italic %%%%%
-\makeatletter
-\DeclareRobustCommand{\em}{%
-  \@nomath\em \if b\expandafter\@car\f@series\@nil
-  \normalfont \else \bfseries \fi}
-\makeatother
+% \makeatletter
+% \DeclareRobustCommand{\em}{%
+%   \@nomath\em \if b\expandafter\@car\f@series\@nil
+%   \normalfont \else \bfseries \fi}
+% \makeatother
 
 %\DeclareTextFontCommand{\emph}{\bfseries}
 

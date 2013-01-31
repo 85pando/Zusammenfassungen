@@ -16,8 +16,7 @@ Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziel
 \centerline{./../cc-by-nc-sa.png}
 \end{shaded}
 
-\textit{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}
-Find any errors? Please send them back, I want to keep them!}
+\textit{\hm \; Find any errors? Please send them back, I want to keep them!}
 
 \section*{Basic Principle}
 \begin{multicols}{2}
@@ -306,7 +305,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     \begin{itemize}
         \item states:
         \begin{itemize}
-            \item state $<l,\eta>$: current control location $l$ + data valuation $\eta$
+            \item state $<l,\eta\rangle$: current control location $l$ + data valuation $\eta$
             \item initial state: initial location satisfying condition $g_0$
         \end{itemize}
         \item propositions:
@@ -316,12 +315,12 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
         \end{itemize}
         \item labeling
         \begin{itemize}
-            \item $<l,\eta>$ is labeled with $at\_l$ and all conditions that hold in $\eta$
+            \item $<l,\eta\rangle$ is labeled with $at\_l$ and all conditions that hold in $\eta$
         \end{itemize}
     \end{itemize}
     \item from transitions in $PG$ to transitions in $TS$
     \begin{itemize}
-        \item if $\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'$ and $g$ holds in $\eta$, then $<l,\eta>\to^\alpha<l',Effect(\alpha,\eta)>$
+        \item if $\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'$ and $g$ holds in $\eta$, then $<l,\eta\rangle\to^\alpha<l',Effect(\alpha,\eta)\rangle$
     \end{itemize}
 \end{itemize}
 
@@ -342,9 +341,9 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     The transition system $TS(PG)$ of program graph \[PG=(Loc, \blue{Act}, Effect,\longrightarrow, Loc_0,g_0)\] over set $Var$ of variables is the tuple \[ (S,\blue{Act},\longrightarrow,I,AP,L) \] where
     \begin{itemize}
         \item $S=Loc\times Eval(Var)$
-        \item $\longrightarrow\subseteq S\times Act\times S$ is defined by $\displaystyle\frac{\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'\; \wedge \; \eta\models \red g}{<\ell,\eta>\overset{\blue\alpha}{\longrightarrow}<\ell',Effect(\blue\alpha,\eta)>}$
-        \item $I=\left\{<\ell,\eta> | \ell \in Loc_0,\eta \models g_0\right\}$
-        \item $AP=Loc \cup Cond(Var)$ and $L\left(<\ell,\eta>\right)=\{\ell\} \cup \left\{ g\in Cond(Var) | \eta \models g \right\} $
+        \item $\longrightarrow\subseteq S\times Act\times S$ is defined by $\displaystyle\frac{\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'\; \wedge \; \eta\models \red g}{<\ell,\eta\rangle\overset{\blue\alpha}{\longrightarrow}<\ell',Effect(\blue\alpha,\eta)\rangle}$
+        \item $I=\left\{<\ell,\eta\rangle | \ell \in Loc_0,\eta \models g_0\right\}$
+        \item $AP=Loc \cup Cond(Var)$ and $L\left(<\ell,\eta\rangle\right)=\{\ell\} \cup \left\{ g\in Cond(Var) | \eta \models g \right\} $
     \end{itemize}
 \end{shaded}
 
@@ -356,9 +355,83 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     \item variables over infinite domains \follows infinite number of states
 \end{itemize}
 
+\section*{Modelling Concurrency}
+\subsection{Concurrent Event}
+\begin{itemize}
+    \item logically independent events in separate autonomous system
+\end{itemize}
 
+\subsection*{Lamport's \emph{happened-Before} Relation $\to$}
+\begin{shaded}
+    \begin{description}
+        \item[HB1:] for any pair of events $e$ and $e'$, if there is a process $p_i$ such that $e \to_i e'$, then $e \to e'$
+        \item[HB2:] for any pair of events $e$ and $e'$ and for any message $m$, if $e = send(m)$ and $e' = receive(m)$, then $e \to e'$
+        \item[HB3:] if $e$, $e'$ and $e''$ are events and if $e \to e'$ and $e' \to e''$, then $e \to e''$ (HB is identical to its transitive closure)
+    \end{description}
+\end{shaded}
 
+\begin{center}
+\scalebox{1}{\input{images/lamport.tikz}}
+\end{center}
 
+\subsection*{Concurrency}
+\begin{itemize}
+    \item two events are $E_1, E_2$ are concurrent, if each ordering of them is possible
+\end{itemize}
 
+\subsection*{Interleaving}
+\begin{itemize}
+    \item concurrent actions $\alpha,\beta$ are executed in arbitrary order
+    \item $Effect(\alpha \interleave \beta,\nu) = Effect((\alpha;\beta)+(\beta;\alpha),\nu$
+    \begin{itemize}
+        \item $\interleave$  is binary interleaving operator
+        \item $;$ is sequential execution
+        \item $+$ is nondeterministic choice
+        \item $\underset{=\alpha}{\underbrace{x:=x+1}} \interleave \underset{=\alpha}{\underbrace{y:=y-2}}$ \\
+        \begin{center}
+        \scalebox{1}{\input{images/interleave.tikz}}
+        \end{center}
+    \end{itemize}
+    \begin{shaded}
+        Let $TS_i=(S_i,Act_i,\to_i,I_i,AP_i,L_i), i=1,2$ be two transition systems.
+        \[ TS_1\interleave TS_2 = (S_1\times S_2,Act_1\uplus Act_2),\to,I_1\times I_2,AP_1\uplus AP_2, L) \]
+        where $L(\langle s_1,s_2\rangle)=L_1(s_1) \cup L_2(s_2)$ and the transition relation $\to$ is defined by the rules:
+        \[
+        \frac{\red{s_1}\overset{\alpha}{\longrightarrow}_1 \red{s'_1}}
+        {\langle\red{s_1},s_2\rangle \overset{\alpha}{\longrightarrow} \langle\red{s'_1},s_2\rangle}
+        \textrm{ and }
+        \frac{\red{s_2}\overset{\alpha}{\longrightarrow}_2 \red{s'_2}}
+        {\langle s_1,\red{s_2}\rangle \overset{\alpha}{\longrightarrow} \langle s_1,\red{s'_2}\rangle}
+        \]
+    \end{shaded}
+    \begin{itemize}
+        \item Interleaving of Program Graphs\\
+        let $PG_1$ and $PG_2$ be program graphs
+        \begin{description}
+            \item[without shared variables:] \ \\
+            i.e. $Var_1\cap Var_2=\varnothing$\\
+            concurrent behaviour: $TS(PG_1)\interleave TS(PG_2)$
+            \item[with shared variables:] \ \\
+            concurrent behaviour: $TS(PG_1 \interleave PG_2)$
+            \item[in general:] \ \\
+            $TS(PG_1) \interleave TS(PG_2) \not= TS(PG_1\interleave PG_2)$
+        \end{description}
+        \begin{shaded}
+            For program graph $PG_i=(Loc_i,Act_i,Effect_i,\longrightarrow_i,Loc_{0,i},g_{0,i})$ over variables $Var_i$, the Program graph $PG_1\interleave PG_2$ over $Var_1\cup Var_2$ is defined by:
+            \[ (Loc_1\times Loc_2,Act_1\uplus Act_2,Effect,\longrightarrow,Loc_{0,1}\times Loc_{0,2},g_{0,1}\wedge g_{0,2}) \]
+            where $\longrightarrow$ is defined by the inference rules:
+            \[
+            \frac{\red{l_1} \overset{g:\alpha}{\longrightarrow} \red{l'_1}}
+            {\langle \red{l_1},l_2 \rangle \overset{g:\alpha}{\longrightarrow} \langle \red{l'_1},l_2 \rangle}
+            \textrm{ and }
+            \frac{\red{l_2} \overset{g:\alpha}{\longrightarrow} \red{l'_2}}
+            {\langle l_1,\red{l_2} \rangle \overset{g:\alpha}{\longrightarrow} \langle l_1,\red{l'_2} \rangle}
+            \]
+            and $Effect(\alpha,\eta)=Effect_i(\alpha,\eta)$ if $\alpha\in Act_i$
+        \end{shaded}
+    \end{itemize}
+\end{itemize}
+
+%next: 5-9
 
 \end{document}
