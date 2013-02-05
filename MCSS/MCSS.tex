@@ -356,7 +356,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
 \end{itemize}
 
 \section*{Modelling Concurrency}
-\subsection{Concurrent Event}
+\subsection*{Concurrent Event}
 \begin{itemize}
     \item logically independent events in separate autonomous system
 \end{itemize}
@@ -389,7 +389,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
         \item $+$ is nondeterministic choice
         \item $\underset{=\alpha}{\underbrace{x:=x+1}} \interleave \underset{=\alpha}{\underbrace{y:=y-2}}$ \\
         \begin{center}
-        \scalebox{1}{\input{images/interleave.tikz}}
+        \scalebox{.8}{\input{images/interleave.tikz}}
         \end{center}
     \end{itemize}
     \begin{shaded}
@@ -427,11 +427,185 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
             \frac{\red{l_2} \overset{g:\alpha}{\longrightarrow} \red{l'_2}}
             {\langle l_1,\red{l_2} \rangle \overset{g:\alpha}{\longrightarrow} \langle l_1,\red{l'_2} \rangle}
             \]
-            and $Effect(\alpha,\eta)=Effect_i(\alpha,\eta)$ if $\alpha\in Act_i$
+            and $Effect(\alpha,\eta)=Effect_i(\alpha,\eta)$ if $\alpha\in Act_i$.
         \end{shaded}
+        \begin{center}
+        \scalebox{.7}{\input{images/interleavePgTs.tikz}}
+        \end{center}
+        \item \textbf{atomicity} a sequence of statements is called \emph{atomic}, if it cannot be interleaved with program statements from a concurrently executing program. \\
+        \[\underset{atomic}{\underbrace{\langle x:=x+1;y:=2x+1\rangle}} ; x:=0\]
     \end{itemize}
 \end{itemize}
 
-%next: 5-9
+\subsection{Inter Process Synchronisation}
+\begin{itemize}
+    \item concurrent processes need to synchronize their computations
+    \begin{itemize}
+        \item adjust relative speed
+        \item exchange data, that may be needed by other processes
+    \end{itemize}
+    \item common synchronization methods:
+    \begin{itemize}
+        \item shared variables
+        \item message passing
+        \begin{itemize}
+            \item synchronous (rendez-vous, handshaking) \\
+            wait till other party is ready
+            \begin{shaded}
+                Let $TS_i=(S_i,Act_i,\longrightarrow_i,I_i,AP_i,L_i), i=1,2$ and $H\subseteq Act_1\cap Act_2$. \\
+                Introducing: The \emph{handshake-operator} $\Vert_H$ for an action set $H$ in the following way:
+                \[ TS_1 \Vert_H TS_2 = (S_1\times S_2,Act_1\cup Act_2,\longrightarrow,I_1\times I_2, AP_1 \uplus AP_2,L) \]
+                where $(\langle s_1,s_2\rangle) = L_1(s_1)\cup L_2(s_2)$ and $\longrightarrow$ is defined as follows
+                \begin{itemize}
+                    \item for $\alpha\not\in H$ (interleaving)
+                    \[
+                    \frac{
+                    s_1 \overset{\alpha}{\longrightarrow} s'_1
+                    }{
+                    \langle s_1,s_2 \rangle \overset{\alpha}{\longrightarrow} \langle s'_1,s_2 \rangle
+                    }
+                    \phantom{\textrm{ and ·}}
+                    \frac{
+                    s_2 \overset{\alpha}{\longrightarrow} s'_2
+                    }{
+                    \langle s_1,s_2 \rangle \overset{\alpha}{\longrightarrow} \langle s_1,s'_2 \rangle
+                    }
+                    \]
+                    \item for $\alpha\in H$ (handshaking)
+                    \[
+                    \frac{
+                    s_1 \overset{\alpha}{\longrightarrow}_1 s'_1 \wedge s_2 \overset{\alpha}{\longrightarrow}_2 s'_2
+                    }{
+                    \langle s_1,s_2 \rangle \overset{\alpha}{\longrightarrow} \langle s'_1,s'_2 \rangle
+                    }
+                    \]
+                    \item $\Vert$ is shorthand for $\Vert_H$ when $H=Act_1\cap Act_2$
+                \end{itemize}
+            \end{shaded}
+            \item asynchronous (typically fifo, queue)
+            \begin{itemize}
+                \item $c!e$: send the value of expression $e$ along the channel $c$
+                \item $c?x$: receive a message from channel $c$ and assign it to variable $x$
+                \item channels have storage capacity $cap(c)$
+                    \\ if $cap(c)\in\mathbb{N}$, then $c$ is a channel with finite capacity
+                    \\ if $cap(c)=\infty$, then $c$ has infinite capacity
+                    \\ $cap(c)=0$ sometimes means, that the channel uses synchronous handshake communication
+                \item types of communication:
+                \begin{description}
+                    \item[non-blocking:] execution never delays invoker
+                    \item[blocking:] otherwise
+                \end{description}
+                \item when is blocking taking place?
+                    \\ asynchronous message passing with unbounded buffers \follows sender never blocks
+                    \\ synchronous message passing: no buffering
+                    \\ buffered message passing with bounded, finite capacity
+                    \begin{description}
+                        \item[sender blocks] on full buffer
+                        \item[sender does not block] on full buffer (entails message loss)
+                    \end{description}
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Channel System}
+\begin{shaded}
+    A \emph{channel system} $CS$ over $(Var,Chan)$ consists of $i$ program graphs $PG_i$ over $(Var_i,Chan_i)$, for $1\leq i\leq n$, with $Var=\bigcup_{1\leq i\leq n}Var_i$ and is denoted by $CS=[PG_1 | \dots | PG_n ]$ \\
+    Global states are tuples of the form $\langle l_1,\dots,l_n,\eta, \xi \rangle$ where
+    \begin{description}
+        \item[$l_i$] current control location of process $i$
+        \item[$\eta$] current valuation of variables
+        \item[$\xi$] current valuation of channels
+    \end{description}
+    \begin{itemize}
+        \item A \emph{channel evaluation} $\xi$ is a mapping from channel $c\in Chan$ onto sequence $\xi(c)\in dom(c)^*$ such that
+        \begin{itemize}
+            \item current length cannot exceed the capacity of $c:len(\xi(c))\leq cap(c)$
+            \item $\xi(x)=v_1v_2\dots v_k, cap(c)\geq k$ denotes, $v_1$ is at front of buffer, etc.
+            \item $\xi [c:=v_1\dots v_k]$ denotes channel evaluation
+            \[ \xi [c:=v_1\dots v_k] (c') =
+            \begin{cases}
+            \xi(c') & if c \not= c' \\
+            v_1\dots v_k & c=c
+            \end{cases}
+            \]
+            \item initial channel evaluation $\xi_0$ equals $\xi_0(c)=\varepsilon$ for any $c$.
+        \end{itemize}
+        Let $CS=[PG_1 | \dots | PG_n ]$ be a \emph{channel system} over $(Chan,Var)$ with
+        \[ PG_i = (Loc_i, Act_i, Effect_i,) \rightsquigarrow_i, Loc_{0,i}, g_{0,i}, \textrm{ for } 0<i\leq n \]
+        $TS(CS)$ is the \emph{transition system} $(S,Act,\to,I,AP,L)$ where
+        \begin{itemize}
+            \item $S=(Loc_1\times\dots\times Loc_n)\times Eval(Var) \times Eval(Chan)$
+            \item $Act = (\biguplus_{0<i\leq n} Act_i) \uplus \{ \tau \}$
+            \item $I=\left\lbrace \langle \ell_1,\dots \ell_n,\eta,\xi_0 \rangle | \forall i. (l_i\in Loc_{0,i} \wedge \eta \models g_{0,i}) \wedge \forall c.\xi_0(c)=\varepsilon \right\rbrace$
+            \item $AP=\biguplus_{0<i\leq n} Loc_i \uplus Cond(Var)>$
+            \item $L(\langle \ell_1,\dots,\ell_n,\eta,\xi\rangle) = \{\ell_1,\dots,\ell\} \cup \{g\in Cond(Var) | \eta \models g \}$
+            \item $\to$ is defined by the inference rules:
+            \begin{description}
+                \item[Interleaving for $\alpha\in Act_i$:]
+                \[
+                \frac{
+                \red{\ell_i} \overset{g:\alpha}{\longrightarrow} \red{\ell'_i} \wedge \eta \models g
+                }{
+                \langle \ell_1,\dots,\red{\ell_i},\dots,\ell_n,\blue\eta,\xi \rangle
+                \overset{\alpha}{\longrightarrow}
+                \langle \ell_1,\dots,\red{\ell'_i},\dots,\ell_n,\blue{\eta'},\xi \rangle
+                },
+                where \;\blue{\eta'} = Effect(\alpha,\blue\eta)
+                \]
+                \item[Synchronous message passing over $c\in Chan, \; cap(c)=0$:]
+                \[
+                \frac{
+                \red{\ell_i} \overset{g:c?x}{\longrightarrow} \red{\ell'_i}
+                \wedge
+                \red{\ell_j} \overset{g:c!e}{\longrightarrow} \red{\ell'_j}
+                \wedge \eta \models g\wedge g' \wedge i\not=j
+                }{
+                \langle \ell_1,\dots,\red{\ell_i},\dots, \red{\ell_j}\dots,\ell_n,\blue\eta,\xi \rangle
+                \overset{\tau}{\longrightarrow}
+                \langle \ell_1,\dots,\red{\ell'_i},\dots,\red{\ell'_j}\dots,\ell_n,\blue{\eta'},\xi \rangle
+                },
+                where \; \blue{\eta'} = \blue{\eta} [x:=\eta(e)]
+                \]
+                \item[Asynchronous message passing over $c\in Chan, cap(c)<0$:]
+                \[\frac{
+                \red{\ell_i} \overset{g:c?x}{\longrightarrow} \red{\ell'_i}
+                \wedge
+                \eta\models g
+                \wedge
+                len(\xi(c)) = k>0
+                \wedge
+                \eta(c) = v_1\dots v_k
+                }{
+                \langle \ell_1,\dots,\red{\ell_i},\dots,\ell_n,\blue\eta,\dGreen\xi \rangle
+                \overset{\alpha}{\longrightarrow}
+                \langle \ell_1,\dots,\red{\ell'_i},\dots,\ell_n,\blue{\eta'},\dGreen{\xi'} \rangle
+                },
+                where \; \blue{\eta'} = \blue{\eta} [x:=v_1] \textrm{ and } \dGreen{\xi'}=\dGreen\xi [c:=v_2\dots v_k]
+                \]
+                \item[transmit value $\eta(e)\in dom(c)$ over channel $c$:]
+                \[\frac{
+                \red{\ell_i} \overset{g:c!\blue e}{\longrightarrow} \red{\ell'_i}
+                \wedge
+                \eta \models g
+                \wedge
+                len(\eta(c))=k<cap(c)
+                \wedge
+                \eta(c) = v_1\dots v_k
+                }{
+                \langle \ell_1,\dots,\red{\ell_i},\dots,\ell_n,\eta,\dGreen\xi \rangle
+                \overset{\alpha}{\longrightarrow}
+                \langle \ell_1,\dots,\red{\ell'_i},\dots,\ell_n,\eta',\dGreen{\xi'} \rangle
+                },
+                where \; \dGreen{\xi'}=\dGreen\xi [c:=v_1v_2\dots v_k\eta(\blue e)]
+                \]
+            \end{description}
+        \end{itemize}
+    \end{itemize}
+\end{shaded}
+
+\subsection*{nanoPromela}
+\follows 5-38 to 5-50
+
 
 \end{document}

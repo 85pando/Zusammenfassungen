@@ -1,0 +1,41 @@
+\begin{tikzpicture}[
+arrow/.style={draw,->,>=stealth},
+point/.style={circle,fill=black},
+every node/.style={node distance = 10},
+]
+
+\node (p1) at (0,2) {$p_1$};
+\node (p2) at (0,1) {$p_2$};
+\node (p3) at (0,0) {$p_3$};
+
+\node (p1l) at (0.2,2) {};
+\node (p2l) at (0.2,1) {};
+\node (p3l) at (0.2,0) {};
+
+\node (p1r) at (8,2) {};
+\node (p2r) at (8,1) {};
+\node (p3r) at (8,0) {};
+
+\path[draw] (p1l.center) edge (p3l.center);
+
+\draw[arrow] (p1l.center) to (p1r);
+\path[arrow] (p2l.center) to (p2r);
+\path[arrow] (p3l.center) to (p3r);
+
+\node[point] (a) at (1,2) {};
+\node [below of = a] {a};
+\node[point] (b) at (2.5,2) {};
+\node [below of = b] {b};
+\node[point] (c) at (4,1) {};
+\node [below of = c] {c};
+\node[point] (d) at (5.5,1) {};
+\node [below of = d] {d};
+\node[point] (e) at (1.75,0) {};
+\node [below of = e] {e};
+\node[point] (f) at (7,0) {};
+\node [below of = f] {f};
+
+\path[arrow] (b) edge node [right] {$m_1$} (c);
+\path[arrow] (d) edge node [right] {$m_2$} (f);
+
+\end{tikzpicture}

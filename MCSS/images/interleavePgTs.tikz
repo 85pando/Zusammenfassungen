@@ -1,0 +1,47 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+state/.style={draw,rounded corners,text width=1cm,align=center},
+every path/.style={draw,->,>=stealth,thick},
+every label/.style={draw},
+long/.style={node distance = 70},
+short/.style={node distance = 60},
+init/.style={node distance=70},
+label/.style={node distance=20}
+]
+
+\node[state] (alpha1) at (0,0) {$x=0$};
+\node[state,long] (alpha2) [below of = alpha1] {$x=1$};
+\node [above of = alpha1,label] {$PG_1$};
+
+\node[state,long] (beta1) [right of = alpha1] {$x=0$};
+\node[state,long] (beta2) [below of = beta1] {$x=1$};
+\node [above of = beta1,label] {$PG_2$};
+
+\path (alpha1) to node [right] {$x:=2\cdot x$} (alpha2);
+\path (beta1) to node [right] {$x:=x+1$} (beta2);
+
+\node[state] (int1) at (-3,-5) {$l_1$, $l_2$};
+\node[state,short] (int12) [below left of = int1] {$l'_1$, $l_2$};
+\node[state,short] (int21) [below right of = int1] {$l_1$, $l'_2$};
+\node[state,short] (int3) [below right of = int12] {$l'_1$, $l'_2$};
+\node [above of = int1,label] {$PG_1\interleave PG_2$};
+
+\path (int1.west)  to[bend right] node [above left] {$x:=2\cdot x$}  (int12.120);
+\path (int1.east)  to[bend left]  node [above right] {$x:=x+1$}  (int21.60);
+\path (int12.240) to[bend right]  node [below left] {$x:=x+1$}  (int3.west);
+\path (int21.300) to[bend left]   node [below right] {$x:=2\cdot x$}  (int3.east);
+
+\node[state] (pg1) at (5,-5) {$l_1, l_2$ $x=3$};
+\node[state,short] (pg2l) [below left of = pg1] {$l'_1$, $l_2$, $x=6$};
+\node[state,short] (pg2r) [below right of = pg1] {$l_1$, $l'_2$, $x=4$};
+\node[state,short] (pg3l) [below of = pg2l] {$l'_1$, $l'_2$, $x=7$};
+\node[state,short] (pg3r) [below of = pg2r] {$l'_1$, $l'_2$, $x=8$};
+\node [above of = pg1,label] {$TS(PG_1\interleave PG_2)$};
+
+\path
+    (pg1)  edge[bend right] (pg2l)
+    (pg1)  edge[bend left]   (pg2r)
+    (pg2l) edge (pg3l)
+    (pg2r) edge (pg3r)
+;
+\end{tikzpicture}

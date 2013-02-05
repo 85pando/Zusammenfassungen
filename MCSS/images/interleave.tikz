@@ -1,0 +1,33 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+state/.style={draw,rounded corners,text width=1cm,align=center},
+every path/.style={draw,->,>=stealth,thick},
+every label/.style={draw},
+long/.style={node distance = 70},
+short/.style={node distance = 50},
+init/.style={node distance=70},
+]
+
+\node[state] (alpha1) at (0,0) {$x=0$};
+\node[state,long] (alpha2) [below of = alpha1] {$x=1$};
+
+\node[state,long] (beta1) [right of = alpha1] {$x=0$};
+\node[state,long] (beta2) [below of = beta1] {$x=1$};
+
+\path (alpha1) to node [right] {$\alpha$} (alpha2);
+\path (beta1) to node [right] {$\beta$} (beta2);
+
+\node (int) at (1.25,-1.2) {$\interleave$};
+\node (eq)  at (3.5,-1.2)    {$=$};
+
+\node[state] (int1) at (8,0) {$x=0$, $y=7$};
+\node[state,short] (int12) [below left of = int1] {$x=1$, $y=7$};
+\node[state,short] (int21) [below right of = int1] {$x=0$, $y=5$};
+\node[state,short] (int3) [below right of = int12] {$x=1$, $y=5$};
+
+\path (int1.west)  to[bend right] node [above left] {$\alpha$}  (int12.120);
+\path (int1.east)  to[bend left]  node [above right] {$\beta$}  (int21.60);
+\path (int12.240) to[bend right]  node [below left] {$\beta$}  (int3.west);
+\path (int21.300) to[bend left]   node [below right] {$\alpha$}  (int3.east);
+
+\end{tikzpicture}
