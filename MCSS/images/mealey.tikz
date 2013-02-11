@@ -1,0 +1,16 @@
+\begin{tikzpicture}[
+state/.style={draw,rounded corners, minimum height=.5cm},
+every node/.style={node distance = 140},
+every path/.style={draw,->, >=stealth, thick, minimum width=1cm},
+]
+
+\node[state] (i) at (0,0) {idle};
+\node[state] (s) [right of = i] {sel};
+
+\path
+    (i) edge                          node[above] {?m/-} (s)
+    (s) edge[bend right]  node[above] {?s/!d} (i)
+    (s) edge[bend left]    node[below] {?s/!r} (i)
+;
+
+\end{tikzpicture}

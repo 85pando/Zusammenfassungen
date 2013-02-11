@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+state/.style={draw,rounded corners, minimum height=.5cm},
+every node/.style={node distance = 50},
+every path/.style={draw,->, >=stealth, thick, minimum width=1cm},
+]
+
+    \node[state] (m1) at (0,0) {M1};
+    \node[state] (m2) [below left of = m1] {M2};
+    \node[state] (m3) [below right of = m1] {M3};
+
+    \path
+        (m1) edge[bend right] (m2)
+        (m2) edge (m1)
+        (m1) edge (m3)
+        (m3) edge[bend right] (m1)
+        (m3) edge (m2)
+        (m2) edge[bend right] (m3)
+    ;
+
+\end{tikzpicture}
