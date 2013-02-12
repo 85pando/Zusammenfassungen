@@ -893,4 +893,142 @@ A (symbolic) state of an \textsc{Efsm} represents an \emph{equivalence class} of
     \end{itemize}
 \end{itemize}
 
+\section*{Linear-Time Properties and Invariants}
+\begin{description}
+    \item[Property:] A system execution (computation) will be modeled as a \emph{sequence of states or events}.
+    \begin{itemize}
+        \item $\sigma_0 = <g,a,z,g,\dots>$
+        \item $\sigma_1 = <g,a,d,g,\dots>$
+    \end{itemize}
+    \begin{shaded}
+        A (model of the system/system/program) P has the property $\Pi$ if all its computations are in $\Pi$.
+    \end{shaded}
+    \item[Property Representation:] too cumbersome to enumerate all infinite computations \follows use mathematical formalisms:
+    \begin{itemize}
+        \item $\omega$-automata (property corresponds to accepted language)
+        \item $\omega$-regular expressions
+        \item temporal logic
+    \end{itemize}
+\end{description}
+
+\subsection*{State Graph}
+\begin{shaded}
+\begin{itemize}
+    \item The \emph{state graph} of $TS$ ($G(TS)$, is the digraph $(V,E)$ with vertices $V=S$ and edges $E=\{(s,s')\in S\times S | s'\in Post(s)\}$ \follows omit all state and transition labels in $TS$ and ignore being inital
+    \item $Post^*(s)$ is the set of reachable states $G(TS)$ from $s$:
+    \[ Post^*(C)=\bigcup_{s\in C}Post^*(s) \textrm{ for } C \subseteq S \]
+    \item $Pre^*(C)$ has analogous meaning
+    \item set of reachable states: $Reach(TS)=Post^*(I)$
+\end{itemize}
+\end{shaded}
+
+\subsection*{Path Fragment}
+\begin{shaded}
+    \begin{itemize}
+        \item A \emph{path fragment} is an execution fragment without actions
+        \item A \emph{finite path fragment} $\hat{\pi}$ of $TS$ is a state sequence:
+        \[ \hat{\pi} = s_0s_1\dots s_n \textrm{ such that } s_{i+1}\in Post(s_i) \textrm{ for all } 0 \leq i<n \textrm{ where } n\geq0 \]
+        \item An \emph{infinite path fragment} $\pi$ of $TS$ is an infinite state sequence:
+        \[ \pi=s_0s_1\dots \textrm{ such that } s_{i+1}\in Post(s_i) \textrm{ for all } i\geq0 \]
+        \item A \emph{path} of $TS$ is an initial, maximal path fragment
+        \begin{itemize}
+            \item a \emph{maximal} path fragment is either finite ending in a terminal state or infinite
+            \item a path fragment ist \emph{initial} if $s_0\in I$
+            \item $Paths(s)$ is the set of maximal path fragments $\pi$ with $first(\pi)=s$
+        \end{itemize}
+    \end{itemize}
+\end{shaded}
+\begin{center}
+\scalebox{1}{\input{images/semaphore.tikz}}
+\end{center}
+
+
+\subsection*{Traces}
+\begin{shaded}
+    \begin{itemize}
+        \item Let $TS=(S,Act,\to,I,AP,L)$ without terminal states {\tiny all maximal paths (and executions) are infinite}
+        \item The \emph{trace} of the infinite path fragment $\pi=s_0s_1\dots$ is $trace(\pi)=L(s_0)L(s_1)\dots$
+        \item The \emph{trace} of the finite path fragment $\pi=s_0s_1\dots s_n$ is $(s_n)$
+        \item The set of traces of a set $\Pi$ of pahts: $trace(\Pi)=\{ trace(\pi) | \pi\in\Pi \}$
+        \item %\hspace*{-2em}
+        \begin{align*}
+        Traces(s)&=trace(Paths(s)) & Traces(TS)&=\bigcup_{s\in I} Traces(s) \\
+        Traces_{fin}(s)&=trace(Paths_{fin}(s)) & Traces_{fin}(TS)&=\bigcup_{s\in I} Traces_{fin}(s)
+        \end{align*}
+    \end{itemize}
+\end{shaded}
+\paragraph*{Example}
+$AP=\{ crit_1,crit_2 \}$
+\begin{align*}
+\textrm{path:} & & %\qquad
+\pi = &
+    \langle n_1,n_2,y=1 \rangle \to
+    \langle w_1,n_2,y=1 \rangle \to
+    \langle c_1,n_2,y=0 \rangle \to \\
+    & & &
+    \langle n_1,n_2,y=1 \rangle \to
+    \langle n_1,2_2,y=1 \rangle \to
+    \langle n_1,c_2,y=0 \rangle \to \dots \\
+\textrm{trace:} & & % \qquad
+trace(\pi) = &
+    \varnothing\varnothing \{crit_1\}\varnothing\varnothing\{crit_2\}\varnothing\varnothing \{crit_1\}\varnothing\varnothing\{crit_2\}\dots
+\end{align*}
+
+\subsubsection*{Linear Time Properties for Transition Systems}
+\begin{shaded}
+    \begin{itemize}
+        \item for a given $TS$ a linear time property $\Pi$ over $AP$ is a subset of the set of all infinite strings formed over subset of $AP$: $\Pi\subseteq(2^{AP})^\omega$
+        \item $\Pi$ specifies the set of all admissible observable behaviour of the system
+        \item satisfaction: $TS\models S \textrm{ iff } Traces(TS) \subseteq \Pi$
+        \item notation: state $s\in S$ satisfies $\Pi$, written as $s\models \Pi$, iff $Traces(s)\subseteq\Pi$
+    \end{itemize}
+\end{shaded}
+
+\subsubsection*{Trace Equivalence}
+\begin{itemize}
+    \item Let $TS$ and $TS'$ be two transition systems over $AP$ without terminal state
+    \begin{description}
+        \item[trace inclusion] $Traces(TS\red\subseteq Traces(TS')$ iff for \red{any} $LT$ property $P:\;TS\models P \textrm{ \red{implies} } TS'\models P$
+        \item[trace equivalence] $Traces(TS\red= Traces(TS')$ iff $TS$ and $TS'$ satisfy the \red{same} $LT$ properties
+    \end{description}
+    \item i.e. there is \emph{no LT property} that can distinguish between $TS$ and $TS'$ \follows $TS$ and $TS'$ are trace equivalent
+\end{itemize}
+
+\subsubsection*{Invariant $LT$ properties}
+\begin{itemize}
+    \item Properties over $AP$ that hold for all rechable states, including the initial state (e.g. mutual exclusion, deadlock freedom)
+    \item
+    \begin{shaded}
+        An $LT$ property $P_{inv}$ over $AP$ is called an \emph{invariant} if there is a propositional formula $\psi$ over $AP$ such that
+        \[ P_{inv} = \{ A_0,A_1,\dots\in (2^{AP})^\omega | (\forall j\geq0)(A_j\models\psi) \} \]
+        $\psi$ is then referred to as the \emph{invariant condition} for invariant $P_{inv}$
+    \end{shaded}
+    \begin{tabular}[t]{ll}
+    $TS\models P_{inv}$ & \\
+    & iff $trace(\pi)\in P_{inv}\forall \; \pi \; in \; TS$ \\
+    & iff $L(s)\models\psi\forall$ states $s$ that belong to a path of $TS$ \\
+    & iff $L(s)\models\psi\forall$ states $s\in Reach(TS)$
+    \end{tabular}
+    \item Model Checking Invariants
+    \begin{itemize}
+        \item perform systematic forward search
+        \begin{description}
+            \item[depth first search] \textsc{Dfs}
+            \item[breadth first search] \textsc{Bfs}
+        \end{description}
+        \item alternative: backwards search
+        \begin{itemize}
+            \item compute all states violating invariant condition $\psi$
+            \item starting here, compute $Pre=\bigcup_{S\in\mathcal{S},S\not\models\psi}Pre^*(s)$
+            \item Check if $Pre$ contains an inital state
+        \end{itemize}
+        \item Time complexity of \textsc{Dfs}: $\mathcal{O}(N\times(|\Phi|+1)+M)$
+        \begin{itemize}
+            \item $N$: number of reachable states
+            \item $(|\Phi|+1)$ length of formula
+            \item $M=\sum_{s\in\mathcal{S}}|Post(s):$ number of transitions in the reachable part of $TS$
+        \end{itemize}
+        \follows time complexity of \textsc{Dfs} is linear
+    \end{itemize}
+\end{itemize}
 \end{document}
