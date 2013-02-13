@@ -1118,6 +1118,89 @@ Many properties are not pure, but a combination of safety and liveness propertie
         \item $E(\Phi)$ consists of all infinite $\sigma\in\Sigma^\omega$ so that there exists a prefix of $\sigma$ that belongs to $\Phi$ \[ \textrm{Example: } \Phi=a^+b^*\Rightarrow E(\Phi)=a^+b^*\cdot \Sigma^\omega \] \\
         \vspace*{-4em} {\tiny Note: for every finite property $\Phi: E(\Phi)=\Phi\cdot\Sigma^\omega$}
     \end{itemize}
+    \item Other Classifications:
+    \begin{itemize}
+        \item topological \follows safety (closed sets), liveness (dense sets)
+        \item temporal logic
+        \item automata theoretic
+    \end{itemize}
+    \item Safety/Liveness is intuitive:
+    \begin{itemize}
+        \item checking safety properties: simple exploration of all states
+        \item checking liveness property: exploration of all states, checking in every state whether any continuation of prefix will satisfy property
+    \end{itemize}
 \end{itemize}
+
+\section*{Fairness}
+Fairness ensures, that each process wanting to do something at one point will eventually be able to do so.
+\paragraph*{Types of Fairness}
+\begin{description}
+    \item[unconditional fairness:] an activity is executed \emph{infinitely often}
+    \item[strong fairness:] if an activity is \emph{infinitely often enabled}, it will \emph{infinitely often be executed}
+    \item[weak fairness] if an activity is \emph{continuously enabled}, it will \emph{infinitely often be executed}
+\end{description}
+\begin{itemize}
+    \item Fairness violations often occur due to an unjustifiedly high level of abstraction (e.g. one process indefinitely faster than other)
+    \item or due to unjustified assumptions about environment behaviour
+\end{itemize}
+\begin{shaded}
+    For $TS=(S,Act,\to,I,AP,L)$ without terminal states, $A\subseteq Act$, and infinite execution fragment $\rho=s_0\overset{\alpha_0}{\longrightarrow}s_1\overset{\alpha_1}{\longrightarrow}\dots$ of $TS$ {\tiny where $Act(s) = \left\{ \alpha\in Act | \exists s' \in S. s\overset{\alpha}{\longrightarrow}s'\right\}$}
+    \begin{enumerate}
+        \item $\rho$ is \emph{unconditionally $A$-fair} whenever: $true\Rightarrow \underset{\textrm{infinitely often } A\textrm{ is taken}}{\underbrace{\forall k\geq0.\exists j\geq k.\alpha_j\in A}}$
+        \item $\rho$ is \emph{strongly $A$-fair} whenever: $\underset{\textrm{infinitely often } A\textrm{ is enabled}}{\underbrace{(\forall k\geq0.\exists j\geq k.Act(s_j)\cap A\not=\varnothing)}}\Rightarrow \underset{\textrm{infinitely often } A\textrm{ is taken}}{\underbrace{\forall k\geq0.\exists j\geq k.\alpha_j\in A}}$
+        \item $\rho$ is \emph{weakly $A$-fair} whenever: $\underset{\textrm{infinitely often } A\textrm{ is enabled}}{\underbrace{(\exists k\geq0.\forall j\geq k.Act(s_j)\cap A\not=\varnothing)}}\Rightarrow \underset{\textrm{infinitely often } A\textrm{ is taken}}{\underbrace{\forall k\geq0.\exists j\geq k.\alpha_j\in A}}$
+    \end{enumerate}
+\end{shaded}
+
+\subsection*{Which Fairness Notion to Use?}
+Fairness filters out ``unreasonable'' runs (may be too strong, unfair)
+\begin{itemize}
+    \item Too Strong? \follows relevant computations may be ruled out, verification yields:
+    \begin{description}
+        \item[\red{false}:] error found
+        \item[\dGreen{true}:] may still be false, if relevant executions may be considered ``unfair''
+    \end{description}
+    \item Too Weak? \follows too many computations considered, verification yields:
+    \begin{description}
+        \item[\dGreen{true}:] property holds
+        \item[\red{false}:] may still be true, if violating run was unfair
+    \end{description}
+    \item Relationship: unconditional \follows strong \follows weak
+\end{itemize}
+
+\subsection*{Fairness Assumptions}
+\begin{shaded}
+    A \emph{fairness assumption} for $Act$ is a triple \[ \mathcal{F}=(\mathcal{F}_{uncond},\mathcal{F}_{strong},\mathcal{F}_{weak}) \] with $\mathcal{F}_{ucond},\mathcal{F}_{strong},\mathcal{F}_{weak}\subseteq 2^{Act}$
+    \begin{itemize}
+        \item unconditionally $A$-fair \emph{for all} $A\in\mathcal{F}_{ucond}$
+        \item stongly $A$-fair \emph{for all} $A\in\mathcal{F}_{strong}$
+        \item weakyl $A$-fair \emph{for all} $A\in\mathcal{F}_{weak}$
+    \end{itemize}
+    e.g. $(\varnothing,\mathcal{F}',\varnothing)$ denotes strong fairness
+\end{shaded}
+\begin{itemize}
+    \item A Path $s_o\to s_1\to s_2\to\dots$ is $\mathcal{F}$-fair, if
+    \begin{itemize}
+        \item there exists an $\mathcal{F}$-fair execution $s_0\overset{\alpha_0}{\longrightarrow}s_1\overset{\alpha_1}{\longrightarrow}\dots$
+        \item $FairPaths_\mathcal{F}(s)$ denotes the set of $\mathcal{F}$-fair paths that start in $s$
+        \item $FairPaths\mathcal{F}(TS)=\bigcup_{s\in I} FairPaths\mathcal{F}(s)$
+    \end{itemize}
+    \item Trace $\sigma$ is $\mathcal{F}$-fair if there exists an $\mathcal{F}$-fair execution $\rho$ with $trace(\rho)=\sigma$
+    \begin{itemize}
+        \item $FairTraces_\mathcal{F}(s)=trace(FairPaths_\mathcal{F}(s))$
+        \item $FairTraces_\mathcal{F}(TS)=trace(FairPaths_\mathcal{F}(TS))$
+    \end{itemize}
+    \item $TS$ \emph{satisfies} $LT$-property $P$: \[ TS\models P \textrm{ iff } Traces(TS)\subseteq P \]
+    \item $TS$ \emph{fairly satisfies} $LT$-property $P$ wrt. fairness assumption $\mathcal{F}$: \[ TS\models_\mathcal{F} P \textrm{ iff } FairTraces_\mathcal{F}(TS)\subseteq P \]
+\end{itemize}
+
+\subsection*{Fairness and Safety}
+\begin{itemize}
+    \item for $TS$ with set of Actions $Act$ and fairness assumption $\mathcal{F}$ for $Act$, $\mathcal{F}$ is defined as \emph{realizable} for $TS$ if for any $s\in Reach(TS):$ \[ FairPaths_\mathcal{F}(s)\not=\varnothing \]
+    \item for $TS$ and safety property $P_{safe}$ over $AP$ and $\mathcal{F}$ a realizable fairness assumption for $TS$ the following holds true: \[ TS\models P_{safe} \textrm{ iff } TS\models_\mathcal{F}P_{safe} \] {\tiny i.e. safety properties are preserved by realizable fairness assumption, non-realizable fairness assumptions may harm safety properties}
+\end{itemize}
+
+\section*{Model Checking Regular Safety Properties}
+
 
 \end{document}

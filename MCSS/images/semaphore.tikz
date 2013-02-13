@@ -1,0 +1,62 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+every node/.style={node distance = 90,text width=1.4cm,align=center},
+state/.style={draw,rounded corners, minimum height=.5cm,node distance=80},
+state2/.style={state,text width=2.3cm},
+every path/.style={draw,->, >=latex, thick, minimum width=1cm},
+]
+
+\node (inter) at (0,0) {$interleave$};
+
+\node[state] (pg1W) [left of = inter] {$w_1$};
+\node[state] (pg1N) [above of = pg1W] {$n_1$};
+\node[state] (pg1C) [below of = pg1W] {$c_1$};
+\node (pg1) [node distance=20,above of = pg1N] {$\red{PG_1}:$};
+\node (init1) [left of = pg1N,node distance=20] {};
+\path
+	(init1) edge (pg1N)
+	(pg1N)  edge (pg1W)
+	(pg1W)  edge node [right] {$y>0: y:=y-1$} (pg1C)
+	(pg1C)  edge[bend left] node [left] {$y:=y+1$} (pg1N)
+;
+
+\node[state] (pg2W) [right of = inter] {$w_2$};
+\node[state] (pg2N) [above of = pg2W] {$n_2$};
+\node[state] (pg2C) [below of = pg2W] {$c_2$};
+\node (pg2) [node distance=20,above of = pg2N] {$\blue{PG_2}:$};
+\node (init2) [left of = pg2N,node distance=20] {};
+\path
+	(init2) edge (pg2N)
+	(pg2N)  edge (pg2W)
+	(pg2W)  edge node [left] {$y>0: y:=y-1$} (pg2C)
+	(pg2C)  edge[bend right] node [right] {$y:=y+1$} (pg2N)
+;
+
+\node[state2,below of = inter,node distance=140] (nn) {$\langle \red{n_1},\blue{n_2},y=1\rangle$};
+\node[state2,below left of = nn]  (wn) {$\langle\red{w_1},\blue{n_2},y=1\rangle$};
+\node[state2,below right of = nn] (nw) {$\langle\red{n_1},\blue{w_2},y=1\rangle$};
+\node[state2,below left of = wn]  (cn) {$\langle\red{c_1},\blue{n_2},y=0\rangle$};
+\node[state2,below right of = wn] (ww) {$\langle\red{w_1},\blue{w_2},y=1\rangle$};
+\node[state2,below right of = nw] (nc) {$\langle\red{n_1},\blue{c_2},y=1\rangle$};
+\node[state2,below left of = ww]  (cw) {$\langle\red{c_1},\blue{w_2},y=0\rangle$};
+\node[state2,below right of = ww] (wc) {$\langle\red{w_1},\blue{c_2},y=0\rangle$};
+\node (initTS) [left of = nn,node distance = 25] {};
+\node (ts) [node distance=20,above of = nn,text width=4cm] {$TS(PG_1 interleave PG_2):$};
+\path
+	(initTS) edge (nn)
+	(nn) edge (wn)
+	(nn) edge (nw)
+	(wn) edge (cn)
+	(wn) edge (ww)
+	(nw) edge (ww)
+	(nw) edge (nc)
+	(cn) edge (cw)
+	(ww) edge (cw)
+	(ww) edge (wc)
+	(nc) edge (wc)
+	(cn) edge[bend left]  node [above left]  {$y:=y+1$} (nn)
+	(nc) edge[bend right] node [above right] {$y:=y+1$} (nn)
+	(cw) edge[bend right] node [below right] {$y:=y+1$} (nw)
+	(wc) edge[bend left]  node [below left]  {$y:=y+1$} (wn)
+;
+\end{tikzpicture}
