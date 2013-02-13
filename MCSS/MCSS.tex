@@ -1020,7 +1020,7 @@ trace(\pi) = &
         \begin{itemize}
             \item compute all states violating invariant condition $\psi$
             \item starting here, compute $Pre=\bigcup_{S\in\mathcal{S},S\not\models\psi}Pre^*(s)$
-            \item Check if $Pre$ contains an inital state
+            \item Check if $Pre$ contains an initial state
         \end{itemize}
         \item Time complexity of \textsc{Dfs}: $\mathcal{O}(N\times(|\Phi|+1)+M)$
         \begin{itemize}
@@ -1030,5 +1030,94 @@ trace(\pi) = &
         \end{itemize}
         \follows time complexity of \textsc{Dfs} is linear
     \end{itemize}
+    \item Computation and representation of successor states:
+    \begin{description}
+        \item[explicit state model checking]
+        \begin{itemize}
+            \item successor states are implicitly given (program graph, Promela code, \dots)
+            \item $Post(s)$ is typically stored as adjacency list
+            \item successor states are explicitly computet (state vectors)
+        \end{itemize}
+        \item[symbolic model checking]
+        \begin{itemize}
+            \item $Post(s)$ is represented symbolically (binary decision diagrams (BDD))
+            \item reachability computation is fixed point computation
+        \end{itemize}
+    \end{description}
 \end{itemize}
+
+\section*{Safety and Liveness}
+According to Leslie Lamport
+\begin{description}
+    \item[safety:] something bad will never happen
+    \item[liveness:] something good will eventually happen
+\end{description}
+\begin{itemize}
+    \item Property $P$ corresponds to a language
+    \begin{itemize}
+        \item $P\subseteq (2^{AP})^*:$ the property is finitary
+        \item $P\subseteq (2^{AP})^\omega:$ the property is infinitary
+    \end{itemize}
+    \item often convenient to express property by $\omega$-regular expressions
+\end{itemize}
+
+\subsection*{Safety Properties}
+\begin{shaded}
+    \begin{itemize}
+        \item An LT property $P_{safe}$ is a \emph{safety property}, iff $\forall\sigma\in(2^{AP})^\omega\setminus P_{safe}$ there exists a finite prefix $\hat\sigma$ of $\sigma$ such that $P_{safe}\cap\{ \sigma'\in(2^{AP})^\omega | \hat\sigma \textrm{ is a prefix of } \sigma' \}=\varnothing$ \\{\tiny If we violate the safety property, there is no way to fix it. OR: Violation can be confirmed by a finite prefix.}
+        \item $\hat\sigma$ is called a \emph{bad prefix} of $P_{safe}$, and we let $BadPref(P_{safe})$ denote the set of all bad prefixes of $P_{safe}$.
+        \item $\hat\sigma$ is a \emph{minimal bad prefix} for $P_{safe}$ iff $\hat\sigma\in BadPref(P_{safe})$ and no proper prefix of $\hat\sigma$ is in $BadPref(P_{safe})$.
+        \item Any invariant is a safety property. There are safety properties, that are not invariants.
+        \item For a transition system $TS$ without final states and safety property $P_{safe}$ the following holds: \[ TS\models P_{safe} \textrm{ iff } Traces_{fin}(TS)\cap BadPref(P_{safe})=\varnothing \]
+        \item The \emph{closure} of an $LT$ property $P$ is defined as: \[ closure(P)=\{ \sigma\in(2^{AP})^\omega | pref(\sigma) \subseteq pref(P) \} \]
+        {\tiny This denotes the set of all infinite traces whose finite prefixes are also prefixes of $P$ Example: $closure(a^+b^\omega)=a^\omega+a^+b^\omega$}
+        \item $P$ is a safety property iff $closure(P)=P$
+    \end{itemize}
+\end{shaded}
+\begin{itemize}
+    \item Finite traces and safety properties:
+    \begin{itemize}
+        \item $Traces_{fin}(TS)\subseteq Traces_{fin}(TS') \textrm{ iff for any safety property } P_{safe}:\ TS'\models P_{safe} \Rightarrow TS \models P_{safe}$
+        \item $Traces_{fin}(TS)\subseteq Traces_{fin}(TS')$ iff $TS$ and $TS'$ satisfy the same set of safety properties
+        \item for $TS$ without terminals states and finite $TS'$ the following holds: \[ Traces(TS) \subseteq Traces(TS') \iff Traces_{fin}(TS) \subseteq Traces_{fin}(TS') \]
+        \item trace inclusion $\not=$ finite trace inclusion
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Liveness Properties}
+Safety properties can be satisfied by never doing anything. \follows We want some property that ensures something will happen eventually.
+\begin{shaded}
+    An $LT$ property $P_{live}$ over $AP$ is a \emph{liveness} property whenever $pref(P_{live})=(2^{AP})^*$ \\
+    {\tiny \follows Any finite computation can be extended to an execution satisfying the property.}
+\end{shaded}
+
+\subsection*{Safety and Liveness component}
+Many properties are not pure, but a combination of safety and liveness properties.
+\begin{itemize}
+    \item let $S$ denote an atomic predicate that holds in a ``sent'' state, and let $R$ denote an atomic predicate that holds in a ``received'' state.
+    \item let $S,R\in \Sigma$\qquad {\tiny $\Sigma$ is the alphabet}
+    \item Property: when a message has been ``sent'' eventually it will be ``received'': \[ \Pi=S^*R\Sigma^\omega \]
+    \item \begin{align*}
+    \Pi & \not= closure(\Pi) \\
+    &= S^\omega\cup S^*R\sigma^\omega \\
+    &= \Pi_s
+    \end{align*}
+    We call $\Pi_s$ the \emph{safety closure} of $\Pi$
+    \item decomposition into safety and liveness property:
+    \begin{description}
+        \item[liveness:] $\Pi_l$ eventually $R$ will hold: $\Pi_l=\Sigma^* R\Sigma^\omega$
+        \item[safety:] $\Pi_s = closure(\Pi)$
+        \item[will hold:] $\Pi=\Pi_s\cap\Pi_l=(S^\omega\cup S^*R\Sigma^\omega)\cap(\Sigma^* R \Sigma^\omega)$
+    \end{description}
+    \item Safety and Liveness properties are \emph{disjoint} except for the trivial property $\Sigma^\omega$
+    \item Every property $\Pi$ can be represented as the \emph{intersection}: $\Pi=\Pi_s\cap\Pi_l$
+    \item let $\Pi$ be a infinitary and $\Phi$ be an finitary property
+    \begin{itemize}
+        \item $PREF(\Pi)$ denotes the set of all finite prefixes of $\Pi$
+        \item $A(\Phi)$ corresponds to all infinite $\sigma\in\Sigma^\omega$ so that all finite prefixes of $\sigma$ are in $\Phi$ \[ \textrm{Example: } \Phi=a^+b^*\Rightarrow \underset{(closure)}{A(\Phi)}=a^\omega+a^+b^\omega \]
+        \item $E(\Phi)$ consists of all infinite $\sigma\in\Sigma^\omega$ so that there exists a prefix of $\sigma$ that belongs to $\Phi$ \[ \textrm{Example: } \Phi=a^+b^*\Rightarrow E(\Phi)=a^+b^*\cdot \Sigma^\omega \] \\
+        \vspace*{-4em} {\tiny Note: for every finite property $\Phi: E(\Phi)=\Phi\cdot\Sigma^\omega$}
+    \end{itemize}
+\end{itemize}
+
 \end{document}
