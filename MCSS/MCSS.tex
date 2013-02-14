@@ -1201,6 +1201,136 @@ Fairness filters out ``unreasonable'' runs (may be too strong, unfair)
 \end{itemize}
 
 \section*{Model Checking Regular Safety Properties}
+\begin{shaded}
+A safety property $P_{safe}$ is \emph{regular} if
+\begin{itemize}
+    \item $BadPref(P_{safe})$ is a regular language.
+    \item there exists a finite automaton over $2^{AP}$ recognizing $BadPref(P_{safe})$
+\end{itemize}
+\end{shaded}
+\begin{itemize}
+    \item $bp(P_{safe} \equiv BadPref(P_{safe})$
+    \item $mbp(P_{safe})$ \follows set of minimal bad prefixes for $P_{safe}$
+    \item not regular safety properties: something to do with counting
+\end{itemize}
+
+\subsection*{Regular Languages}
+\begin{shaded}
+    A \emph{nondeterministic finite automaton} \textsc{Nfa} $\mathcal{A}$ is a tuple $(Q,\Sigma,\delta,Q_0,F)$ where
+    \begin{itemize}
+        \item $Q$ is a finite set of states
+        \item $\Sigma$ is an alphabet
+        \item $\delta:\ Q\times\Sigma\to2^Q$ is a transition function (nondeterministic)
+        \item $Q_0\subseteq Q$ a set of initial states
+        \item $F\subseteq Q$ is a set of accept (or: final) states
+    \end{itemize}
+    assume word $w=A_1\dots A_n\in\Sigma^*$
+    \begin{itemize}
+        \item A \emph{run} for $w$ in $\mathcal{A}$ is a finite sequence $q_0q_1\dots q_n$ such that:
+        \[ q_0\in Q_0 \textrm{ and } q_1\overset{A_{i+1}}{\longrightarrow} q_{i+q} \textrm{ for all } 0\leq i < n \]
+        \item Run $q_0q_1\dots q_n$ is \emph{accepting} if $q_n\in F$
+        \item $w\in\Sigma^*$ is \emph{accepted} by $\mathcal{A}$ if there exists an accepting run for $w$.
+        \item The \emph{accepted language} of $\mathcal{A}$: \[ \mathcal{L}(\mathcal{A})=\{ w\in\Sigma^* | \textrm{ there exists an accepting run for } w \textrm{ in } \mathcal{A} \} \]
+        \item \textsc{Nfa} $\mathcal{A}$ and $\mathcal{A}'$ are \emph{equivalent} if $\mathcal{L}(\mathcal{A})=\mathcal{L}(\mathcal{A}')$
+    \end{itemize}
+\end{shaded}
+
+\subsection*{Synchronous Product}
+\begin{shaded}
+\begin{multicols}{2}
+For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\mathcal{A}=(Q,\Sigma,\delta,Q_0,F)$ and \textsc{Nfa} with $\Sigma=2^{AP}$ and $Q_0\cap F=\varnothing$, let:
+    \[ TS \otimes\mathcal{A}=(S',Act,\to',I',AP',L') \]
+    where
+    \begin{itemize}
+        \item $S'=S\times Q$, $AP'=Q$ and $L'(\langle s,q \rangle) = \{ q \}$
+        \item $\to'$ is the smallest relation defined by
+        $\displaystyle \frac{
+            s\overset{\alpha}{\longrightarrow}\red{t} \wedge q \overset{L(\red{t})}{\longrightarrow} p
+        }{
+        \langle s,q \rangle \overset{\alpha}{\longrightarrow}' \langle \red{t},p \rangle
+        }$
+        \item $I'=\{ \langle s_0,q \rangle | s_0\in I\wedge \exists q_0\in Q_0. q_0 \overset{L(s_0)}{\longrightarrow} q\}$
+    \end{itemize}
+    without loss of generality it may be assumed that $TS\otimes\mathcal{A} has no terminal states$
+\columnbreak
+\begin{center}
+\scalebox{0.5}{\input{images/syncProd.tikz}}
+\end{center}
+\end{multicols}
+\end{shaded}
+
+\subsection*{Properties of \textsc{Nfa}}
+\begin{itemize}
+    \item They are as expressive as regular languages
+    \item They are closed unter $\cap$ and \emph{complementation}
+    \begin{itemize}
+        \item \textsc{Nfa} $\mathcal{A}\otimes B$ (=cross product) accepts $\mathcal{L}(\mathcal{A})\cap\mathcal{L}(\mathcal{B})$
+        \item Total \textsc{Dfa} $\overline{\mathcal{A}}$ (=swap all accept and normal states) accepts $\overline{\mathcal{L}(\mathcal{A})}=\Sigma^*\setminus\mathcal{L}(\mathcal{A})$
+    \end{itemize}
+    \item They are closed under \emph{determinization} (=removal of choice) {\tiny (although exponentially more runtime)}
+    \item $\mathcal{L}(\mathcal{A}=\varnothing$ \follows check for a reachable accept state in $\mathcal{A}$ \follows simple \textsc{Dfs}
+    \item For regular language $\mathcal{L}$ there is a unique minimal \textsc{Dfa} accepting $\mathcal{L}$
+\end{itemize}
+
+\subsection*{Model Checking regular safety properties}
+\marginpar[right text]{\red{Check this with exercise sheet}}
+
+\begin{itemize}
+    \item let $P_{safe}$ be a regular safety property over $AP$
+    \item let $\mathcal{A}$ be an \textsc{Nfa} recognizing the bad prefixes of $P_{safe}$
+    \begin{itemize}
+        \item assume that $\varepsilon\not\in\mathcal{L}(\mathcal{A})$ (otherwise all finite words over $2^{AP}$ are bad prefixes and $P_{safe}=\varnothing$)
+    \end{itemize}
+    \item let $TS$ be a finite transition system over $AP$ without terminal states
+    \item $TS\models P_{safe}$
+    \begin{itemize}
+        \item iff $Traces_{fin}(TS)\cap bp(P_{safe})=\varnothing$
+        \item iff $Traces_{fin}(TS)\cap \mathcal{L}(\mathcal{A})=\varnothing$
+        \item iff $TS\otimes\mathcal{A}\models $ ``always $\Phi$''
+        \begin{itemize}
+            \item invariant checking \follows  \textsc{Dfs}
+        \end{itemize}
+        \begin{shaded}
+            The following statements are equivalent
+            \begin{itemize}
+                \item $TS\models P$
+                \item $Traces_{fin}(TS)\cap\mathcal{L}(\mathcal{A})=\varnothing$
+                \item $TS\otimes\mathcal{A} \models P_{inv(\mathcal{A})}=\bigwedge_{q\in F} \neg q$
+            \end{itemize}
+            \follows checking safety properties is like checking an invariant
+        \end{shaded}
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Counterexample}
+\begin{shaded}
+    For each initial path fragment $\langle s_0,q_1\rangle\dots\langle s_n,q_{n+q}$ of $TS\otimes\mathcal{A}:$
+    \[
+    q_1,\dots q_n\not\in F \textrm{ and } q_{n+1}\in F \Rightarrow \underset{\textrm{bad prefix for } P_{safe}}{\underbrace{trace(s_0s_1\dots s_n)\in\mathcal{L(\mathcal{A})}}}
+    \]
+\end{shaded}
+
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwData{finite transition system $TS$ and regular safety property $P_{safe}$}
+ \KwResult{true if $TS\models P_{safe}$. Otherwise false plus a counterexample for $P_{safe}$ }
+ \eIf{$TS\otimes\mathcal{A}\models P_{inv(\mathcal{A})}$}{
+ \Return{true}
+ }{
+ Determine initial path fragment $\langle s_0,q_1\rangle\dots\langle s_n,q_{n+1}\rangle$ of $TS\otimes\mathcal{A}$ with $q_{n+q}\in F$ \\
+ \Return{(false, $s_0s_1\dots s_n$)}
+ }
+ \caption{Basic Model Checking algorithm}
+\end{algorithm}
+
+\subsection*{Time Complexity}
+\begin{shaded}
+    The time and space complexity of checking $TS\models P_{safe}$ is in:
+    \[ \mathcal{O} (|TS|\cdot|\mathcal{A}|) \]
+    where $\mathcal{A}$ is an \textsc{Nfa} with $\mathcal{L}(\mathcal{A}=mbp(P_{safe})$
+\\ The \emph{size} of \textsc{Nfa} $\mathcal{A}$, denoted $|\mathcal{A}|$ is the number of states and transitions in $\mathcal{A}:$
+\[ \underset{\textrm{rel. small}}{|\mathcal{A}|} = |Q| + \sum_{q\in Q} \sum_{A}\in\Sigma |\delta(q,A)| \]
+\end{shaded}
 
 
 \end{document}

@@ -31,6 +31,7 @@
 %\usetikzlibrary{automata} % für den CFlipper, wenn es den soweit ist			%
 \usetikzlibrary{positioning} % positionierung
 %\usetikzlibrary{shadows} % fuer schoene schlagschatten
+\usetikzlibrary{automata} % für Automaten
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Formatierung der Seite
@@ -156,13 +157,11 @@
 \newcommand{\hm}{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}}
 
 %%%%%% make emph bold instead of italic %%%%%
-% \makeatletter
-% \DeclareRobustCommand{\em}{%
-%   \@nomath\em \if b\expandafter\@car\f@series\@nil
-%   \normalfont \else \bfseries \fi}
-% \makeatother
-
-%\DeclareTextFontCommand{\emph}{\bfseries}
+\makeatletter
+\DeclareRobustCommand{\em}{%
+  \@nomath\em \if b\expandafter\@car\f@series\@nil
+  \normalfont \else \bfseries \fi}
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % languages for \loadCode
