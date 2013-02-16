@@ -437,7 +437,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     \end{itemize}
 \end{itemize}
 
-\subsection{Inter Process Synchronisation}
+\subsection*{Inter Process Synchronisation}
 \begin{itemize}
     \item concurrent processes need to synchronize their computations
     \begin{itemize}
@@ -1419,5 +1419,232 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
         \item \textsc{GNba} accepts a word, if it visits all sets $F_i$ infinitely often
     \end{itemize}
 \end{itemize}
+
+\section*{Linear Temporal Logic \textsc{Ltl}}
+\begin{itemize}
+    \item Büchi automata use operational approach, want to have Logic for the description of temporal requirements
+    \item first order logic quite complicated for this
+    \item[\follows] need explicit quantification over state sequences
+    \item modalities:
+    \begin{tabular}[t]{rll}
+    $Lp:$ & it is necessary, that $p$ & {\tiny for all visible worlds $p$}\\
+    $Mp:$ & it is possible, that $p$ & {\tiny there exists a visible world with $p$}\\
+    $\neg Lp:$ & it is not necessary, that $p$ & %{\tiny there does not need to be a visible world with $p$}
+    \\
+    $\neg Mp:$ & it is not possible, that $p$ & %{\tiny there may be a world, with $p$}
+    \end{tabular}
+    \item Formulae of Modal Logic:
+    \begin{itemize}
+        \item $p$ is a formula
+        \item if $\Phi$ is a formula, then $\neg\Phi$ is a formula
+        \item if $\Phi$ and $\rho$ are formulae, then $\Phi\wedge\rho, \Phi\supset\rho \textrm{ (\tiny implication)}, \Phi\equiv\rho, L\Phi, M\Phi$ are formulae
+    \end{itemize}
+    \item \begin{shaded}
+        Let $\Pi$ a set of atomic propositions. Further let
+        \begin{itemize}
+            \item $W$ a set of worlds
+            \item $R\subseteq W\times W$ a visibility relation on worlds
+            \item $A: W\times\Pi\to \{true,false\}$ a truth value assignement
+        \end{itemize}
+        then we call $(W,R,A)$ a \emph{model} or \emph{Kripke-Structure}
+    \end{shaded}
+\end{itemize}
+\subsection*{Model-theoretic Semantics of Modal Logic}
+\begin{shaded}
+    Let
+    \begin{itemize}
+        \item $M=(W,R,A)$ a Kripke-structure
+        \item $\Pi$ a set of atomic propositions and $p\in\Pi$
+        \item $w$ and $v\in w$
+        \item $\Phi$ and $\rho$ formulae
+    \end{itemize}
+    then we define the relation $\models$ for $M$:
+    \begin{align*}
+    (M,w) & \models p               & iff \; A(w,p) & = true  \\
+    (M,w) & \models \neg p          & iff \; A(w,p) & = false \\
+    (M,w) & \models \Phi\wedge\rho  & iff \; (M,w)  & \models \Phi \textrm{ and } (M,w) \models \rho \\
+    (M,w) & \models L\Phi           & iff \; (\forall v: (w,v) & \in R)((M,v)\models\Phi) \\
+    (M,w) & \models M\Phi           & iff \; (\exists v:(w,v) & \in R)((M,v)\models\Phi)
+    \end{align*}
+    Further we define:
+    \begin{align*}
+    \Phi \vee \rho  & \cong \neg(\neg\Phi\wedge\neg\rho) \\
+    \Phi\supset\rho & \cong \neg\Phi\vee\rho \\
+    \Phi\equiv\rho  & \cong (\Phi\supset\rho)\wedge(\Phi\subset\rho) \\
+    M\Phi           & \cong \neg L\neg\Phi
+    \end{align*}
+    Axiomatisation:
+    \begin{multicols}{2}
+    \begin{enumerate}
+        \item $(\Phi\vee\Phi)\supset\Phi$
+        \item $\rho\supset(\Phi\vee\rho)$
+        \item $(\Phi\vee\rho)\supset(\rho\supset\Phi)$
+        \item $(\Phi\supset\rho)\supset((\rho\vee\Phi)\supset(\sigma\vee\rho))$
+        \item $L\Phi\supset\Phi$
+        \item $L(\Phi\supset\rho)\supset(L\Phi\supset L\rho)$
+        \item $L\Phi\supset LL\Phi$
+        \item $M\Phi\supset LM\Phi$
+    \end{enumerate}
+    \end{multicols}
+    We call a formula $\Phi$ a \emph{theorem} if it can be derived from the axioms, notation: $\vdash \Phi$
+    \begin{enumerate}
+        \item $\vdash\Phi$ and $\vdash(\Phi\supset\rho)$ imply $\vdash\rho$ (modus ponens)
+        \item $\vdash\Phi$ implies $\vdash L\Phi$
+    \end{enumerate}
+\end{shaded}
+\subsection*{Temporal Interpretation of Modal Logic}
+\begin{itemize}
+    \item worlds correspond to system states
+    \item visibility relation corresponds to sequences of system states
+    \begin{itemize}
+        \item system sees its current state \follows reflexivity
+        \item state $s_3$ follows $s_2$ and $s_2$ follows $s_1$, then $s_3$ follows $s_1$ \follows transitivity
+    \end{itemize}
+    \item linear time temporal logic \textsc{Ltl}:
+    \begin{multicols}{2}
+    \begin{itemize}
+        \item reflexivity
+        \item transitivity
+        \item connectivity
+        \item discreteness
+    \end{itemize}
+    \end{multicols}
+\end{itemize}
+\subsection*{satisfiability and Validity}
+\begin{itemize}
+    \item $p$ is \emph{state-satisfiable} if there is a state so that $s\models p$
+    \item $p$ is \emph{state-valid} if $s\models p$ for all states $s$
+\end{itemize}
+\subsection*{Linear Temporal Logic \textsc{Ltl}}
+$p,q$ are formulae, the folowing are fomulae:
+\begin{itemize}
+    \item $\circ p$ (next)
+    \item $\diamond$ (eventually)
+    \item $\square$ (always)
+    \item $p \mathcal{U}q$ (until)
+    \item $p \mathcal{W}q$ (unless/weak until) {\tiny either once $q$ or always $p$}
+\end{itemize}
+\subsubsection*{Satisfaction}
+given a state sequence (model) $\sigma$ and formula $p$
+\begin{itemize}
+    \item $p$ \emph{holds at position $i$} of sequence $\sigma$ iff \[ (\sigma,i) \models p \] we write $\sigma\models p$
+\end{itemize}
+\subsubsection*{Validity}
+a formula $p$ is \emph{valid}, iff \[ (\forall\sigma)(\sigma\models p) \] we write $\models p$
+\subsubsection*{Finite Model Property}
+\textsc{Ltl} has the finite model property, there are only $4$ distinct temporal modalities \\
+$\square p, \diamond p, \square\diamond p, \diamond\square p$ \\
+$\square\square\diamond p\equiv\square\diamond p, \square\diamond\square\diamond p\equiv\square\diamond p$
+\subsection*{\textsc{Ltl}-example}
+\begin{itemize}
+    \item $\square(p\to\diamond q)\cong p\leadsto q$ ``response-property'', ``p leads-to q''
+    \item ``between process A updating a value and process B reading the cache, the value must be flushed from A's cache''
+    \[ \square((UpdateA\wedge\diamond ReadB)\to(\neg ReadB \mathcal{U}FlushA)) \]
+\end{itemize}
+\begin{multicols}{2}
+\subsection*{Property Expansion}
+\begin{itemize}
+    \item $\square p \Leftrightarrow (p\wedge\circ\neg p)$
+    \item $\diamond p\Leftrightarrow(p\vee\circ\diamond p)$
+    \item $p \mathcal{U}q\Leftrightarrow(q\vee[p\wedge\circ(p \mathcal{U}q)])$
+    \item $p \mathcal{W}q\Leftrightarrow(q\vee[p\vee\circ(p \mathcal{W})])$
+\end{itemize}
+\subsection*{Dualitites}
+\begin{itemize}
+    \item $\neg\square p \Leftrightarrow\diamond\neg p$
+    \item $\neg\diamond p \Leftrightarrow\square\neg p$
+    \item $\neg(p \mathcal{U}q)\Leftrightarrow(\neg q)\mathcal{W}(\neg p\wedge\neg q) $
+    \item $\neg(p \mathcal{W} q)\Leftrightarrow(\neg q)\mathcal{U}(\neg p\wedge\neg q) $
+    \item $\neg\circ p\Leftrightarrow \circ\neg p$
+\end{itemize}
+\subsubsection*{Strong and Weak Operators}
+\begin{itemize}
+    \item $p \mathcal{U}q\Leftrightarrow(p \mathcal{W} q \wedge\diamond q) $
+    \item $p \mathcal{W}q\Leftrightarrow(p \mathcal{U} q \wedge\square q) $
+    \item $p \mathcal{U}q\Rightarrow p \mathcal{W}q $
+\end{itemize}
+\subsubsection*{Indempotence}
+Two-fold application yields result identical to single application:
+\begin{itemize}
+    \item $\square\square p \Leftrightarrow\square p$
+    \item $\diamond\diamond p\Leftrightarrow\diamond p$
+    \item $p \mathcal{U}(p \mathcal{U}q) \Leftrightarrow p \mathcal{U}q$
+    \item $p \mathcal{W}(p \mathcal{W}q) \Leftrightarrow p \mathcal{W}q$
+    \item $(p \mathcal{U}q)\mathcal{U}q \Leftrightarrow p \mathcal{U}q$
+    \item $(p \mathcal{W}q)\mathcal{W}q \Leftrightarrow p \mathcal{W}q$
+\end{itemize}
+\subsubsection*{Absorption}
+\begin{itemize}
+    \item $\diamond\square\diamond p\Leftrightarrow \square\diamond p$
+    \item $\square\diamond\square p\Leftrightarrow \diamond\square p$
+\end{itemize}
+Absorption and Indempotence also lead to only $4$ different unary modalities (compare finite-model property):
+\[ \square p,\diamond p,\square\diamond p,\diamond\square p \]
+\subsubsection{Commutativity of the next-operator}%$\circ$}
+\begin{itemize}
+    \item $\circ(\neg p)\Leftrightarrow\neg\circ p$
+    \item $\circ(p\vee q)\Leftrightarrow\circ p\vee\circ q$
+    \item $\circ(p \mathcal{W}q)\Leftrightarrow\circ p \mathcal{W}\circ q$
+\end{itemize}
+\subsection*{Distribution of Temporal Operators}
+\begin{itemize}
+    \item $\square(p\wedge q)\Leftrightarrow\square p\wedge\square q$
+    \item $\diamond(p\vee q)\Leftrightarrow\diamond p\vee \diamond q$
+    \item $\square\diamond(p\vee q)\Leftrightarrow\square\diamond p\vee\square\diamond q$
+    \item $\diamond\square(p\wedge q)\Leftrightarrow\diamond\square p\wedge\diamond\square q$
+\end{itemize}
+\subsection*{Possible Base set of Operators}
+$\circ, \mathcal{W}\neg$, derived operators:
+\begin{itemize}
+    \item $\square p = p \mathcal{W} false$
+    \item $\diamond p=\neg\square\neg p=\neg(\neg p \mathcal{W}false)$
+    \item $p \mathcal{U}q=p \mathcal{W}q \wedge \diamond q = p \mathcal{W}q \wedge\neg(\neg \mathcal{W}false)$
+\end{itemize}
+\subsubsection*{Possible Axiomatisation}
+\begin{itemize}
+    \item $\square p\to p$
+    \item $\circ\neg p\Leftrightarrow\neg\circ p$
+    \item $\circ(p\to q)\Leftrightarrow(\circ p\to\circ q)$
+    \item $\square(p\to q)\Leftrightarrow(\square p \to \square q)$
+    \item $\square p\to\square\circ p$
+    \item $(p\Rightarrow\circ p)\to(p\Rightarrow\square p)$
+    \item $p \mathcal{W}q\Leftrightarrow[q\vee(p\wedge\circ(p \mathcal{W}q))]$
+    \item $\square p\Rightarrow p \mathcal{W}false$
+\end{itemize}
+\end{multicols}
+\subsection*{Safety-Progess Classification}
+\begin{itemize}
+    \item Temporal Logic Property Classes
+    \begin{itemize}
+        \item classification based on syntactic form of formulae
+        \item A property $\Pi\subseteq\Sigma^\omega$ will be specified by temporal logic formula $\Phi$ if $\Phi$ is defined over the state vocabulary $\Sigma$ and the following condition holds:
+        \[ \sigma\in\Pi \quad \textrm{iff} \quad \sigma\models\Phi \]
+        \item hence, $\Phi$ describes a decision mechanism determining whether a state sequence belongs to the set of valid executions of a system
+    \end{itemize}
+    \item alternative (Manna and Pnueli)
+    \begin{itemize}
+        \item orthigonal to safety-liveness classification
+        \item classes:
+        \begin{multicols}{2}
+        \begin{itemize}
+            \item safety $\square p$
+            \item guarantee $\diamond p$
+            \item obligation $\diamond p\to\diamond q$ oder $\square\vee\diamond q$
+            \item response $\square\diamond p$
+            \item persistence $\diamond\square p$
+            \item reactivity $\square\diamond p\vee\diamond\square q$
+        \end{itemize}
+        \end{multicols}
+        \item Temporal Logic Specification Patterns:
+        \url{http://www.cis.ksu.edu/santos/spec-patterns/index.html}
+        \item Scopes used in Specification Patterns
+        \begin{center}
+        \scalebox{.7}{\input{images/scopes.tikz}}
+        \end{center}
+    \end{itemize}
+\end{itemize}
+
+
+
 
 \end{document}
