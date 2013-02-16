@@ -1332,5 +1332,92 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
 \[ \underset{\textrm{rel. small}}{|\mathcal{A}|} = |Q| + \sum_{q\in Q} \sum_{A}\in\Sigma |\delta(q,A)| \]
 \end{shaded}
 
+\section*{Büchi Automata \& $\omega$-Regular Languages}
+\begin{itemize}
+    \item Properties of reacive systems contain liveness elements, need to be described with infinite sequences
+    \item Need acceptance of languages of infinite words
+\end{itemize}
+\subsection*{Regular Expression}
+\begin{shaded}
+\begin{itemize}
+    \item Let $\Sigma$ be an alphabet with $A\in\Sigma$
+    \item Regular Expressions over $\Sigma$ have the \emph{syntax}:
+    \[ E:=\varnothing \ | \ \varepsilon \ | \ A \ | \ E+E'\ | \ E.E'\ | \ E^* \]
+    \item The \emph{semantics} of regular expression $E$ is a language $\mathcal{L}(E)\subseteq \Sigma^*$:
+    \begin{align*}
+    \mathcal{L}(\varnothing) = \varnothing, \; \mathcal{L}(\varepsilon)=\{\varepsilon\},\; \mathcal{L}(A)=\{A\} \\
+    \mathcal{L}(E+E') = \mathcal{L}(E)\cup\mathcal{L}(E') \; \mathcal{L}(E.E')=\mathcal{L}(E).\mathcal{L}(E') \; \mathcal{L}(E^*)=\mathcal{L}(E)^*
+    \end{align*}
+\end{itemize}
+\end{shaded}
+
+\subsection*{$\omega$-Regular Expressions}
+\begin{shaded}
+\begin{itemize}
+    \item denote languages of infinite words
+    \item An $\omega$-regular expression $G$ over $\Sigma$ has the form
+    \[ G=E_1.F_1^\omega + \dots + E_n.F_n^\omega \quad \textrm{for } n>0 \]
+    where $E_i,F_1$ are regular expressions over $\Sigma$ with $\varepsilon \not\in\mathcal{L}(F_i)$
+    \item The \emph{semantics} of $G$ is a language $\mathcal{L}(G)\subseteq\Sigma^\omega$:
+    \[\mathcal{L}_\omega(G)=\mathcal{L}(E_1).\mathcal{L}(F_1)^\omega \cup\dots\cup \mathcal{L}(E_n).\mathcal{L}(F_n)^\omega \]
+    \item $G_1$ and $G_2$ are \emph{equivalent}, denotet $G_1\equiv G_2$, if $\mathcal{L}_\omega(G_1)=\mathcal{L}_\omega(G_2)$
+    \item $\mathcal{L}$ is $\omega$-regular if $\mathcal{L}=\mathcal{L}\omega(G)$ for some $\omega$-regular expression $G$.
+    \item $\omega$-Regular languages are closed under $\cup,\cap$ and \emph{complementation}
+\end{itemize}
+\end{shaded}
+
+\subsection*{$\omega$-Regular Properties}
+\begin{shaded}
+        An $LT$ property $P$ over $AP$ is \emph{$\omega$-regular} if $P$ is an $\omega$-regular language over the alphabet $2^{AP}$
+\end{shaded}
+
+\subsection*{Acceptance conditions for words inf $(2^{AP})^\omega$}
+\begin{enumerate}
+    \item finite acceptance {\tiny (the automaton accepts a prefix of $a\in(2^{AP})^\omega$), \red{does not ensure liveness, note even infiniteness}}
+    \item looping acceptance {\tiny (the automaton has an infinite execution when reading the word) \red{does not ensure liveness, as the automaton may do anything}}
+    \item repeating acceptance {\tiny (looping acceptance $+$ the set of states that the automaton reaches infinitely often an additional acceptance condition) \dGreen{also called ``Büchi acceptance condition''}}
+\end{enumerate}
+
+\subsection*{$\omega$-Automata}
+\begin{itemize}
+    \item Definition as for \textsc{Nfa}
+    \item[+] Büchi acceptance condition: \emph{An infinite word $a\in(2^{AP})^\omega$ will be accepted by a Büchi Automaton iff the automaton reaches at least one of the states in the acceptance set $F$ infinitely often when reading $a$.}
+\end{itemize}
+\begin{shaded}
+    A \emph{nondeterministic Büchi automaton} \textsc{Nba} $\mathcal{A}$ is a tuple $(Q,\Sigma,\delta,Q_0,F)$ where:
+    \begin{itemize}
+        \item $Q$ is a finite set of states with $Q_0\subseteq !$ a set of initial states
+        \item $\Sigma$ is an alphabet
+        \item $\delta:\ Q\times\Sigma\to2^Q$ is a transition function {\tiny (nondeterministic)}
+        \item $F\subseteq Q$ is a set of accept (or final) states
+    \end{itemize}
+\end{shaded}
+\subsubsection*{Language accepted by \textsc{Nba}}
+\begin{itemize}
+    \item \textsc{Nba} $\mathcal{A}=(Q,\Sigma,\delta,Q_0,F)$ and word $\sigma=A_0A_1A_2\dots\in\Sigma^\omega$
+    \item A \emph{run} for $\sigma$ in $\mathcal{A}$ is an \emph{in}finite sequence $q_0q_1q_2\dots$ such that:
+    \[ q_0\in Q_0 \textrm{ and }  \underset{\delta \textrm{ of the \textsc{Nba}}}{\underbrace{q_i \overset{A_{i+1}}{\longrightarrow} q_{i+1}}} \textrm{ for all } 0\leq i \]
+    \item Run $q_0q_1q_2\dots$ is \emph{accepting} if $q_i\in F$ for \emph{infinitely} many $i$
+    \item $\sigma\in\Sigma^\omega$ is \emph{accepted} by $\mathcal{A}$ if there exists an accepting run for $\sigma$
+    \item The \emph{accepted language} of $\mathcal{A}$:
+    \[ \mathcal{L}_\omega(\mathcal{A})=\{ \sigma\in\Sigma^\omega | \textrm{ there exists an accepting run for } \sigma \textrm{ in } \mathcal{A}\} \]
+    \item \textsc{Nba} $\mathcal{A}$ and $\mathcal{A}'$ are \emph{equivalent} if $\mathcal{L}_\omega(\mathcal{A})=\mathcal{L}_\omega(\mathcal{A}') $
+\end{itemize}
+\subsubsection*{More facts about Büchi Automata}
+\begin{itemize}
+    \item assume: the final state will be repeatet infinitely often
+    \item finite equivalence $\not\Rightarrow\;\omega$-quivalence
+    \item $\omega$-equivalence $\not\Rightarrow$ finite equivalence
+    \item The class of languages accepted by \textsc{Nba} is \emph{identical} to the class of $\omega$-regular languages
+    \item A Büchi automaton is \emph{deterministic}, if $|Q_0|\leq 1$ and $|\delta(q,A)|\leq1$ for all $q\in Q$ and $A\in\Sigma$ \\
+    \textsc{Nba} and \textsc{Dba} are note equally expressive \follows \textsc{Nba} are more expressive \follows need for nondeterminism
+    \item There is no canonic representation for \textsc{Nba} \follows there is no minimal \textsc{Nba} for a given $\omega$-regular language
+    \item alternative: ``Muller, Rabin and Streett automata'' with deterministic/nondeterministic variants \follows same expressivenes as \textsc{N/Dba}
+    \item Generalized Nondeterministic Büchi Automaton \textsc{GNba}:
+    \begin{itemize}
+        \item acceptance condition expressed in terms of a set $\mathcal{F}$ consisting of sets $F_1,\dots,F_k$ with $F_i\subseteq Q$
+        \item \textsc{GNba} accepts a word, if it visits all sets $F_i$ infinitely often
+    \end{itemize}
+\end{itemize}
 
 \end{document}

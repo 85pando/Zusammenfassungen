@@ -1,0 +1,46 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+every node/.style={node distance = 70,},
+ts/.style={draw,rounded corners, minimum height=.5cm,text width=1.4cm,align=center},
+every path/.style={draw,->, >=latex, thick, minimum width=1cm},
+>=latex, shorten >=1pt, auto, accepting/.style={double distance=2.0pt, outer sep=1pt+\pgflinewidth},
+]
+
+% transition system
+\node[ts,initial,initial text=] (sr) at (0,0) {$s_r$};
+\node[ts,below left  of = sr]   (sy)          {$s_y$};
+\node[ts,below right of = sr]   (sry)         {$s_{ry}$};
+\node[ts,below left of = sry]   (sg)          {$s_g$};
+\node [above of = sr,node distance=20] {$\{red\}$};
+\node [left of = sy,node distance=50] {$\{yellow\}$};
+\path
+	(sr) edge  (sry)
+	(sry) edge (sg)
+	(sg) edge  (sy)
+	(sy) edge  (sr)
+;
+
+% automaton
+\node[state,right of = sr,node distance = 200,initial, initial text= ] (q0) {$\red{q_0}$};
+\node[state,below left of = q0] (q1) {$\dGreen{q_1}$};
+\node[state,below right of = q0,accepting] (qf) {$\blue{q_f}$};
+\path
+	(q0) edge[loop above] node[above] {$\neg red\wedge \neg yellow$} (q0)
+	(q0) edge[bend right] node[above left] {$\neg red\wedge yellow$} (q1)
+	(q1) edge[bend right] node[below right] {$\neg yellow$} (q0)
+	(q1) edge[loop below] node[below] {$yellow$} (q1)
+	(q0) edge node[above right] {$red$} (qf)
+;
+
+% synchronous product
+\node[ts,below of = qf,node distance = 100] (ry0) {$\langle s_{ry},\red{q_0} \rangle$};
+\node[ts,left of = ry0,node distance = 110,initial,initial text=] (g0) {$\langle s_g,\red{q_0} \rangle$};
+\node[ts,below of = g0] (y1) {$\langle s_y,\dGreen{q_1} \rangle$};
+\node[ts,below of = ry0] (r0) {$\langle s_r,\red{q_0} \rangle$};
+\path
+	(ry0) edge (g0)
+	(g0) edge (y1)
+	(y1) edge (r0)
+	(r0) edge (ry0)
+;
+\end{tikzpicture}
