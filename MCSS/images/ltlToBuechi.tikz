@@ -1,0 +1,22 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+%every node/.style={node distance = 40,text width=1.4cm,align=center},
+every node/.style={node distance = 50,minimum size=0,},
+%state/.style={draw,rounded corners, minimum height=.5cm,node distance=80},
+every path/.style={draw,->,>=latex,thick},
+]
+
+\node[state] (until) at (0,0) {$a\mathcal{U}b$};
+
+\node (left) [state,below left of = until] {$s_1$};
+\node (right) [state,below right of = until] {$s_2$};
+
+\node (leftl) [node distance=40,left of = left] {$\eta(s_1)=\{b\}$};
+\node (rightl) [right of = right] {$\eta(s_2)=\{a,a\mathcal{U}b\}$};
+
+\path
+(until) edge (left)
+(until) edge (right)
+;
+
+\end{tikzpicture}

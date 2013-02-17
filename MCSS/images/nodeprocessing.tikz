@@ -1,0 +1,22 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+]
+
+%Name
+\draw (0,0) rectangle (1,-.5);
+\node at (.5,-.25) {$s'$};
+%Incoming
+\draw (-1.1,-.5) rectangle (2.1,-1);
+\node at (.5,-.75) {$Incoming(s'):=\{s\}$};
+%New
+\draw (-1.8,-1) rectangle (.5,-2);
+\node[text width=2.2cm] (new) at (-.6,-1.5) {$New(s'):=Next(s)$};
+%Old
+\draw (.5,-1) rectangle (2.8,-2);
+\node[text width=2.2cm] (old) at (1.6,-1.25) {$Old(s'):=\varnothing$};
+%Next
+\draw (.5,-2) rectangle (2.8,-3);
+\node[text width=2.2cm] at (1.6,-2.25) {$Next(s'):=\varnothing$};
+
+
+\end{tikzpicture}

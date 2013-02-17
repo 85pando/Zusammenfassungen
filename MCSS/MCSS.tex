@@ -1273,7 +1273,7 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
 \end{itemize}
 
 \subsection*{Model Checking regular safety properties}
-\marginpar[right text]{\red{Check this with exercise sheet}}
+\note{Check this with exercise sheet}
 
 \begin{itemize}
     \item let $P_{safe}$ be a regular safety property over $AP$
@@ -1644,7 +1644,158 @@ $\circ, \mathcal{W}\neg$, derived operators:
     \end{itemize}
 \end{itemize}
 
-
+\section*{Büchi Automata and \textsc{Ltl}}
+Relationship of Büchi-Automata and \textsc{Ltl}
+\begin{itemize}
+    \item Büchi-Automata more expressive.
+    \begin{itemize}
+        \item \textsc{Ltl} can not count
+    \end{itemize}
+    \item \begin{tabular}{llcl}
+    \textsc{Etl} & Not counter-free Büchi-Automata & $\approx$ & $\omega$-regular languages \\
+    \textsc{Ltl} & Counter-free Büchi-Automata & $\approx$ & $^*-free \omega$-regular languages
+    \end{tabular}
+\end{itemize}
+\subsection*{\textsc{Ltl} to Büchi-Automaton Translation}
+\begin{itemize}
+    \item \textsc{Ltl} often more abstract / easier than to directly specify as Büchi-Automata
+    \item next-operator free \textsc{Ltl} specified properties are guaranteed to be stutter invariant \follows Partial Order Reduction
+\end{itemize}
+\subsubsection*{Overview}
+\begin{itemize}
+    \item synthesize an automaton that uses Büchi acceptance criteria to represent the same set of models that satisfy the \textsc{Ltl} formula
+    \item let every node $s$ of this automaton be labeled with an \textsc{Ltl} formula $\eta(s)$
+    \begin{itemize}
+        \item for some accepting run $\sigma$, if the automaton reaches state $s$, then the suffice $\ sigma[s\dots]$ must satisfy $\eta(s)$, i.e., $\sigma[s\dots]\models\eta(s)$
+        \item the $\eta(s)$ are of the form $(\wedge_{i=1\dots m}\nu_i\wedge\circ(\wedge_{j=1\dots n} \kappa_j)$, i.e. the successor nodes of $s$ have to satisfy $(\wedge_{j=1\dots n}\kappa_j)$
+        \item refine $\eta(s)$ into shorter subformulas $\nu_i$ until all $\nu_i$ are propositional variables in positive or negative form
+    \end{itemize}
+    \begin{center}
+    \scalebox{.8}{\input{images/ltlToBuechi.tikz}}
+    \end{center}
+    \begin{itemize}
+        \item for $\Phi \mathcal{U} \Psi$
+        \begin{itemize}
+            \item either satisfy $\Psi$ now or $\Phi$ now and $\Phi \mathcal{U} \Psi$ later
+            \item split current node
+            \begin{itemize}
+                \item first resulting node, add $\Psi$ to $\nu_i$
+                \item second resulting node, add $\Phi$ to $\nu_i$ and $\Phi \mathcal{U} \Psi$ to $\kappa_i$
+            \end{itemize}
+            \item keep all $\nu_i$ and $\kappa_i$ formulas that are not affected by current splitting
+            \item when all formulas have been split, generate successor node $s'$ to $s$
+            \item $\nu_i$ of $s'$ are the $\kappa_i$ of $s$
+            \item $\kappa_i$ of $s'$ are initially empty
+            \item no more splitting? define acceptance condition
+        \end{itemize}
+        \item Not necessarily the most effective algorithm, but no proof for more effective exists
+        \item steps of translation
+        \begin{enumerate}
+            \item preprocessing: bring formulae into negation normal form
+            \item construction of node data structure for Büchi Automaton: recursively decompose
+            \item define acceptance criteria to turn node data structure into Büchi Automaton: Use acceptance criterion for \textsc{GNba}
+            \item translate the \textsc{GNba} into a ``simple'' \textsc{Nba}
+        \end{enumerate}
+        \item convert into \emph{negation normal form}, where negation only applies to propositional variables
+        \begin{align*}
+        \neg\square\Phi             &\Rightarrow \diamond\neg\Phi \\
+        \neg\diamond\Phi            &\Rightarrow \square\neg\Phi \\
+        \neg(\Phi \mathcal{U}\Psi)  &\Rightarrow (\neg\Phi)\mathcal{V}(\neg\Psi) \\
+        \neg(\Phi \mathcal{V}\Psi)  &\Rightarrow (\neg\Phi)\mathcal{U}(\neg\Psi) \\
+        \neg(\Phi\vee\Psi)          &\Rightarrow (\neg\Phi)\wedge(\neg\Psi) \\
+        \neg(\Phi\wedge\Psi)        &\Rightarrow (\neg\Phi)\vee(\neg\Psi) \\
+        \Phi\to\Psi                 &\Rightarrow (\neg\Phi)\vee\Psi \\
+        \diamond\Phi                &\Rightarrow  true \mathcal{U}\Phi \\
+        \square                     &\Rightarrow  false \mathcal{V}\Phi
+        \end{align*}
+        \item Semantics of $\mathcal{V}$ (unless): $\Phi$ is false when $\Psi$ is true \note{Is this true?}
+        \item node data structure
+        \begin{multicols}{2}
+        \begin{description}
+            \item[Name] unique identifier for the node
+            \item[Incoming] list of node names that lead into this node
+            \item[New,Old,Next] each is a set of subformulas for $\Phi$
+            \begin{itemize}
+                \item each node represents suffixes of executions
+                \item $New(s)\sup Old(s):\;\nu_i$ formulas
+                \item $New(s):$ unprocessed formulas
+                \item $Old(s):$ processed formulas
+                \item $Next(s):\;\kappa_i$ formulas
+            \end{itemize}
+            \item[Nodes\_Set] set of all existant nodes
+            \begin{center}
+            \scalebox{1}{\input{images/nodestructure.tikz}}
+            \end{center}
+            \item[Observation]
+            \begin{itemize}
+                \item assumption: $\sigma[\dots s]$ satisfies all subformulae in Old or New
+                \item obligation: $\sigma[(s+1)\dots]$ satisfies all subformulae in Next
+            \end{itemize}
+        \end{description}
+        \end{multicols}
+        \item Nodes can be split (two nodes after) or evolved (one node after) \note{evolve $\to$ node gets changed only?}
+        \item Processing of Current node $s$: is there a subformula to be processed in $New$ of node $s$?
+        \begin{description}
+            \item[no:] node $s$ is completely processed\\
+            is there another node $r$ with the same subformulae as $s$ in both $Old$ and $Next$ field? \follows $s$ is discarded and incoming edges of $s$ are added to $r$\\
+            else: add node $s$ to $Nodes\_Set$, continue with new subnode $s'$
+            \begin{center}
+            \scalebox{1}{\input{images/nodeprocessing.tikz}}
+            \end{center}
+            \item[yes:] select subformula $\eta$ from $New$
+            \begin{itemize}
+                \item remove $\eta$ from $New(S):=New(s)-\{\eta\}$
+                \item determine main Boolean operator in $\eta$ \follows determine which rule to apply
+                \item perform split into $s_1,s_2$ or evolve to $s'$
+                \begin{itemize}
+                    \item if $\eta$ is $\Phi\wedge\Psi,$\emph{proposition, negated proposition} or \emph{Boolean constant}:
+                    \\ if $\eta$ is $false$ or if $\neg\eta$ is in old \follows contradiction, discard
+                    \\ else: $s$ evolves into $s'$
+                    \item if $\eta=\Phi \mathcal{U}\Psi,\; \Phi \mathcal{V}\Psi,\; \Phi\vee\Psi$, split into $s_1,s_2$
+                \end{itemize}
+            \end{itemize}
+        \end{description}
+    \end{itemize}
+    \item Automaton construction form node structure
+    \begin{itemize}
+        \item initial node is initial state
+        \item make transitions to states from all states in $Incoming$
+        \item \textsc{GNba} Acceptance Conditions
+        \begin{itemize}
+            \item create set $F_i$ for each subformula of the form $\Phi \mathcal{U}\Psi$
+            \item this ensures that if $\Phi \mathcal{U}\Psi$ holds in some run, $\Psi$ must hold later
+            \item $F_i$ contains all states that either:
+            \begin{itemize}
+                \item contain $\Psi$ in its label
+                \item does not contain $\Phi \mathcal{U}\Psi$ in its label
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    \item Translation from \textsc{GNba} $\mathcal{B}=(\Sigma,S,\delta,I,L,F)$ to \textsc{Nba} $\mathcal{A}'=(\Sigma,S',\delta',I',F')$, $F=\{ F_1\dots F_n \}$
+    \begin{itemize}
+        \item $S'=S\times\{1\dots n\}$
+        \item $I'=I\times\{1\}$
+        \item $\delta'$ is defined by $(t,i)\in\delta'((s,k),a)$ if $t\in\delta(s,a)$ and
+        \begin{align*}
+        i=k             & if\;s\not\in F_k \\
+        i=(k \mod n) +1  & if\;s    \in F_k
+        \end{align*}
+        \item $F'=F_1\times\{1\}$
+    \end{itemize}
+    \item the construction labels states with numbers from $1\dots n$
+    \begin{itemize}
+        \item if the current number is $k$, then it will keep $k$ if we do not go though an acceptance state of $F_k$
+        \item if we do go though an acceptance state $F_k$, then the new value is $\underset{\textrm{the next} k}{\underbrace{(k \mod n)+1}}$
+        \item As soon as we reach an acceptance set from $F_1$ we look for one from $F_2$ next and thus go through all acceptance sets
+    \end{itemize}
+\end{itemize}
+\subsection*{Complexity of Algorithm}
+\begin{itemize}
+    \item some optimization possible (redundancies, bisimulation reduction, weak alternating automata, prune parts that don't lead to acceptance cycle)
+    \item number of nodes and runtime is exponential in the length of the \textsc{Ltl} formula
+    \item \textsc{Ltl} are typically small \follows Büchi automaton typically less than $10$ states
+    \item \textsc{Ltl} model checking is polynomial in the size of the Büchi automaton
+\end{itemize}
 
 
 \end{document}

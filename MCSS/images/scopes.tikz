@@ -1,0 +1,73 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+%every node/.style={node distance = 40,text width=1.4cm,align=center},
+every node/.style={node distance = 40,minimum size=0,},
+%state/.style={draw,rounded corners, minimum height=.5cm,node distance=80},
+%state2/.style={state,text width=2.3cm},
+norm/.style={draw,line width=2},
+marked/.style={line width=8,color=blue},
+]
+
+\node (glo) at (0,0)            {Global};
+\node (bef) [below of = glo]    {Before Q};
+\node (aft) [below of = bef]    {After Q};
+\node (bet) [below of = aft]    {Between Q and R};
+\node (unt) [below of = bet]    {After Q until R};
+\node (seq) [below of = unt]    {State Sequence};
+%global
+\node[right of = glo] (left) {};
+\node[right of = left, node distance = 240] (right) {};
+\path[marked] (left) edge (right);
+
+%before
+\node[right of = bef] (left) {};
+\node[right of = left, node distance = 240] (right) {};
+\path[norm] (left) edge (right);
+\node[right of = left, node distance = 40] (right) {};
+\path[marked] (left) edge (right);
+
+%after
+\node[right of = aft] (left) {};
+\node[right of = left, node distance = 240] (right) {};
+\path[norm] (left) edge (right);
+\node[right of = left, node distance = 40] (left) {};
+\path[marked] (left) edge (right);
+
+%between
+\node[right of = bet] (left) {};
+\node[right of = left, node distance = 240] (right) {};
+\path[norm] (left) edge (right);
+\node[right of = left, node distance = 40] (left) {};
+\node[right of = left, node distance = 40] (right) {};
+\path[marked] (left) edge (right);
+\node[right of = left, node distance = 80] (left) {};
+\node[right of = left, node distance = 40] (right) {};
+\path[marked] (left) edge (right);
+
+%after
+\node[right of = unt] (left) {};
+\node[right of = left, node distance = 240] (right) {};
+\path[norm] (left) edge (right);
+\node[right of = left, node distance = 40] (left) {};
+\node[right of = left, node distance = 40] (right) {};
+\path[marked] (left) edge (right);
+\node[right of = left, node distance = 80] (left) {};
+\node[right of = left, node distance = 40] (right) {};
+\path[marked] (left) edge (right);
+\node[right of = left, node distance = 80] (left) {};
+\node[right of = left, node distance = 40] (right) {};
+\path[marked] (left) edge (right);
+
+%sequence
+\node[right of = seq] (left) {};
+%\node[right of = left, node distance = 240] (right) {};
+%\path[norm] (left) edge (right);
+\node[right of = left, node distance = 40] (left) {Q};
+\node[right of = left, node distance = 40] (left) {R};
+\node[right of = left, node distance = 40] (left) {Q};
+\node[right of = left, node distance = 40] (left) {R};
+\node[right of = left, node distance = 40] (left) {Q};
+\node[right of = left, node distance = 40] (left) {R};
+
+
+\end{tikzpicture}
