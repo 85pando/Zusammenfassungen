@@ -1851,13 +1851,254 @@ Don't want to revisit states, that have previously been visited. To efficiently 
     \end{itemize}
 \end{itemize}
 \end{minipage}
-\begin{minipage}[t]{0.48\textwidth}
+\begin{minipage}[]{0.48\textwidth}
 \begin{center}
 \scalebox{.8}{\input{images/hashtable.tikz}}
 \end{center}
 \end{minipage}
+\begin{itemize}
+    \item impact of hash collisions:
+    \begin{itemize}
+        \item $r$ number of states stored in hash table
+        \item $h$ number of slots in table
+        \item if $h>>r$ then each state can be stored in different slot for equal distribution
+        \begin{itemize}
+            \fitem linked list in every slot either empty or just one element
+            \fitem almost no storage and time overhead
+        \end{itemize}
+        \item if $h<r$, then hash collisions lead to lists with $length\geq1$
+        \begin{itemize}
+            \fitem on average $\frac{r}{h}$ comparisions in linked list required per state access
+            \fitem overhead grows linearly with $\frac{r}{h}$
+        \end{itemize}
+        \item if $h>>r$: what should we do
+        \begin{itemize}
+            \item store just \emph{one bit}, indicating whether state was visited before, or not
+            \item dramatic savings in state space consumption
+            \item problem of duplicates:
+            \begin{itemize}
+                \item renders method incomplete, when $hash(s)=hash(s')\textrm{ for } s\not=s'$ {\tiny (two different states with same hash, algo will assume, that state was visited before)}
+                \item does not compromise soundness of method {\tiny (every error, that is found is indeed an error, not all errors may be found)}
+            \end{itemize}
+        \end{itemize}
+        \item increased coverage due to bistate hashing
+        \begin{itemize}
+            \item $m:$ bit to store in hash table
+            \item $S:$ bits per state description
+            \item $r:$ number of reachable states
+            \item $h:$ slots in hash table
+        \end{itemize}
+        \item less than $\frac{m}{s}$ will fit in memory, since hash table itsself requires space
+        \item if $r>\frac{m}{S}$, search will abort after exploring a fraction of $\frac{m}{r*S}$ of the state space
+        \item practical experience shows, that bitstate hashing produces greater coverage due to ability to store more states
+    \end{itemize}
+\end{itemize}
 
-
-%part 14
+\section*{Model Checking $\omega$-Regular Properties}
+To validate liveness-properties we need to visit every state and check, whether a cycle violating the condition can be found. This can be achieved by two nested \textsc{Dfs}'
+\subsubsection*{Persistence}
+\begin{shaded}
+We call \emph{``eventually forever $\neg F$''} a \emph{persistence} property: \\
+Let $P_{pers}\subseteq(2^{AP})^\omega$ an LT property and $\Phi$ some propositional logic formula over $AP$. We call
+\[ P_{pers}=\{ A_0A_1A_2\dots\in(2^{AP})^\omega | \exists i\geq0.\forall j\geq i.A_j\models\Phi \} \]
+a \emph{persistence property} and $\Phi$ a \emph{persistence} (or state) \emph{condition} of $P_{pers}$. $\Phi$ represents a propositional property that after a while (=a finite number of steps) becomes an invariant
+\end{shaded}
+\subsection*{Persistence Checking}
+\begin{itemize}
+    \item Check wheter $TS\not\models P_{pers}$ with persistence condition $\Phi$
+    \item Algorithmic Idea
+    \begin{itemize}
+        \item Let $s$ a state reachable in $TS$ with $S\not\models\Phi$ \follows then $TS$ has an initial path fragment leading into $s$
+        \item If $s$ is on a cycle
+        \begin{itemize}
+            \fitem this path fragment can be continued by an infinite path in $TS$ by re-visiting $s$ infinitely often
+            \fitem $TS$ may visit the $\neg\Phi$-state $s$ infinitely often, which hence means \[ TS\not\models P_{pers} \]
+        \end{itemize}
+        \item If no $\neg\Phi$-state $s$ on a cycle can be found, then $TS\models P_{pers}$
+    \end{itemize}
+    \begin{shaded}
+        $TS\not\models P_{pers}$ iff $\exists s\in Reach(TS).s\not\models\Phi\wedge s$ is on a cycle in $G(TS)$
+        \\ The following statements are equivalent
+        \begin{enumerate}
+            \item $TS\not\models P$
+            \item $Traces(TS)\cap \mathcal{L}_\omega(\mathcal{A})=\varnothing$
+            \item $TS\otimes \mathcal{A}\models P_{pers(\mathcal{A})}$
+        \end{enumerate}
+    \end{shaded}
+    \item model checking $\omega$-regular properties is reduced to checking persistence properties and thus finding cycles in $TS\otimes \mathcal{A}$
+\end{itemize}
+\subsection*{Nested Depth First Search \textsc{NDfs}}
+performs two nested \textsc{Dfs} searches, post-order traversal for the first \textsc{Dfs}. \\
+\input{code/ndfs.tex}
+\begin{minipage}[]{0.78\textwidth}
+Derivation of counterexample for \texttt{terminate(true)}
+\begin{itemize}
+    \item dfs2($s_1$)
+    \item $s_2$ is found by dfs2 on dfs1-stack
+    \item counterexample construction: $(q_0\dots s_2)(s_2\dots s_2)^\omega$
+\end{itemize}
+\end{minipage}
+\begin{minipage}[]{0.28\textwidth}
+    \begin{center}
+    \scalebox{1}{\input{images/lasso.tikz}}
+    \end{center}
+\end{minipage}
+\subsection*{Observations}
+\begin{itemize}
+    \item \textsc{NDfs} will not produce all accepting runs, but just one, iff there is one (i.e. completeness is not compromised)
+    \item \textsc{Dfs2} will only encounter states that have previously been reached by \textsc{Dfs1} (post-order traversal) \follows a state, once flagged will not be re-expanded during cycle detection
+    \item Post-Order vs. Pre-Order Traversal Strategy
+    \begin{itemize}
+        \item alternative: pre-ordered nested search
+        \begin{itemize}
+            \item search an acceptance state and once encountered, find a cycle
+            \item quadratic worst case time overhead, linear worst case space overhead \follows since second search has to be invoked with a newly initialized list of flagged states
+            \fitem post-order traversal strategy of \textsc{NDfs} is more efficient
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\subsection*{Nested \textsc{Dfs} vs. Tarjans's \textsc{Scc} Detection}
+\begin{minipage}[t]{0.48\textwidth}
+Tarjan
+\begin{itemize}
+    \item \textsc{Scc}: strongly connected component: each element is reachable from inside an \textsc{Scc}
+    \item Tarjan: \textsc{Dfs}-based \textsc{Scc} detection (not on-the-fly)
+    \item every state is visited twice
+    \item memory-overhead: thee $32-bit$ numbers / addresses per state visited
+    \item capable to find all accepting paths
+    \item easier to implement strong fairness constraints
+\end{itemize}
+\end{minipage}
+\hfill \vrule \hfill
+\begin{minipage}{0.48\textwidth}
+\textsc{NDfs}
+\begin{itemize}
+    \item same worst case complexity
+    \item memory overhead: $2-bits$ per state (hash + flag)
+    \item enables supertrace / bitstate hashing
+    \item finds one accepting path, if one exists (suffices to refute claimed property)
+\end{itemize}
+\end{minipage}
+\subsection*{Property Specification in Promela}
+\begin{itemize}
+    \item Progress State Labels
+    \begin{itemize}
+        \item processes may diverge in infinite loops without ever making any visible progress
+        \item prepending ``progress'' in front of a name of a control state label means, that any cyclic execution of the Promela model must lead though at least on progress labeled state, otherwise ``non-progress-cycle''
+    \end{itemize}
+    \item Temporal or Never Claims
+    \begin{itemize}
+        \item possibility to specify temporal properties directly as Büchi automata
+        \item Promela model and never claim are executed as synchronous product
+    \end{itemize}
+    \item also permitted: end, progress, assert
+    \item \textsc{Ltl} gets translated to never claim, as those are often unintuitive
+\end{itemize}
+\subsection*{Path Properties}
+\begin{itemize}
+    \item evaluated along execution paths
+    \item Let $R$ an asynchronous product of a set of \textsc{Mts}
+    \begin{shaded}
+        \begin{itemize}
+            \item $R$ is \emph{free of non-progress cycles} if at least one state in the cyclic suffix of any cyclic trace of $R.P.T.E$ in $R.PRG$ {\tiny (progress states)}
+            \item $R$ is \emph{free of accepting cycles} if no state of the cyclic suffix of any cyclic trace of $R.P.T.E$ is in $R.ACC$ {\tiny (acceptance states $F$)}
+        \end{itemize}
+    \end{shaded}
+    \item need for cycle-searching algorithm for accepting cycle detection
+    \begin{itemize}
+        \item traverse state space to find an accepting state $x$ \follows a procut state $z$ is accepting if at least oine of the component $MTS$  is in $M_i.ACC$
+        \item change to second state space, set $x$ as seed, check whether $x$ is reachable form itself \follows post-order traversal
+    \end{itemize}
+    \follows \textsc{NDfs}
+    \item on-the-fly Non-Progress Cycle Detection
+    \\ let $x\in M_i.PRG$ for all $i$
+    \begin{itemize}
+        \item check, whether $x$ is reachable from itself
+        \item if so, and if for all states $y$ in this cycle $y\not\in M_i.PRG$ for all $i$, then a non-progress cycle has been detected
+    \end{itemize}
+\end{itemize}
+\subsection*{Automata-based Model Checking}
+\begin{itemize}
+    \item Computing $L(M)\subseteq L(S)$
+    \item let $\Sigma^\omega-L(S)= \overline{L(S)}$ then \[ L(M)\subseteq L(S)\leftrightarrow L(M)\cap \overline{(L(S))} = \varnothing \]
+    \item implementation variants:
+    \begin{itemize}
+        \item direct complementation of $S$: non-trivial operation \\
+        for \textsc{Nba} $S$ with $n$ states, complement has $2^{\mathcal{O}(n\log n)}$ states
+        \item direct specification of $\overline{S}$
+        \item specify \textsc{Ltl} formula $\varphi$, obtain $\neg\varphi$, tranlaste $\neg\varphi$ into equivalent \textsc{Nba}
+    \end{itemize}
+    \item Existence of counterexample \\
+    \begin{minipage}{0.48\textwidth}
+    \begin{itemize}
+        \item $L(M)\cap \overline{L(S)}=\varnothing$ \follows $A$ satisfies $S$
+        \item $L(M)\cap \overline{L(S)}\not=\varnothing$ \follows $C$ is counterexample for the non-satisfaction of $S$ by $M$
+        \item it can be shown, that any word in $C$ can be represented by an $\omega$-regular expression of the form $uv^\omega$ where $u$ and $v$ are finite state event sequences
+    \end{itemize}
+    \end{minipage}
+    \hfill \vrule \hfill
+    \begin{minipage}{0.48\textwidth}
+    \begin{center}
+        \scalebox{1}{\input{images/lasso2.tikz}}
+        \end{center}
+    \end{minipage}
+    \item Construction of the Intersection of Büchi Automata
+    \begin{itemize}
+        \item let $M_1=(Q_1,q_0,q_{0,1},A,\delta_1,F_1)$ and $M_2=(Q_2,q_2,q_{0,2},A,\delta_2,F_2)$ be two Büchi automata
+        \item the Büchi automaton accepting $L(M_1)\cap L(M_2)$ can be defined as \[ M_1\cap M_2 = (Q_1\times Q_2\times\{0,1,2\},(q_{0,1},q_{0,2},0),A,\delta,Q_1\times Q_2\times\{2\}) \] such that $(\langle r_i,q_i,x\rangle,a,\langle r_k,q_n,y\rangle)\in\delta$ iff all of the following contidions hold:
+        \begin{enumerate}
+            \item $(r_i,a,r_k)\in\delta_1$ and $(q_j,a,q_n)\in\delta_2$ (the transition of the intersection automaton agree with the transition of the operand automata)
+            \item The third component of the state tuples can be computed as follows:
+            \begin{itemize}
+                \item if $x=0$ and $r_k\in F_1$, then $y=1$
+                \item if $x=1$ and $q_n\in F_2$, then $y=2$
+                \item if $x=2$ then $y=0$
+                \item else, $y=x$
+            \end{itemize}
+        \end{enumerate}
+        \item third component in state ensures, that acceptance states of both operand automata $M_1$ and $M_2$ occur infinitely often in accepting cycle
+        \item construction is generally considered to inefficient
+    \end{itemize}
+\end{itemize}
+\subsection*{Emptiness Check for Büchi Automata}
+\begin{itemize}
+    \item Let $M=(Q,q_0,A,\delta,F)$ a Büchi automaton, let $\rho$ a run on $\sigma$ such that $\sigma$ is being accepted by $M$
+    \item $\rho$ contains infinitely many accepting states from $F$
+    \item since $Q$ is finite, there is a suffix $\rho'$ of $\rho$ such that every state in $\rho'$ occurs infinitely often
+    \item Every state in $\rho'$ is reachable from every other state in $\rho'$ \follows states in $\rho'$ form an \textsc{Scc}
+\end{itemize}
+\subsection*{Promela Never Claim}
+\begin{itemize}
+    \item just one instance per Promela model
+    \item executed synchronously with the rest of the model
+    \item can perform a step when condition label on transition is satisfied in current state of Promela model
+    \item the final state of never claim is always indicating a property violation: stuttering semantics: final state repeated forever
+    \item \red{there is something missing here:} part 15.44-47
+\end{itemize}
+\subsection*{Fairness}
+\begin{description}
+    \item[strong fairness:] a $\omega$-run $\sigma$ satisfies the property of \emph{strong fairness} if it contains infinitely many transitions from every componen automaton (proctype), which is infinitely often enabled in $\sigma$
+    \[\forall \textrm{ component automata } i:\square\diamond enabled(i)\Rightarrow\square\diamond taken(i) \]
+    \item[weak fairness:] a $\omega$-run $\sigma$ satisfies the property of \emph{weak fairness} if it contains infinitely many transitions from every componen automaton (proctype), which is enabled infinitely long in $\sigma$
+    \[ \forall \textrm{ component automata } i:\diamond\square enabled(i)\Rightarrow \square\diamond taken(i) \]
+\end{description}
+\begin{itemize}
+    \item avoidance of explicit specification of fairness constraints using \textsc{Ltl} formulae by \emph{built-in} fairness checking algorithms
+    \begin{description}
+        \item[strong fairness:] runtime increase by factor $n^2$, where $n$ is the number of concurrent components
+        \item[weak fairness] runtime increase by factor $n$\\
+        implemented in \textsc{Spin} \\
+        in practice the factor is often 2
+    \end{description}
+    \item Construction: based on Chouekas flag construction
+    \item \textsc{NDfs} checks LTS consisting of $k$ component LTSs
+    \item create $k+2$ copies of the LTS that is obtained from the asynchronous product of the component LTSs
+    \item preserve acceptance labels only in copy 0
+    \item change outgoing transitions from acceptance states in copy 0 to point to corresponding state in copy 1
+    \item in $i$th component ($1\leq i \leq k$) component, destination state of each transition contributed by LTS$_i$ to corresponding state in LTS$_{i+1}$, transitions contributed by other LTSs remain in same component
+    \begin{center}
+    \scalebox{.75}{\input{images/weakfairness.tikz}}
+    \end{center}
+\end{itemize}
 
 \end{document}

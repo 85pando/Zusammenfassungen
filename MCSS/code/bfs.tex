@@ -15,7 +15,7 @@ Start() \Begin{
 \ \\
 Search() \Begin{
     z=Del\_Queue() \\
-    \For{each $(s,l,s')\in A.T$}{
+    \ForEach{$(s,l,s')\in A.T$}{
         \If{In\_Statespace$(V,\ s')==false$}{
             Add\_Statespace($V,\ s'$) \\
             Add\_Queue($D,\ s'$) \\
@@ -23,5 +23,5 @@ Search() \Begin{
         }
     }
 }
-\caption{Basic Breadh-First Search}
+\caption{Basic Breatdh-First Search}
 \end{algorithm}

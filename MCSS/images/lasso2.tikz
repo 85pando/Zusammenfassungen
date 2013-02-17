@@ -1,0 +1,21 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+every path/.style={draw,->,thick,>=latex},
+]
+
+\node (q0) {$u$};
+\node[right of = q0,node distance=50] (s2) {};
+\node[right of = s2,node distance=30] (s1) {$v^\omega$};
+
+\node[above of = q0,node distance=10] (q) {};
+\node[above of = s2,node distance=10] (2) {};
+\node[above of = s1,node distance=10] (1) {};
+
+\node[above left of = 2,node distance=70] (h2) {};
+\node[above right of = 1,node distance=70] (h1) {};
+
+\path(q) edge[dGreen] (2);
+\path[blue](2) to (1) .. controls (h1) and (h2) .. (2)
+;
+
+\end{tikzpicture}

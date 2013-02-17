@@ -1,0 +1,32 @@
+\begin{tikzpicture}[
+every path/.style={draw,->,>=latex,thick}
+]
+
+\node[draw,ellipse,minimum height=4cm,minimum width=2cm] (0) at (0,0) {};
+\node[draw,ellipse,minimum height=4cm,minimum width=2cm] (1) at (6,0) {};
+%\node[] (dot) at (12,0) {\dots};
+\node[draw,ellipse,minimum height=4cm,minimum width=2cm] (k1) at (18,0) {};
+
+\node[below of = 0,node distance=70] {copy $0$};
+\node[below of = 1,node distance=70] {copy $1$};
+\node[below of = k1,node distance=70] {copy $k+1$};
+
+\node[draw,circle,double] (0h) at (.5,-1) {};
+\node[] (1h)   at ( 6,-1) {};
+\node[] (dh) at (12,0) {\dots};
+\node[] (kh)   at (18,-1) {};
+\node[] (h0)   at (-.5,-1) {};
+
+\node[] (1u) at (6,1) {};
+\node[] (ku) at (18,1) {};
+
+\path
+(0h) edge[bend left] node [above] {$pid = 1\dots k$} (1h)
+(1h) edge[bend left] node [above] {$pid = 1$} (dh)
+(dh) edge[bend left] node [above] {$pid = k$} (kh)
+(kh) edge[bend left] node [below] {$pid = 1\dots k$} (h0)
+(1u) edge[loop below] node [below] {$pid \not= 1$} (1u)
+(ku) edge[loop below] node [below] {$pid \not= 2$} (ku)
+;
+
+\end{tikzpicture}

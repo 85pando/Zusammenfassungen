@@ -13,11 +13,11 @@ Start() \Begin{
 Search() \Begin{
     z=Top\_Stack() \\
     \tcp{all successor states in all components}
-    \For{all $i$ with $i\leq i\leq n$}{
+    \ForAll{$i$ with $i\leq i\leq n$}{
         $s=Control(z,i)$ \\
         $v=Data(z)$ \\
         \tcp{all successor states in component $i$}
-        \For{all $(s,s')\in P.T.E$}{
+        \ForAll{$(s,s')\in P.T.E$}{
             \If{$F(s,s').C(v) == true$}{
                 $z'= Update(z,i,s',F(s,s').A(V))$
                 \If{ In\_Statespace($z'$) == false}{
