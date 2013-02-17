@@ -1,0 +1,14 @@
+%!TEX root = ../MCSS.tex
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwIn{finite transition system $TS$ and regular safety property $P_{safe}$}
+% \KwData{finite transition system $TS$ and regular safety property $P_{safe}$}
+ \KwResult{true if $TS\models P_{safe}$. Otherwise false plus a counterexample for $P_{safe}$ }
+ \eIf{$TS\otimes\mathcal{A}\models P_{inv(\mathcal{A})}$}{
+ \Return{true}
+ }{
+ Determine initial path fragment $\langle s_0,q_1\rangle\dots\langle s_n,q_{n+1}\rangle$ of $TS\otimes\mathcal{A}$ with $q_{n+q}\in F$ \\
+ \Return{(false, $s_0s_1\dots s_n$)}
+ }
+ \caption{Basic Model Checking algorithm}
+\end{algorithm}

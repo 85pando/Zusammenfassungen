@@ -1309,19 +1309,7 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
     q_1,\dots q_n\not\in F \textrm{ and } q_{n+1}\in F \Rightarrow \underset{\textrm{bad prefix for } P_{safe}}{\underbrace{trace(s_0s_1\dots s_n)\in\mathcal{L(\mathcal{A})}}}
     \]
 \end{shaded}
-
-\begin{algorithm}[H]
- \SetAlgoLined
- \KwData{finite transition system $TS$ and regular safety property $P_{safe}$}
- \KwResult{true if $TS\models P_{safe}$. Otherwise false plus a counterexample for $P_{safe}$ }
- \eIf{$TS\otimes\mathcal{A}\models P_{inv(\mathcal{A})}$}{
- \Return{true}
- }{
- Determine initial path fragment $\langle s_0,q_1\rangle\dots\langle s_n,q_{n+1}\rangle$ of $TS\otimes\mathcal{A}$ with $q_{n+q}\in F$ \\
- \Return{(false, $s_0s_1\dots s_n$)}
- }
- \caption{Basic Model Checking algorithm}
-\end{algorithm}
+\input{code/basicmc.tex}
 
 \subsection*{Time Complexity}
 \begin{shaded}
@@ -1797,5 +1785,79 @@ Relationship of Büchi-Automata and \textsc{Ltl}
     \item \textsc{Ltl} model checking is polynomial in the size of the Büchi automaton
 \end{itemize}
 
+\section*{Algorithms for Checking Safety Properties}
+\subsection*{Basic \textsc{Dfs}}
+\input{code/basicdfs.tex}
+\begin{itemize}
+    \item properties for finite state spaces
+    \begin{itemize}
+        \item complete exploration of state space
+        \item termination can be proven
+    \end{itemize}
+    \item complexity
+    \begin{itemize}
+        \item linear in the number of nodes (which can be exponential in number of components)
+    \end{itemize}
+    \item efficiency problem
+    \begin{itemize}
+        \item ever node needs to be visited twice, once during generation of asynchronous product \textsc{Lts}, once during state space search \follows requires storage of copmlete {\tiny reachable} state space
+        \item on-the-fly algorithm \follows expand asynchronous product and search
+    \end{itemize}
+\end{itemize}
+\subsection*{On-the-fly \textsc{Dfs}}
+\input{code/otfdfs.tex}
+\begin{itemize}
+    \item $Control(z,i)$: return control state of $i-th$ component
+    \item $Data(z)$: return data values $v_1,\dots,v_n$
+    \item $Update(z,i,s,f):$ take $z$, replace control of $i-th$ component with $s$, apply data action $f$ \follows check property
+\end{itemize}
+\subsection*{Basic-\textsc{Dfs} vs. On-the-fly \textsc{Dfs}}
+\begin{itemize}
+    \item Trade space complexity (memory) for time-complexity
+    \begin{itemize}
+        \item On-the-fly \textsc{Dfs} erases the parts of the state space \emph{not on the stack}
+        \item danger of multiple generation of some states if erased and need to be visited again
+    \end{itemize}
+    \item in practical situations: Size (exponential in \dots) prevents use of basic dfs algorithm
+\end{itemize}
+\subsection*{\textsc{Bfs}}
+\input{code/bfs.tex}
+\subsection*{Depth-First vs. Breadth-First Search}
+\begin{description}
+    \item[BFS] always finds shortest counterexample
+    \item[otf-DFS]
+    \begin{itemize}
+        \item easy extension to detect cylces (liveness properties)
+        \item stack contents automatically yield counterexample
+        \item memory efficiency, only need to store portion of state space
+    \end{itemize}
+    \item[conclusion]\textsc{Dfs} will be used in most cases, moderately sized models with \textsc{Bfs}
+    \item[\textsc{Spin}] Depth-Bounded Breadth First Search
+    \begin{itemize}
+        \item May lead to incomplete search
+    \end{itemize}
+\end{description}
+\subsection{Bitstate Hashing (Supertrace)}
+\begin{minipage}[]{0.48\textwidth}
+Don't want to revisit states, that have previously been visited. To efficiently determine, whether a state was visited before: use a \emph{hashtable}
+\begin{itemize}
+    \item $h$ slots with lists of zero or more states
+    \begin{itemize}
+        \item store new state $s$: compute $hash(s)$ out of $0\dots (h-1)$
+        \item lookup state $s$: compute $hash(s)$, search for $s$ in sorted linked list, if not found add $s$ to linked list
+    \end{itemize}
+    \begin{itemize}
+        \item \textsc{Spin} uses checksum-polynomial as well as Jenkin's hashing
+    \end{itemize}
+\end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{center}
+\scalebox{.8}{\input{images/hashtable.tikz}}
+\end{center}
+\end{minipage}
+
+
+%part 14
 
 \end{document}

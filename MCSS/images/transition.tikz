@@ -1,3 +1,4 @@
+%!TEX root = ../MCSS.tex
 \begin{tikzpicture}[
 state/.style={draw,rounded corners},
 every node/.style={node distance = 70},

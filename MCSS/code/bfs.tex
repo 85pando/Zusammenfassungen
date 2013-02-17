@@ -1,0 +1,27 @@
+%!TEX root = ../MCSS.tex
+\begin{algorithm}[H]
+ \SetAlgoLined
+% \KwIn{input}
+% \KwResult{result/output}
+Queue $D=\{\}$ \\
+Statespace $V=\{\}$
+
+Start() \Begin{
+    \tcp{$s_0$ is initial state of TS}
+    Add\_Statespace($V,\ A.s_0$)\\
+    Add\_Queue($D,\ A.s_0$) \\
+    Search()
+}
+\ \\
+Search() \Begin{
+    z=Del\_Queue() \\
+    \For{each $(s,l,s')\in A.T$}{
+        \If{In\_Statespace$(V,\ s')==false$}{
+            Add\_Statespace($V,\ s'$) \\
+            Add\_Queue($D,\ s'$) \\
+            Search()
+        }
+    }
+}
+\caption{Basic Breadh-First Search}
+\end{algorithm}

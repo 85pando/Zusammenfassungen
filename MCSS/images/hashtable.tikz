@@ -1,0 +1,44 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+hashtable/.style={text width=1cm,minimum height=.5cm,node distance=14,align=center},
+hash/.style={draw,rectangle,hashtable},
+lab/.style={align=right,text width=1cm,node distance=40},
+list/.style={hash,node distance=50},
+every path/.style={draw,->,thick,>=latex}
+]
+%hashtable
+\node[hash] (0) at (0,0) {};
+\node[below of = 0,hash] (1) {};
+\node[below of = 1,hash] (2) {};
+\node[below of = 2,hashtable] (3) {\vdots};
+\node[below of = 3,hash] (4) {};
+\node[below of = 4,hash] (5) {};
+\node[below of = 5,hash] (6) {};
+\node[below of = 6,hashtable] (7) {\vdots};
+\node[below of = 7,hash] (8) {};
+\node[below of = 8,hash] (9) {};
+
+%labels
+\node[left of = 0,lab] {$0$};
+\node[left of = 9,lab] {$h-1$};
+\node[left of = 5,lab] {$hash (s)$};
+
+%linked list
+\node[right of = 5,list] (51) {};
+\node[right of = 51,list] (52) {$s$};
+\node[right of = 52,list] (53) {$s'$};
+\path
+(5) edge (51)
+(51) edge (52)
+(52) edge (53)
+;
+\node[above of = 52,node distance=15] {sorted linked list};
+
+%left part
+\node (s) at (-2.5,-4.5) {$s$};
+\node[above of = s,draw,ellipse,node distance=30] (hash) {hash};
+\path
+(s) edge (hash)
+(hash) edge (5)
+;
+\end{tikzpicture}

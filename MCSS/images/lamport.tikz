@@ -1,3 +1,4 @@
+%!TEX root = ../MCSS.tex
 \begin{tikzpicture}[
 arrow/.style={draw,->,>=stealth},
 point/.style={circle,fill=black},

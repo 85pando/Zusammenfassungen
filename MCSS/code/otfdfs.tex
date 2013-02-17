@@ -1,0 +1,34 @@
+%!TEX root = ../MCSS.tex
+\begin{algorithm}[H]
+ \SetAlgoLined
+% \KwIn{input}
+% \KwResult{result/output}
+Start() \Begin{
+    \tcp{$s_0$ is initial state of TS}
+    Add\_Statespace($z_0$)\\
+    Push\_Stack($z_0$) \\
+    Search()
+}
+\ \\
+Search() \Begin{
+    z=Top\_Stack() \\
+    \tcp{all successor states in all components}
+    \For{all $i$ with $i\leq i\leq n$}{
+        $s=Control(z,i)$ \\
+        $v=Data(z)$ \\
+        \tcp{all successor states in component $i$}
+        \For{all $(s,s')\in P.T.E$}{
+            \If{$F(s,s').C(v) == true$}{
+                $z'= Update(z,i,s',F(s,s').A(V))$
+                \If{ In\_Statespace($z'$) == false}{
+                    Add\_Statespace($z'$) \\
+                    Push\_Stack(z') \\
+                    Search()
+                }
+            }
+        }
+    }
+    Pop\_Stack()
+}
+\caption{On-the-fly Depth First Search}
+\end{algorithm}

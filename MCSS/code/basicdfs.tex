@@ -1,0 +1,31 @@
+%!TEX root = ../MCSS.tex
+\begin{algorithm}[H]
+ \SetAlgoLined
+% \KwIn{input}
+% \KwResult{result/output}
+Start() \Begin{
+    \tcp{$s_0$ is initial state of TS}
+    Add\_Statespace($P.T.s_0$)\\
+    Push\_Stack($P.T.s_0$) \\
+    Search()
+}
+\ \\
+Search() \Begin{
+    s=Top\_Stack() \\
+    \tcp{this checks the property and prints the counterexample if violated}
+    \If{!Safety(s)}{
+        Print\_Stack(D)
+    }
+    \tcp{$P.T.E \Rightarrow successors(s)$}
+    \For{all $(s,s')\in P.T.E$}{
+    \tcp{state not yet visited (uses hashtable)}
+        \If{In\_statespace(s'( == false))}{
+            Add\_Statespace(s') \\
+            Push\_Stack($s'$) \\
+            Search()
+        }
+        Pop\_Stack()
+    }
+}
+\caption{Basic Depth First Search}
+\end{algorithm}

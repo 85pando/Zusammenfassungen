@@ -1,3 +1,4 @@
+%!TEX root = ../MCSS.tex
 \begin{tikzpicture}[
 state/.style={draw,rounded corners},
 every node/.style={node distance = 70},
@@ -10,7 +11,7 @@ every path/.style={draw,->, >=stealth, thick, minimum width=1cm},
 \path node[node distance=40] [left of = zero] {} edge (zero);
 \node[state] (one) [above right of = zero] {$s_1$};
 \node[state] (two) [below right of = zero] {$s_2$};
-\path 
+\path
 (zero) edge (one)
 (one) edge (two)
 (two) edge (zero)
