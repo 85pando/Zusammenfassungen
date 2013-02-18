@@ -13,7 +13,7 @@
 
 \begin{shaded}
 Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziell-Weitergabe unter gleichen Bedingungen (\textbf{CC by-nc-sa}) veröffentlicht. Die Bedingungen finden sich unter \href{http://creativecommons.org/licenses/by-nc-sa/3.0/de}{diesem Link}. \\
-\centerline{./../cc-by-nc-sa.png}
+\centerline{\includegraphics[]{../cc-by-nc-sa.png}}
 \end{shaded}
 
 \textit{\hm \; Find any errors? Please send them back, I want to keep them!}
@@ -1273,8 +1273,7 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
 \end{itemize}
 
 \subsection*{Model Checking regular safety properties}
-\note{Check this with exercise sheet}
-
+\begin{minipage}[t]{0.48\textwidth}
 \begin{itemize}
     \item let $P_{safe}$ be a regular safety property over $AP$
     \item let $\mathcal{A}$ be an \textsc{Nfa} recognizing the bad prefixes of $P_{safe}$
@@ -1301,6 +1300,19 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
         \end{shaded}
     \end{itemize}
 \end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+Model Checking Procedure
+\begin{enumerate}
+    \item Model transition system out of the model
+    \item \textsc{Ltl} needs to be created an negated
+    \item Create \textsc{Nnf} from this negated \textsc{Ltl}
+    \item Create Büchi Automaton from this \textsc{Nnf}
+    \item Synchronous product of TS and Büchi automaton needs to be created, Endstates are endstates of Büchi-automaton
+    \item conduct \textsc{NDfs} to find loops touch endstates in this system
+\end{enumerate}
+\end{minipage}
+
 
 \subsection*{Counterexample}
 \begin{shaded}
@@ -1929,7 +1941,7 @@ a \emph{persistence property} and $\Phi$ a \emph{persistence} (or state) \emph{c
 \end{itemize}
 \subsection*{Nested Depth First Search \textsc{NDfs}}
 performs two nested \textsc{Dfs} searches, post-order traversal for the first \textsc{Dfs}. \\
-\input{code/ndfs.tex} \note{check this algo with updated script}
+\input{code/ndfs.tex}
 \begin{minipage}[]{0.78\textwidth}
 Derivation of counterexample for \texttt{terminate(true)}
 \begin{itemize}
