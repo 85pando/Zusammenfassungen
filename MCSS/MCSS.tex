@@ -2302,15 +2302,51 @@ D includes:
         \item includes in particular pairs of transitions in $current_i(s)$ for given $s$ and $P_i$
         \item rendez-vous communication: common transition of two processes, all transitions of both processes included in $D$
     \end{itemize}
+\end{itemize}
 not included in $D$
 \begin{itemize}
     \item pair of send and receive transitions in different processes referring to the same channel d. {\tiny they can enable, but never diable each other}
 \end{itemize}
+Ample Set Construction:
+\begin{itemize}
+     \item candidate for $ample(s): T_i(s)$
+    \begin{itemize}
+        \item all transitions in $T_i(s)$ are interdependent
+        \item $ample(s)$ mus contain either all of the transitions in $T_i(S)$, or none of them
+    \end{itemize}
+    \item select $P_i$ such that $T_i(s)\not=\varnothing$ and use $T_i(s)$ as a candidate for $ample(s)$
+    \item what if this candiate $ample(s)$ does not satisfy $C1$?
+    \begin{itemize}
+        \item some transitions independent of $T_i(s)$ are executed, eventually enabling transition $\alpha$ that is dependent on $T_i(s)$
+        \item the interdependent transitions cannot be in $T_i$, since all the transitions of $P_i$ are interdependent
+    \end{itemize}
+    \item cases in which $ample(s)$ does not satisfy $C1$
+    \begin{enumerate}
+        \item $\alpha$ belongs to some other process $P_k$
+        \begin{itemize}
+            \item then necessarily $dep(T_i(s))$ includes a transition of some process $P_k$
+            \item this condition can easily be checked by examining $D$
+        \end{itemize}
+        \item $\alpha$ belongs to $P_i$
+        \begin{itemize}
+            \item suppose that some $\alpha\in T_i$, violating $C1$, is executed from state $s'$
+            \item transition on path $s,\dots,s'$ are independent of $T_i(s)$ and hence, belong to other processes
+            \item hence $pc_i(s)=pc_i(s')$ and $\alpha\in current_i(s)$
+            \item also, $\alpha\not\in T_i(s)$ otherwise no $C1$ violation
+            \item hence $\alpha in current_i(s)-T_i(s)$
+            \item $\alpha\not\in T_i(s)$ \follows $\alpha$ is diabled in $s$
+            \item therefore, transition in $pre(\alpha)$ must be in $s,\dots s'$
+            \item then necessarily, $pre(current_i(s)-T_i(s))$ includes transition of processes other than $P_i$
+            \item can be checke efficiently
+        \end{itemize}
+    \end{enumerate}
+    \item if one of these tests fails:
+    \begin{itemize}
+        \item discard $T_i(s)$ as candidate
+        \item try other process, i.e. $T_k(s)$
+    \end{itemize}
+    \item approach is over-approximating: \\
+    ample sets might be discarded even though they would not acutally violate $C1$ if the program was executed dynamically
 \end{itemize}
-
-
-
-
-%part 16.2.28
 
 \end{document}
