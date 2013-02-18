@@ -1929,7 +1929,7 @@ a \emph{persistence property} and $\Phi$ a \emph{persistence} (or state) \emph{c
 \end{itemize}
 \subsection*{Nested Depth First Search \textsc{NDfs}}
 performs two nested \textsc{Dfs} searches, post-order traversal for the first \textsc{Dfs}. \\
-\input{code/ndfs.tex}
+\input{code/ndfs.tex} \note{check this algo with updated script}
 \begin{minipage}[]{0.78\textwidth}
 Derivation of counterexample for \texttt{terminate(true)}
 \begin{itemize}
@@ -2096,9 +2096,221 @@ Tarjan
     \item preserve acceptance labels only in copy 0
     \item change outgoing transitions from acceptance states in copy 0 to point to corresponding state in copy 1
     \item in $i$th component ($1\leq i \leq k$) component, destination state of each transition contributed by LTS$_i$ to corresponding state in LTS$_{i+1}$, transitions contributed by other LTSs remain in same component
+    \item all outgoing transition in copy $k+1$ are pointing to copy 0
+    \item a component LTS that has no enabled transition in some state s does not need to participate in infinite run that traverses $s$
+    \item add a null transition from every state $s$ in copy $i$ to the same state $S$ in copy $i$
     \begin{center}
     \scalebox{.75}{\input{images/weakfairness.tikz}}
     \end{center}
+    \item effect:
+    \begin{itemize}
+        \item no change in behaviour
+        \item accepting $\omega$ run now contains transitions from all $k$ component LTSs
+        \item there can be no accepting cycles in copy 0
+    \end{itemize}
+    \item use \textsc{NDfs} on undolded graph to detect weakly fair acceptance cycles
+    \item Implementation optimizations:
+    \begin{itemize}
+        \item do not store $n+2$ copies, but a $k-bit$ vector indicating in which copy this state has been reached
+    \end{itemize}
+    \item wirst case time penalty $2(k+2)$
+    \\ in practice: factor = 2
 \end{itemize}
+
+\section*{Partial Oder Reduction}
+for concurrent events $a \Vert b$ any possible interleaving will be part of set of valid system executions that the model checkers explores. Partial Order Reduction tries to prune execution sequences, that don't change the effect with respect to the property to be checked (i.e. reduces redundancy w.r.t. property).
+\input{code/otfdfspor.tex}
+\subsection*{Ample Set}
+Calculation of $ample(q)\subseteq enabled(q)$
+\begin{itemize}
+    \item include sufficiently many elements from $enabled(q)$ so that model checking algorithm delivers \emph{correct results}
+    \item use of $ample(q)$ should lead to a \emph{significantly smaller} state graph (in terms of states and transitions)
+    \item computation of $ample(q)$ should be doable with \emph{acceptable computation overhead}
+\end{itemize}
+\begin{shaded}
+A \emph{state transition system} is a tuple $(S,T,S_0,L)$ where
+\begin{itemize}
+    \item $S:$ finite set of states
+    \item $S_0\subseteq S:$ finite set of initial states
+    \item $L:S\to2^{AP}:$ function that labels every state with the $AP$ true int that state
+    \item $T:$ finite set of transition relations so that for each $\alpha\in T,\alpha\subseteq S\times S$
+\end{itemize}
+let $\alpha\in T, s\in S$ then
+\begin{itemize}
+    \item $\alpha\in enabled(s)$ iff $(\exists s'\in S)((s,s')\in\alpha)$
+    \item $\alpha$ is deterministic if for every $s$, there is at most one $s'$ so that $(s,s')\in\alpha$ {\tiny (consider only deterministic transitions)}
+    \item we write $s'=\alpha(s)$ for $(s,s')\in\alpha$
+\end{itemize}
+\end{shaded}
+\subsection*{Independence}
+\begin{shaded}
+    $I\subseteq T\times T$ is an independence relation if $I$ is symmetric and antireflexive and the following conditions hold for each $s\in S$ and for each $(\alpha,\beta)\in I:$
+    \begin{enumerate}
+        \item if $\alpha,\beta\in enabled(s)$ then $\alpha\in enabled(\beta(s))$\\
+        \emph{enabledness:} a pair of independent transitions do not disable each other when taken
+        \item if $\alpha,\beta\in enabled(s)$ then $\alpha(\beta(s))=\beta(\alpha(s))$ \\
+        \emph{commutativity:} executing pair of independent transitions in any order result in same state
+    \end{enumerate}
+    \emph{Dependence Relation:} $D:=(T\times T)-I$
+\end{shaded}
+\subsection*{Correctness of Pruning}
+Elimination may still deliver incorrect results (even if you show independence before) if:
+\begin{enumerate}
+    \item $s_1$ and $s_2$ may influence the outcome of the property check {\tiny (the property is not insensitive to whether $s_1$ or $s_2$ is being reached)}
+    \item $s_1$ or $s_2$ may have successor states other than $r$ that would be pruned in case either of the two states did not belong to the reduced state space
+\end{enumerate}
+\subsection{Invisibility}
+\begin{shaded}
+    $T=(S,T,S_0,L)$ a state transition system, $AP'\subseteq AP$ \\
+    $\alpha\in T$ is \emph{invisible} w.r.t $AP'$ if
+    \[ (\forall s,s'\in S| s'=\alpha(s))((L(s)\cap AP')=(L(s')\cap AP')) \]
+    {\tiny (i.e. a transition is invisible w.r.t. some selected set of propositions if its execution doesn't change the truth value for the selected set of propositions)}
+\end{shaded}
+\subsection{Invariance under Stuttering}
+\begin{shaded}
+    two paths $\sigma$ and $\rho$ though a state transition system are \emph{stuttering equivalent} (written as $\sigma\sim_{st}\rho$) if the following condition holds:
+    \begin{itemize}
+        \item there are two infinite sequences of integers
+        \begin{align*}
+        0&=i_0<i_2<\dots \\
+        0&=j_0<j_1<\dots
+        \end{align*}
+        such that for every $k\geq0$
+        \[ L(s_{i_k})=L(s_{i_{k+1}})=L(s_{_{k+1}-1})=L(r_{j_k})=L(r_{j_{k+1}})=L(r_{j_{k+1}-1}) \]
+        \item identically labeled sequences of states are called blocks
+        \begin{center}
+        \scalebox{1}{\input{images/stutter.tikz}}
+        \end{center}
+    \end{itemize}
+\end{shaded}
+\subsection*{Invariance under Stuttering}
+\begin{shaded}
+    An \textsc{Ltl} formula $f$ is invariant under stuttering, if for each pair of paths $\pi$ and $\pi'$ such that $\pi\sim_{st}\pi'$: \[ \pi\models f \textrm{ iff } \pi'\models f \]
+    \begin{itemize}
+        \item let \textsc{Ltl}$_\upchi$ denote the set of all \textsc{Ltl} formulae free of the nexttime operator $\circ$
+        \item any property expressible in\textsc{Ltl}$_\upchi$ is invariant under stuttering
+        \item any stutter invariant property that is expressible with \textsc{Ltl} can be expressed in \textsc{Ltl}$_\upchi$
+    \end{itemize}
+\end{shaded}
+\begin{shaded}
+    Stutter Invariance for Transition Systems\\
+    Let $M$ and $M'$ be state transition systems. $M$ and $M'$ are \emph{stutter invariant} iff
+    \begin{itemize}
+        \item they have the same set of initial states
+        \item for each path $\sigma$ of $M$ that starts in an initial state of $M$ there is a path $\sigma'$ of $M'$ that starts in an initial state of $M'$ such that $\sigma\sim_{st}\sigma'$
+        \item the same for the other way around
+        \item Let $M$ and $M'$ two stuttering equivalent state transition systems. For ever property expressed by an \textsc{Ltl}$_\upchi$ formula $f$ and every initial state $s\in S_0$ the following holds true:
+        \[ (M,s)\models f\textrm{ iff } (M',s)\models f \]
+        {\tiny (\textsc{Ltl}$_\upchi$ formulae cannot distinguish between stuttering equivalent state transition systems)}
+    \end{itemize}
+\end{shaded}
+\subsection*{Partial Order Reduction for \textsc{Ltl}$_\upchi$}
+\begin{shaded}
+    \begin{itemize}
+        \item $s$ is fully expanded, iff $enabled(s)=ample(s)$
+        \item else: provide conditions for selecting $ample(s)$ such that reduced state space satisfies property expressed by \textsc{Ltl}$_\upchi$ formula $f$
+        \begin{description}
+            \item[C0:] at-leat-one-successor rule
+            \[ (\forall s\in S)(ample(s)=\varnothing \textrm{ iff } enabled(s)=\varnothing) \]
+            {\tiny if a state has at least one successor in the full state space, it has at least on successor in the reduced state space}
+            \item[C1:] dependent-transition rule \\
+            Along every path in the full state space that starts at $s$, a transition that is dependent on a transition in $ample(s)$ cannot be executed without a transition in $ample(s)$ occuring first.
+
+            for all paths in the full state space starting at $s$, the following holds true: \\
+            {\tiny need to check for $C1$ without actually computing full state space in order to enable on-the-fly model checking, will later be done by approximation}
+            \begin{itemize}
+                \item a transition $\alpha'$ that is dependent on a transition $\alpha\in ample(s)$ cannot be executed without a transition from $ample(s)$ occuring first
+                \item the transition in $enabled(s)-ample(s)$ are all independent of those in $ample(s)$
+            \end{itemize}
+            \item[C2:] invisibility rule \\
+            for all states $s\in S$: if $s$ is not fully expanded, then every $\alpha\in ample(s)$ is invisible
+            \item[C3:] cycle condition {\tiny (also called ``Cycle Proviso'')} \\
+            The reduced state graph may not contain a cycle in which $\alpha\in enabled(s)$ for some state $s$ of the cycle so that $\alpha\not\in ample(s')$ for all states $s'$ of the cycle
+        \end{description}
+        \item for \textsc{Ltl}$_\upchi$ property $f$, reduction depends on the set $AP_f$ of atomic propositions occurring in $f$
+    \end{itemize}
+\end{shaded}
+\subsection*{Preservation of Correctness}
+\subsubsection*{C1: dependend transition rule}
+Ensure, that the \textsc{Dfs} algorithm, when applied to the reduced statespace does not prune any parts of the graph, that are essential to the property when choosing the next transition to explore from $ample(s)$ \\
+$C1$ ensures that:
+\begin{description}
+    \item[case 1:]$\beta_0\beta_1\dots\beta_m\alpha$, where $\alpha\in ample(s)$ and each $\beta_i$ is independent of all transitions in $ample(s)$, including $\alpha$
+    \item[case 2:] $\beta_0\beta_1\dots$ where $\beta_i$ is independent of all transitions in $ample(s)$
+    \fitem $\beta_i$ is independent from transitions on $ample(s)$ \follows cannot disable them
+\end{description}
+\subsubsection*{C2: Invisibility rule}
+as alls transitions in $ample(s)$ are invisible, for $\alpha\in ample(s)$:
+\[ \alpha\beta_0\beta_1\dots \textrm{ is stuttering equivalent to } \beta_0\beta_1 \]
+\subsection*{Partial Order Reduction and Search}
+Conditions $C0,C1,C2$ are independent of search algorithm, $C3$ is global condition and as expensive to check as model checking itself
+\begin{itemize}
+    \item $C3$ can be over-approximated as $C3_{cycle}:$
+    \begin{itemize}
+        \item every cycle in the reduced state space contains at least one state, that is fully expanded ($enabled(s)=ample(s)$)
+        \item expensive, since it requires cycle detection
+        \item not on-the-fly
+    \end{itemize}
+    \item $C3$ further over-approximated for safety-properties as $C3_{stack}$
+    \begin{itemize}
+        \item if a state is not fully expanded, then at least one transition in $ample(s)$ does not lead to a state that is on the search stack
+        \item only applicable to stack-based \textsc{Dfs} search
+        \item stronger than $C3$, less reduction
+    \end{itemize}
+    \item Overapproximation of $C3$ for non-\textsc{Dfs} (e.g. \textsc{Bfs}, $A^*$)
+    \begin{itemize}
+        \item[$C3_{duplicate}$:] if a state is not entirely expanded, then at least one transition in $ample(s)$ does not lead into a previously visited state \follows will not necessarily close a cycle
+        \item[$C3_{static}$:] if a state is not fully expanded, then there is no transition in $ample(s)$ which closes a cycle in the control flow of a local process
+    \end{itemize}
+    \begin{center}
+    \scalebox{1}{\input{images/approx.tikz}}
+    \end{center}
+\end{itemize}
+\subsection*{Computational effort:}
+\begin{description}
+    \item[C0] easy, constant time
+    \item[C1] checking this is at least as hard as checking reachability for full state space \follows over-approximation heuristics
+    \item[C2] easy, static analysis of the transitions in the set
+\end{description}
+\subsubsection*{Heuristics for C1}
+\begin{itemize}
+    \item $pc_i(s):$ program counter for process $P_i$ in state $s$
+    \item $pre(\alpha):$ all transitions $\beta$, such that there is a state $s$ for which $\alpha\not\in enabled(s),\beta\in enabled(s)$ and $\alpha\in enabled(\beta(s))$
+    \item $dep(\alpha)=\{\beta|(\beta,\alpha)\in D\}$, the set of all dpeendent transitions of $\alpha$
+    \item $T_i(s):$ transitions of process $i$ enabled in state $s$
+    \item $current(s):$ set of transitions of $P_i$ that are enabled in some state $s'$ such that $pc_i(s')=pc_i(s)$
+\end{itemize}
+Definition of $pre(\alpha)$ and $D$ may not be exact
+\begin{description}
+    \item[$pre(\alpha)$] may contain transitions that do not enable $\alpha$
+    \item[$D$] may contain transitions that are actually independent
+\end{description}
+This allows for efficient computation of ample sets while preserving correctness of p.o. reduction.
+\subsubsection*{Specialization of $pre(\alpha)$ for different Modles of Computation}
+\begin{itemize}
+    \item $pre(\alpha)$ includes transitions of processes that contain $\alpha$ and that can change some $pc_i$ to a value from which $\alpha$ can execute
+    \item if enabling condition for $\alpha$ involves shared variables, then $pre(\alpha)$ contains all other transitions that can change these shared variables
+    \item if $\alpha$ involves sending/receiving to/from quere $d$, then all transitions from other processes sending or receiving to/from $d$ are in $pre(\alpha$
+\end{itemize}
+\subsubsection*{Statically computing $D$ for Different Model of Computation}
+D includes:
+\begin{itemize}
+    \item pairs of transitions that share a variable that is changed by at least one of them
+    \item pairs of transitions belonging to the same process $i$
+    \begin{itemize}
+        \item transitions in $P_i$ share ``variable'' $pc_i$
+        \item includes in particular pairs of transitions in $current_i(s)$ for given $s$ and $P_i$
+        \item rendez-vous communication: common transition of two processes, all transitions of both processes included in $D$
+    \end{itemize}
+not included in $D$
+\begin{itemize}
+    \item pair of send and receive transitions in different processes referring to the same channel d. {\tiny they can enable, but never diable each other}
+\end{itemize}
+\end{itemize}
+
+
+
+
+%part 16.2.28
 
 \end{document}

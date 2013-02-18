@@ -1,0 +1,73 @@
+%!TEX root = ../MCSS.tex
+\begin{tikzpicture}[
+%every node/.style={node distance=40},
+arrow/.style={draw,->,thick,>=latex},
+vert/.style={node distance=50},
+hor/.style={node distance=20},
+state/.style={node distance=70,draw,ellipse,text width=.9cm,text centered },
+lab/.style={node distance = 45},
+das1/.style={node distance=35},
+das2/.style={node distance=35},
+]
+\node[state] (11) {$p,q$};
+\node[state,right of = 11] (12) {$\neg p,q$};
+\node[state,right of = 12] (13) {$\neg p,q$};
+\node[state,right of = 13] (14) {$\neg p,q$};
+\node[state,right of = 14] (15) {$\neg p,\neg q$};
+\node[vert,right of = 15] (16) {};
+
+\node[hor,above of = 11] {$1$};
+\node[hor,above of = 12] {$2$};
+\node[hor,above of = 13] {$2$};
+\node[hor,above of = 14] {$2$};
+\node[hor,above of = 15] {$3$};
+
+\node[state,below of = 11,node distance=40] (21) {$p,q$};
+\node[state,right of = 21] (22) {$p,q$};
+\node[state,right of = 22] (23) {$\neg p,q$};
+\node[state,right of = 23] (24) {$\neg p,\neg q$};
+\node[state,right of = 24] (25) {$\neg p,\neg q$};
+\node[vert,right of = 25] (26) {};
+
+\node[hor,below of = 21] {$1$};
+\node[hor,below of = 22] {$1$};
+\node[hor,below of = 23] {$2$};
+\node[hor,below of = 24] {$3$};
+\node[hor,below of = 25] {$3$};
+
+\node[lab,left of = 11] {path 1};
+\node[lab,left of = 21] {path 2};
+
+\path
+(11) edge[arrow] (12)
+(12) edge[arrow] (13)
+(13) edge[arrow] (14)
+(14) edge[arrow] (15)
+(15) edge[arrow] (16)
+%
+(21) edge[arrow] (22)
+(22) edge[arrow] (23)
+(23) edge[arrow] (24)
+(24) edge[arrow] (25)
+(25) edge[arrow] (26)
+;
+
+\node[das1,above right of = 11] (l1) {};
+\node[das2,below of = l1] 		(l2) {};
+\node[das1,below right of = 12] (l3) {};
+\node[das2,below of = l3] 		(l4) {};
+
+\node[das1,above right of = 14] (r1) {};
+\node[das2,below of = r1] 		(r2) {};
+\node[das1,below right of = 13] (r3) {};
+\node[das2,below of = r3] 		(r4) {};
+
+\path[dashed]
+(l1) edge (l2)
+(l2) edge (l3)
+(l3) edge (l4)
+(r1) edge (r2)
+(r2) edge (r3)
+(r3) edge (r4)
+;
+\end{tikzpicture}

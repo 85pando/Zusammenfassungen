@@ -1,0 +1,23 @@
+%!TEX root = ../MCSS.tex
+\begin{algorithm}[H]
+ \SetAlgoLined
+% \KwIn{input}
+% \KwResult{result/output}
+
+explore\_statespace() \Begin{
+    set on\_stack($q_0$) \\
+    dfs($q_0$)
+}
+
+dfs() \Begin{
+    work\_set($q$) := ample($q$) \\
+    local $q'$ \\
+    hash($q$) \\
+    \ForAll{elements $q'$ not in hashtable}{
+        on\_stack($q'$)\\
+        dfs($q'$)
+    }
+    set completed($q$)
+}
+\caption{On-the-fly Depth-First-Search with Partial Order Reduction}
+\end{algorithm}

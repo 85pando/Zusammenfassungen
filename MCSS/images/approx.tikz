@@ -1,0 +1,26 @@
+\begin{tikzpicture}[
+every node/.style={node distance=90},
+close/.style={node distance=35},
+arrow/.style={draw,->,>=latex,thick},
+]
+
+\node (c3) at (0,0) {$C3$};
+\node (c3stack) [right of = c3] {$C3_{stack}$};
+\node (c3duplicate) [right of = c3stack] {$C3_{duplicate}$};
+\node (c3static) [above of = c3duplicate,close] {$C3_{duplicate}$};
+\node (gen) [above of = c3static,close,text width=3cm,text centered] {General state expanding algorithm};
+\node (dfs) [above left of = gen,close] {Depth-first search based algorithm};
+
+%arrows
+\path[arrow]
+(c3duplicate) edge (c3stack)
+(c3stack) edge (c3)
+(c3static) edge[bend right] (c3)
+;
+
+\draw[dashed]
+(8,-.5) rectangle (4.5,3.1)
+(8.5,-.75) rectangle (2,3.8)
+;
+
+\end{tikzpicture}
