@@ -15,7 +15,7 @@ Start() \Begin{
 \ \\
 Search() \Begin{
     z=Del\_Queue() \\
-    \ForEach{$(s,l,s')\in A.T$}{
+    \For{each $(s,l,s')\in A.T$}{
         \If{In\_Statespace$(V,\ s')==false$}{
             Add\_Statespace($V,\ s'$) \\
             Add\_Queue($D,\ s'$) \\

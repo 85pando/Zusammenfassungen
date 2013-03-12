@@ -7,7 +7,7 @@ arrow/.style={draw,->,>=latex,thick},
 \node (c3) at (0,0) {$C3$};
 \node (c3stack) [right of = c3] {$C3_{stack}$};
 \node (c3duplicate) [right of = c3stack] {$C3_{duplicate}$};
-\node (c3static) [above of = c3duplicate,close] {$C3_{duplicate}$};
+\node (c3static) [above of = c3duplicate,close] {$C3_{static}$};
 \node (gen) [above of = c3static,close,text width=3cm,text centered] {General state expanding algorithm};
 \node (dfs) [above left of = gen,close] {Depth-first search based algorithm};
 

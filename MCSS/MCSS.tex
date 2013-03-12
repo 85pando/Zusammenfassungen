@@ -8,7 +8,7 @@
 
 \begin{document}
 
-\Gruppe{Stephan Heidinger}{MCSS - Zusammenfassung v0.1}
+\Gruppe{Stephan Heidinger}{MCSS - Zusammenfassung v0.2}
 \Header{Modell Checking in Software Systems}{WS 12/13}{Stephan Heidinger}
 
 \begin{shaded}
@@ -151,19 +151,20 @@ does $M\models S$
 
 \subsubsection*{Deadlock}
 \begin{itemize}
-    \item concurrent processes wait for each other in a circular wait with no pre-emption
+    \item concurrent processes wait for each other, so that no progress is possible any more
     \item highly undesired
 \end{itemize}
 
 \subsubsection*{Closed System Modeling}
 \begin{itemize}
     \item model checker can only validate all possible system executions under assumed environment
-    \item model includes also environment
+    \item model includes also environment (in \textsc{Promela/Spin})
 \end{itemize}
 
+\newpage
 \subsection*{Transition Systems}
 \begin{shaded}
-Transition System $TS$ is a tuple $(S,Act,\to,I,AP,L$ where \\
+Transition System $TS$ is a tuple $(S,Act,\to,I,AP,L)$ where \\
 \begin{minipage}{0.48\textwidth}
 \begin{tabular}{ll}
 $S$ & is a set of states \\
@@ -171,7 +172,7 @@ $Act$ & is a set of actions \\
 $\to\subseteq S\times Act\times S$ & is a transition relation \\
 $I\subseteq S$ & is a set of initial states \\
 $AP$ & is a set of atomic propositions \\
-$L:S\to2^AP$ & is a labeling function \\
+$L:S\to2^{AP}$ & is a labeling function \\
 \end{tabular}
 \end{minipage}
 \hfill \vrule \hfill
@@ -341,9 +342,9 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     The transition system $TS(PG)$ of program graph \[PG=(Loc, \blue{Act}, Effect,\longrightarrow, Loc_0,g_0)\] over set $Var$ of variables is the tuple \[ (S,\blue{Act},\longrightarrow,I,AP,L) \] where
     \begin{itemize}
         \item $S=Loc\times Eval(Var)$
-        \item $\longrightarrow\subseteq S\times Act\times S$ is defined by $\displaystyle\frac{\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'\; \wedge \; \eta\models \red g}{<\ell,\eta\rangle\overset{\blue\alpha}{\longrightarrow}<\ell',Effect(\blue\alpha,\eta)\rangle}$
-        \item $I=\left\{<\ell,\eta\rangle | \ell \in Loc_0,\eta \models g_0\right\}$
-        \item $AP=Loc \cup Cond(Var)$ and $L\left(<\ell,\eta\rangle\right)=\{\ell\} \cup \left\{ g\in Cond(Var) | \eta \models g \right\} $
+        \item $\longrightarrow\subseteq S\times Act\times S$ is defined by $\displaystyle\frac{\ell\overset{\red g:\blue\alpha}{\longrightarrow} \ell'\; \wedge \; \eta\models \red g}{\langle\ell,\eta\rangle\overset{\blue\alpha}{\longrightarrow}\langle\ell',Effect(\blue\alpha,\eta)\rangle}$
+        \item $I=\left\{\langle\ell,\eta\rangle | \ell \in Loc_0,\eta \models g_0\right\}$
+        \item $AP=Loc \cup Cond(Var)$ and $L\left(\langle\ell,\eta\rangle\right)=\{\ell\} \cup \left\{ g\in Cond(Var) | \eta \models g \right\} $
     \end{itemize}
 \end{shaded}
 
@@ -382,7 +383,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
 \subsection*{Interleaving}
 \begin{itemize}
     \item concurrent actions $\alpha,\beta$ are executed in arbitrary order
-    \item $Effect(\alpha \interleave \beta,\nu) = Effect((\alpha;\beta)+(\beta;\alpha),\nu$
+    \item $Effect(\alpha \interleave \beta,\nu) = Effect((\alpha;\beta)+(\beta;\alpha),\nu)$
     \begin{itemize}
         \item $\interleave$  is binary interleaving operator
         \item $;$ is sequential execution
@@ -464,7 +465,8 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
                     }{
                     \langle s_1,s_2 \rangle \overset{\alpha}{\longrightarrow} \langle s'_1,s_2 \rangle
                     }
-                    \phantom{\textrm{ and ·}}
+                    % \phantom{\textrm{ and }}
+                    \vee
                     \frac{
                     s_2 \overset{\alpha}{\longrightarrow} s'_2
                     }{
@@ -496,7 +498,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
                     \item[blocking:] otherwise
                 \end{description}
                 \item when is blocking taking place?
-                    \\ asynchronous message passing with unbounded buffers \follows sender never blocks
+                    \\ asynchronous message passing with unbounded buffers \follows \; sender never blocks
                     \\ synchronous message passing: no buffering
                     \\ buffered message passing with bounded, finite capacity
                     \begin{description}
@@ -609,7 +611,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
 
 \subsection*{State Machine Based Modeling}
 \begin{itemize}
-    \item Practical use: no TS or PG \follows state machine models \\
+    \item Practical use: no TS or PG \follows \; state machine models \\
     can all be modelled as Program Graphs, Channel Systems or Transition Systems \\
     $\textsc{Uml-Rt} \subset \textsc{Uml}:$ state charts
     \item Mealy and Moore Machines \\
@@ -711,7 +713,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     \end{shaded}
 \end{itemize}
 
-\subsubsection*{Formal Semantics for a Promela-like}
+\subsubsection*{Formal Semantics for a Promela-like Model}
 \begin{description}
     \item[Semantics] of a protocol: set of admissable state sequences
     \item[State] of a protocol?
@@ -732,12 +734,12 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
         \item system is in current state $s$
         \item state transition triggered by \emph{send} and \emph{receive} events
         \begin{description}
-            \item[send event:]
+            \item[send event:] \ \\
             \begin{itemize}
                 \item add a message to the tail of the corresponding message queue
                 \item change local system state of sending process
             \end{itemize}
-            \item[receive event:]
+            \item[receive event:] \ \\
             \begin{itemize}
                 \item take the message to be received from the head of the message queue
                 \item change local system state of receiving process
@@ -749,7 +751,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
     \begin{itemize}
         \item $P=\left(\langle Q_i\rangle,\langle q_o^0 \rangle, \langle A_ij \rangle,\delta \right)$ a protocol
         \item $S=(S_1,\dots,S_N)$ an $N$-tuple of local process states
-        \item $C$ an $N^2$ tuple \\
+        \item $C$ (the channels) an $N^2$ tuple \\
         \[C= \left(
         \begin{array}{cccc}
          & c_1 & \cdots & c_N \\
@@ -779,7 +781,7 @@ Given a transition system $TS=\left(S,Act,\to,I,AP,L\right)$
         \item $\vdash$ the state transition relation of this same protocol
         \item $\vdash^*$ denotes the transitive closure of $\vdash$
     \end{itemize}
-    \item we say that $G$ is rechable if \[ G^0 \vdash^* G \]
+    \item we say that $G$ is reachable if \[ G^0 \vdash^* G \]
     \end{itemize}
     \item When is a Problem $P$ decidable? \\
     There exists an algorithm which terminates after a finite number of steps whether $P=\varnothing$ or not.
@@ -818,7 +820,7 @@ An \textsc{Efsm} is a \textsc{Fsm} extended by
 A (symbolic) state of an \textsc{Efsm} represents an \emph{equivalence class} of system states.
 
 \begin{shaded}
-    we call $E=(S,D,V,O,I,T,C)$ an extended finite state machine \textsc{Efsm}, where
+    we call $E=(S,D,V,O,I,T,C)$ an extended finite state machine \textsc{Efsm}, where \\
     \begin{tabular}{ll}
     $S$: & set of symbolic states \\
     $D$: & $n$-dimensional linear space, each $D_i$ is an (infinite) data domain \\
@@ -901,7 +903,7 @@ A (symbolic) state of an \textsc{Efsm} represents an \emph{equivalence class} of
         \item $\sigma_1 = <g,a,d,g,\dots>$
     \end{itemize}
     \begin{shaded}
-        A (model of the system/system/program) P has the property $\Pi$ if all its computations are in $\Pi$.
+        A (model of the system/program) P has the property $\Pi$ if all its computations are in $\Pi$.
     \end{shaded}
     \item[Property Representation:] too cumbersome to enumerate all infinite computations \follows use mathematical formalisms:
     \begin{itemize}
@@ -914,7 +916,7 @@ A (symbolic) state of an \textsc{Efsm} represents an \emph{equivalence class} of
 \subsection*{State Graph}
 \begin{shaded}
 \begin{itemize}
-    \item The \emph{state graph} of $TS$ ($G(TS)$, is the digraph $(V,E)$ with vertices $V=S$ and edges $E=\{(s,s')\in S\times S | s'\in Post(s)\}$ \follows omit all state and transition labels in $TS$ and ignore being inital
+    \item The \emph{state graph} of $TS$ ($G(TS)$, is the digraph $(V,E)$ with vertices $V=S$ and edges $E=\{(s,s')\in S\times S | s'\in Post(s)\}$) \follows \; omit all state and transition labels in $TS$ and ignore being inital
     \item $Post^*(s)$ is the set of reachable states $G(TS)$ from $s$:
     \[ Post^*(C)=\bigcup_{s\in C}Post^*(s) \textrm{ for } C \subseteq S \]
     \item $Pre^*(C)$ has analogous meaning
@@ -1011,7 +1013,7 @@ trace(\pi) = &
     \end{tabular}
     \item Model Checking Invariants
     \begin{itemize}
-        \item perform systematic forward search
+        \item perform systematic forward search + check $P_{inv}$ in every state
         \begin{description}
             \item[depth first search] \textsc{Dfs}
             \item[breadth first search] \textsc{Bfs}
@@ -1034,9 +1036,9 @@ trace(\pi) = &
     \begin{description}
         \item[explicit state model checking]
         \begin{itemize}
-            \item successor states are implicitly given (program graph, Promela code, \dots)
+            \item successor states are implicitly given (program graph, Promela model, \dots)
             \item $Post(s)$ is typically stored as adjacency list
-            \item successor states are explicitly computet (state vectors)
+            \item successor states are explicitly computed (state vectors)
         \end{itemize}
         \item[symbolic model checking]
         \begin{itemize}
@@ -1085,7 +1087,7 @@ According to Leslie Lamport
 \end{itemize}
 
 \subsection*{Liveness Properties}
-Safety properties can be satisfied by never doing anything. \follows We want some property that ensures something will happen eventually.
+Safety properties can be satisfied by never doing anything. \follows \; We want some property that ensures something will happen eventually.
 \begin{shaded}
     An $LT$ property $P_{live}$ over $AP$ is a \emph{liveness} property whenever $pref(P_{live})=(2^{AP})^*$ \\
     {\tiny \follows Any finite computation can be extended to an execution satisfying the property.}
@@ -1097,7 +1099,8 @@ Many properties are not pure, but a combination of safety and liveness propertie
     \item let $S$ denote an atomic predicate that holds in a ``sent'' state, and let $R$ denote an atomic predicate that holds in a ``received'' state.
     \item let $S,R\in \Sigma$\qquad {\tiny $\Sigma$ is the alphabet}
     \item Property: when a message has been ``sent'' eventually it will be ``received'': \[ \Pi=S^*R\Sigma^\omega \]
-    \item \begin{align*}
+    \item safety property
+    \begin{align*}
     \Pi & \not= closure(\Pi) \\
     &= S^\omega\cup S^*R\sigma^\omega \\
     &= \Pi_s
@@ -1202,15 +1205,15 @@ Fairness filters out ``unreasonable'' runs (may be too strong, unfair)
 
 \section*{Model Checking Regular Safety Properties}
 \begin{shaded}
-A safety property $P_{safe}$ is \emph{regular} if
+A safety property $P_{safe}$ is \emph{regular} iff
 \begin{itemize}
     \item $BadPref(P_{safe})$ is a regular language.
     \item there exists a finite automaton over $2^{AP}$ recognizing $BadPref(P_{safe})$
 \end{itemize}
 \end{shaded}
 \begin{itemize}
-    \item $bp(P_{safe} \equiv BadPref(P_{safe})$
-    \item $mbp(P_{safe})$ \follows set of minimal bad prefixes for $P_{safe}$
+    \item $bp(P_{safe}) \equiv BadPref(P_{safe})$
+    \item $mbp(P_{safe})$ \follows \; set of minimal bad prefixes for $P_{safe}$
     \item not regular safety properties: something to do with counting
 \end{itemize}
 
@@ -1251,7 +1254,7 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
         }$
         \item $I'=\{ \langle s_0,q \rangle | s_0\in I\wedge \exists q_0\in Q_0. q_0 \overset{L(s_0)}{\longrightarrow} q\}$
     \end{itemize}
-    without loss of generality it may be assumed that $TS\otimes\mathcal{A} has no terminal states$
+    without loss of generality it may be assumed that $TS\otimes\mathcal{A}\textrm{ has no terminal states}$
 \columnbreak
 \begin{center}
 \scalebox{0.5}{\input{images/syncProd.tikz}}
@@ -1268,7 +1271,7 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
         \item Total \textsc{Dfa} $\overline{\mathcal{A}}$ (=swap all accept and normal states) accepts $\overline{\mathcal{L}(\mathcal{A})}=\Sigma^*\setminus\mathcal{L}(\mathcal{A})$
     \end{itemize}
     \item They are closed under \emph{determinization} (=removal of choice) {\tiny (although exponentially more runtime)}
-    \item $\mathcal{L}(\mathcal{A}=\varnothing$ \follows check for a reachable accept state in $\mathcal{A}$ \follows simple \textsc{Dfs}
+    \item $\mathcal{L}(\mathcal{A}\overset{?}{=}\varnothing)$ \follows \; check for a reachable accept state in $\mathcal{A}$ \follows \; simple \textsc{Dfs}
     \item For regular language $\mathcal{L}$ there is a unique minimal \textsc{Dfa} accepting $\mathcal{L}$
 \end{itemize}
 
@@ -1289,15 +1292,6 @@ For transition system $TS=(S,Act,\to,I,AP,L)$ without terminal states and $\math
         \begin{itemize}
             \item invariant checking \follows  \textsc{Dfs}
         \end{itemize}
-        \begin{shaded}
-            The following statements are equivalent
-            \begin{itemize}
-                \item $TS\models P$
-                \item $Traces_{fin}(TS)\cap\mathcal{L}(\mathcal{A})=\varnothing$
-                \item $TS\otimes\mathcal{A} \models P_{inv(\mathcal{A})}=\bigwedge_{q\in F} \neg q$
-            \end{itemize}
-            \follows checking safety properties is like checking an invariant
-        \end{shaded}
     \end{itemize}
 \end{itemize}
 \end{minipage}
@@ -1312,7 +1306,15 @@ Model Checking Procedure
     \item conduct \textsc{NDfs} to find loops touch endstates in this system
 \end{enumerate}
 \end{minipage}
-
+\begin{shaded}
+    The following statements are equivalent
+    \begin{itemize}
+        \item $TS\models P$
+        \item $Traces_{fin}(TS)\cap\mathcal{L}(\mathcal{A})=\varnothing$
+        \item $TS\otimes\mathcal{A} \models P_{inv(\mathcal{A})}=\bigwedge_{q\in F} \neg q$
+    \end{itemize}
+    \follows checking safety properties is like checking an invariant
+\end{shaded}
 
 \subsection*{Counterexample}
 \begin{shaded}
@@ -1371,7 +1373,7 @@ Model Checking Procedure
         An $LT$ property $P$ over $AP$ is \emph{$\omega$-regular} if $P$ is an $\omega$-regular language over the alphabet $2^{AP}$
 \end{shaded}
 
-\subsection*{Acceptance conditions for words inf $(2^{AP})^\omega$}
+\subsection*{Acceptance conditions for words in $(2^{AP})^\omega$}
 \begin{enumerate}
     \item finite acceptance {\tiny (the automaton accepts a prefix of $a\in(2^{AP})^\omega$), \red{does not ensure liveness, note even infiniteness}}
     \item looping acceptance {\tiny (the automaton has an infinite execution when reading the word) \red{does not ensure liveness, as the automaton may do anything}}
@@ -1386,7 +1388,7 @@ Model Checking Procedure
 \begin{shaded}
     A \emph{nondeterministic Büchi automaton} \textsc{Nba} $\mathcal{A}$ is a tuple $(Q,\Sigma,\delta,Q_0,F)$ where:
     \begin{itemize}
-        \item $Q$ is a finite set of states with $Q_0\subseteq !$ a set of initial states
+        \item $Q$ is a finite set of states with $Q_0\subseteq Q$ a set of initial states
         \item $\Sigma$ is an alphabet
         \item $\delta:\ Q\times\Sigma\to2^Q$ is a transition function {\tiny (nondeterministic)}
         \item $F\subseteq Q$ is a set of accept (or final) states
@@ -1406,13 +1408,13 @@ Model Checking Procedure
 \subsubsection*{More facts about Büchi Automata}
 \begin{itemize}
     \item assume: the final state will be repeatet infinitely often
-    \item finite equivalence $\not\Rightarrow\;\omega$-quivalence
+    \item finite equivalence $\not\Rightarrow\;\omega$-equivalence
     \item $\omega$-equivalence $\not\Rightarrow$ finite equivalence
     \item The class of languages accepted by \textsc{Nba} is \emph{identical} to the class of $\omega$-regular languages
     \item A Büchi automaton is \emph{deterministic}, if $|Q_0|\leq 1$ and $|\delta(q,A)|\leq1$ for all $q\in Q$ and $A\in\Sigma$ \\
     \textsc{Nba} and \textsc{Dba} are note equally expressive \follows \textsc{Nba} are more expressive \follows need for nondeterminism
     \item There is no canonic representation for \textsc{Nba} \follows there is no minimal \textsc{Nba} for a given $\omega$-regular language
-    \item alternative: ``Muller, Rabin and Streett automata'' with deterministic/nondeterministic variants \follows same expressivenes as \textsc{N/Dba}
+    \item alternative: ``Muller, Rabin and Streett automata'' with nondeterministic/deterministic variants \follows same expressivenes as \textsc{N/Dba}
     \item Generalized Nondeterministic Büchi Automaton \textsc{GNba}:
     \begin{itemize}
         \item acceptance condition expressed in terms of a set $\mathcal{F}$ consisting of sets $F_1,\dots,F_k$ with $F_i\subseteq Q$
@@ -1437,7 +1439,7 @@ Model Checking Procedure
     \begin{itemize}
         \item $p$ is a formula
         \item if $\Phi$ is a formula, then $\neg\Phi$ is a formula
-        \item if $\Phi$ and $\rho$ are formulae, then $\Phi\wedge\rho, \Phi\supset\rho \textrm{ (\tiny implication)}, \Phi\equiv\rho, L\Phi, M\Phi$ are formulae
+        \item if $\Phi$ and $\rho$ are formulae, then $\Phi\wedge\rho, \Phi\supset\rho \textrm{ \tiny (implication)}, \Phi\equiv\rho, L\Phi, M\Phi$ are formulae
     \end{itemize}
     \item \begin{shaded}
         Let $\Pi$ a set of atomic propositions. Further let
@@ -1522,7 +1524,7 @@ $p,q$ are formulae, the folowing are fomulae:
     \item $\diamond$ (eventually)
     \item $\square$ (always)
     \item $p \mathcal{U}q$ (until)
-    \item $p \mathcal{W}q$ (unless/weak until) {\tiny either once $q$ or always $p$}
+    \item $p \mathcal{W}q$ (unless/weak until) {\tiny either always $p$ or $p \mathcal{U} q$}
 \end{itemize}
 \subsubsection*{Satisfaction}
 given a state sequence (model) $\sigma$ and formula $p$
@@ -1580,7 +1582,7 @@ Two-fold application yields result identical to single application:
 \end{itemize}
 Absorption and Indempotence also lead to only $4$ different unary modalities (compare finite-model property):
 \[ \square p,\diamond p,\square\diamond p,\diamond\square p \]
-\subsubsection{Commutativity of the next-operator}%$\circ$}
+\subsubsection*{Commutativity of the next-operator}%$\circ$}
 \begin{itemize}
     \item $\circ(\neg p)\Leftrightarrow\neg\circ p$
     \item $\circ(p\vee q)\Leftrightarrow\circ p\vee\circ q$
@@ -1592,24 +1594,6 @@ Absorption and Indempotence also lead to only $4$ different unary modalities (co
     \item $\diamond(p\vee q)\Leftrightarrow\diamond p\vee \diamond q$
     \item $\square\diamond(p\vee q)\Leftrightarrow\square\diamond p\vee\square\diamond q$
     \item $\diamond\square(p\wedge q)\Leftrightarrow\diamond\square p\wedge\diamond\square q$
-\end{itemize}
-\subsection*{Possible Base set of Operators}
-$\circ, \mathcal{W}\neg$, derived operators:
-\begin{itemize}
-    \item $\square p = p \mathcal{W} false$
-    \item $\diamond p=\neg\square\neg p=\neg(\neg p \mathcal{W}false)$
-    \item $p \mathcal{U}q=p \mathcal{W}q \wedge \diamond q = p \mathcal{W}q \wedge\neg(\neg \mathcal{W}false)$
-\end{itemize}
-\subsubsection*{Possible Axiomatisation}
-\begin{itemize}
-    \item $\square p\to p$
-    \item $\circ\neg p\Leftrightarrow\neg\circ p$
-    \item $\circ(p\to q)\Leftrightarrow(\circ p\to\circ q)$
-    \item $\square(p\to q)\Leftrightarrow(\square p \to \square q)$
-    \item $\square p\to\square\circ p$
-    \item $(p\Rightarrow\circ p)\to(p\Rightarrow\square p)$
-    \item $p \mathcal{W}q\Leftrightarrow[q\vee(p\wedge\circ(p \mathcal{W}q))]$
-    \item $\square p\Rightarrow p \mathcal{W}false$
 \end{itemize}
 \end{multicols}
 \subsection*{Safety-Progess Classification}
@@ -1653,7 +1637,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
     \end{itemize}
     \item \begin{tabular}{llcl}
     \textsc{Etl} & Not counter-free Büchi-Automata & $\approx$ & $\omega$-regular languages \\
-    \textsc{Ltl} & Counter-free Büchi-Automata & $\approx$ & $^*-free \omega$-regular languages
+    \textsc{Ltl} & Counter-free Büchi-Automata & $\approx$ & $^*-free\; \omega$-regular languages
     \end{tabular}
 \end{itemize}
 \subsection*{\textsc{Ltl} to Büchi-Automaton Translation}
@@ -1666,7 +1650,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
     \item synthesize an automaton that uses Büchi acceptance criteria to represent the same set of models that satisfy the \textsc{Ltl} formula
     \item let every node $s$ of this automaton be labeled with an \textsc{Ltl} formula $\eta(s)$
     \begin{itemize}
-        \item for some accepting run $\sigma$, if the automaton reaches state $s$, then the suffice $\ sigma[s\dots]$ must satisfy $\eta(s)$, i.e., $\sigma[s\dots]\models\eta(s)$
+        \item for some accepting run $\sigma$, if the automaton reaches state $s$, then the suffix $\sigma[s\dots]$ must satisfy $\eta(s)$, i.e., $\sigma[s\dots]\models\eta(s)$
         \item the $\eta(s)$ are of the form $(\wedge_{i=1\dots m}\nu_i\wedge\circ(\wedge_{j=1\dots n} \kappa_j)$, i.e. the successor nodes of $s$ have to satisfy $(\wedge_{j=1\dots n}\kappa_j)$
         \item refine $\eta(s)$ into shorter subformulas $\nu_i$ until all $\nu_i$ are propositional variables in positive or negative form
     \end{itemize}
@@ -1708,7 +1692,11 @@ Relationship of Büchi-Automata and \textsc{Ltl}
         \diamond\Phi                &\Rightarrow  true \mathcal{U}\Phi \\
         \square                     &\Rightarrow  false \mathcal{V}\Phi
         \end{align*}
-        \item Semantics of $\mathcal{V}$ (unless): $\Phi$ is false when $\Psi$ is true \note{Is this true?}
+        \item Semantics of $\mathcal{V}$ (unless): $\Phi \mathcal{V} \Psi$ \follows
+        \begin{itemize}
+            \item $\square\Psi$
+            \item $(\Psi \mathcal{U} \Phi) \wedge \diamond \Phi$
+        \end{itemize}
         \item node data structure
         \begin{multicols}{2}
         \begin{description}
@@ -1733,7 +1721,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
             \end{itemize}
         \end{description}
         \end{multicols}
-        \item Nodes can be split (two nodes after) or evolved (one node after) \note{evolve $\to$ node gets changed only?}
+        \item Nodes can be split (two nodes after) or evolved (one node after) (creates new nodes)
         \item Processing of Current node $s$: is there a subformula to be processed in $New$ of node $s$?
         \begin{description}
             \item[no:] node $s$ is completely processed\\
@@ -1748,7 +1736,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
                 \item determine main Boolean operator in $\eta$ \follows determine which rule to apply
                 \item perform split into $s_1,s_2$ or evolve to $s'$
                 \begin{itemize}
-                    \item if $\eta$ is $\Phi\wedge\Psi,$\emph{proposition, negated proposition} or \emph{Boolean constant}:
+                    \item if $\eta$ is $\Phi\wedge\Psi,$ \emph{proposition, negated proposition} or \emph{Boolean constant}:
                     \\ if $\eta$ is $false$ or if $\neg\eta$ is in old \follows contradiction, discard
                     \\ else: $s$ evolves into $s'$
                     \item if $\eta=\Phi \mathcal{U}\Psi,\; \Phi \mathcal{V}\Psi,\; \Phi\vee\Psi$, split into $s_1,s_2$
@@ -1756,7 +1744,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
             \end{itemize}
         \end{description}
     \end{itemize}
-    \item Automaton construction form node structure
+    \item Automaton construction from node structure
     \begin{itemize}
         \item initial node is initial state
         \item make transitions to states from all states in $Incoming$
@@ -1767,7 +1755,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
             \item $F_i$ contains all states that either:
             \begin{itemize}
                 \item contain $\Psi$ in its label
-                \item does not contain $\Phi \mathcal{U}\Psi$ in its label
+                \item do not contain $\Phi \mathcal{U}\Psi$ in its label
             \end{itemize}
         \end{itemize}
     \end{itemize}
@@ -1777,8 +1765,8 @@ Relationship of Büchi-Automata and \textsc{Ltl}
         \item $I'=I\times\{1\}$
         \item $\delta'$ is defined by $(t,i)\in\delta'((s,k),a)$ if $t\in\delta(s,a)$ and
         \begin{align*}
-        i=k             & if\;s\not\in F_k \\
-        i=(k \mod n) +1  & if\;s    \in F_k
+        i=k             & \; if\;s\not\in F_k \\
+        i=(k \mod n) +1 & \; if\;s    \in F_k
         \end{align*}
         \item $F'=F_1\times\{1\}$
     \end{itemize}
@@ -1837,7 +1825,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
 \subsection*{Depth-First vs. Breadth-First Search}
 \begin{description}
     \item[BFS] always finds shortest counterexample
-    \item[otf-DFS]
+    \item[otf-DFS] \ \\
     \begin{itemize}
         \item easy extension to detect cylces (liveness properties)
         \item stack contents automatically yield counterexample
@@ -1849,7 +1837,7 @@ Relationship of Büchi-Automata and \textsc{Ltl}
         \item May lead to incomplete search
     \end{itemize}
 \end{description}
-\subsection{Bitstate Hashing (Supertrace)}
+\subsection*{Bitstate Hashing (Supertrace)}
 \begin{minipage}[]{0.48\textwidth}
 Don't want to revisit states, that have previously been visited. To efficiently determine, whether a state was visited before: use a \emph{hashtable}
 \begin{itemize}
@@ -1917,7 +1905,7 @@ a \emph{persistence property} and $\Phi$ a \emph{persistence} (or state) \emph{c
 \end{shaded}
 \subsection*{Persistence Checking}
 \begin{itemize}
-    \item Check wheter $TS\not\models P_{pers}$ with persistence condition $\Phi$
+    \item Check whether $TS\not\models P_{pers}$ with persistence condition $\Phi$
     \item Algorithmic Idea
     \begin{itemize}
         \item Let $s$ a state reachable in $TS$ with $S\not\models\Phi$ \follows then $TS$ has an initial path fragment leading into $s$
@@ -1942,7 +1930,7 @@ a \emph{persistence property} and $\Phi$ a \emph{persistence} (or state) \emph{c
 \subsection*{Nested Depth First Search \textsc{NDfs}}
 performs two nested \textsc{Dfs} searches, post-order traversal for the first \textsc{Dfs}. \\
 \input{code/ndfs.tex}
-\begin{minipage}[]{0.78\textwidth}
+\begin{minipage}[]{0.6\textwidth}
 Derivation of counterexample for \texttt{terminate(true)}
 \begin{itemize}
     \item dfs2($s_1$)
@@ -1970,7 +1958,7 @@ Derivation of counterexample for \texttt{terminate(true)}
     \end{itemize}
 \end{itemize}
 \subsection*{Nested \textsc{Dfs} vs. Tarjans's \textsc{Scc} Detection}
-\begin{minipage}[t]{0.48\textwidth}
+\begin{minipage}{0.48\textwidth}
 Tarjan
 \begin{itemize}
     \item \textsc{Scc}: strongly connected component: each element is reachable from inside an \textsc{Scc}
@@ -2041,19 +2029,14 @@ Tarjan
         \item specify \textsc{Ltl} formula $\varphi$, obtain $\neg\varphi$, tranlaste $\neg\varphi$ into equivalent \textsc{Nba}
     \end{itemize}
     \item Existence of counterexample \\
-    \begin{minipage}{0.48\textwidth}
     \begin{itemize}
         \item $L(M)\cap \overline{L(S)}=\varnothing$ \follows $A$ satisfies $S$
         \item $L(M)\cap \overline{L(S)}\not=\varnothing$ \follows $C$ is counterexample for the non-satisfaction of $S$ by $M$
         \item it can be shown, that any word in $C$ can be represented by an $\omega$-regular expression of the form $uv^\omega$ where $u$ and $v$ are finite state event sequences
     \end{itemize}
-    \end{minipage}
-    \hfill \vrule \hfill
-    \begin{minipage}{0.48\textwidth}
     \begin{center}
         \scalebox{1}{\input{images/lasso2.tikz}}
         \end{center}
-    \end{minipage}
     \item Construction of the Intersection of Büchi Automata
     \begin{itemize}
         \item let $M_1=(Q_1,q_0,q_{0,1},A,\delta_1,F_1)$ and $M_2=(Q_2,q_2,q_{0,2},A,\delta_2,F_2)$ be two Büchi automata
@@ -2171,14 +2154,14 @@ Elimination may still deliver incorrect results (even if you show independence b
     \item $s_1$ and $s_2$ may influence the outcome of the property check {\tiny (the property is not insensitive to whether $s_1$ or $s_2$ is being reached)}
     \item $s_1$ or $s_2$ may have successor states other than $r$ that would be pruned in case either of the two states did not belong to the reduced state space
 \end{enumerate}
-\subsection{Invisibility}
+\subsection*{Invisibility}
 \begin{shaded}
     $T=(S,T,S_0,L)$ a state transition system, $AP'\subseteq AP$ \\
     $\alpha\in T$ is \emph{invisible} w.r.t $AP'$ if
     \[ (\forall s,s'\in S| s'=\alpha(s))((L(s)\cap AP')=(L(s')\cap AP')) \]
     {\tiny (i.e. a transition is invisible w.r.t. some selected set of propositions if its execution doesn't change the truth value for the selected set of propositions)}
 \end{shaded}
-\subsection{Invariance under Stuttering}
+\subsection*{Invariance under Stuttering}
 \begin{shaded}
     two paths $\sigma$ and $\rho$ though a state transition system are \emph{stuttering equivalent} (written as $\sigma\sim_{st}\rho$) if the following condition holds:
     \begin{itemize}
@@ -2298,7 +2281,7 @@ Definition of $pre(\alpha)$ and $D$ may not be exact
     \item[$D$] may contain transitions that are actually independent
 \end{description}
 This allows for efficient computation of ample sets while preserving correctness of p.o. reduction.
-\subsubsection*{Specialization of $pre(\alpha)$ for different Modles of Computation}
+\subsubsection*{Specialization of $pre(\alpha)$ for different Models of Computation}
 \begin{itemize}
     \item $pre(\alpha)$ includes transitions of processes that contain $\alpha$ and that can change some $pc_i$ to a value from which $\alpha$ can execute
     \item if enabling condition for $\alpha$ involves shared variables, then $pre(\alpha)$ contains all other transitions that can change these shared variables
@@ -2345,7 +2328,7 @@ Ample Set Construction:
             \item transition on path $s,\dots,s'$ are independent of $T_i(s)$ and hence, belong to other processes
             \item hence $pc_i(s)=pc_i(s')$ and $\alpha\in current_i(s)$
             \item also, $\alpha\not\in T_i(s)$ otherwise no $C1$ violation
-            \item hence $\alpha in current_i(s)-T_i(s)$
+            \item hence $\alpha \;in\; current_i(s)-T_i(s)$
             \item $\alpha\not\in T_i(s)$ \follows $\alpha$ is diabled in $s$
             \item therefore, transition in $pre(\alpha)$ must be in $s,\dots s'$
             \item then necessarily, $pre(current_i(s)-T_i(s))$ includes transition of processes other than $P_i$

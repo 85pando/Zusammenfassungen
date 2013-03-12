@@ -17,9 +17,9 @@ Search() \Begin{
         Print\_Stack(D)
     }
     \tcp{$P.T.E \Rightarrow successors(s)$}
-    \ForAll{$(s,s')\in P.T.E$}{
+    \For{ all $(s,s')\in P.T.E$}{
     \tcp{state not yet visited (uses hashtable)}
-        \If{In\_statespace(s'( == false))}{
+        \If{In\_Statespace(s'( == false))}{
             Add\_Statespace(s') \\
             Push\_Stack($s'$) \\
             Search()

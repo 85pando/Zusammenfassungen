@@ -11,7 +11,7 @@ every path/.style={draw,->, >=latex, thick, minimum width=1cm},
 \node[ts,below left  of = sr]   (sy)          {$s_y$};
 \node[ts,below right of = sr]   (sry)         {$s_{ry}$};
 \node[ts,below left of = sry]   (sg)          {$s_g$};
-\node [above of = sr,node distance=20] {$\{red\}$};
+\node [above of = sr,node distance=20] (srl){$\{red\}$};
 \node [left of = sy,node distance=50] {$\{yellow\}$};
 \path
 	(sr) edge  (sry)
@@ -19,6 +19,7 @@ every path/.style={draw,->, >=latex, thick, minimum width=1cm},
 	(sg) edge  (sy)
 	(sy) edge  (sr)
 ;
+\node[above of = srl,node distance = 40] (srll) {$TS$};
 
 % automaton
 \node[state,right of = sr,node distance = 200,initial, initial text= ] (q0) {$\red{q_0}$};
@@ -31,6 +32,7 @@ every path/.style={draw,->, >=latex, thick, minimum width=1cm},
 	(q1) edge[loop below] node[below] {$yellow$} (q1)
 	(q0) edge node[above right] {$red$} (qf)
 ;
+\node[right of = srll, node distance = 200] {$\mathcal{A}$};
 
 % synchronous product
 \node[ts,below of = qf,node distance = 100] (ry0) {$\langle s_{ry},\red{q_0} \rangle$};
