@@ -1,0 +1,364 @@
+ <link rel="stylesheet" type="text/css" href="../style.css"><style>img.latex-inline { vertical-align: middle; }</style>
+<h1>Functional Safety of Embedded Systems - Part 5 - Application Mapping</h1>
+<ul>
+<li>Mapping of Application onto execution platform.</li>
+<li>Certain applications will be used together (e.g. call, blue-tooth, PIM) =&gt; still need to meet deadlines.</li>
+<li><strong>hardware-software-co-design</strong> =&gt; find combination of hardware and software s.t. design is most efficient<ul>
+<li>=&gt; Platform-based design</li>
+</ul>
+</li>
+<li><em>homogeneous multiprocessor systems</em>: all processors provide same functionality (PC-like) =&gt; code compatibility between processors =&gt; reallocate processors at run-time (fault tolerance)</li>
+<li><em>heterogeneous multiprocessor systems</em>: processors of different types =&gt; special processors for special tasks</li>
+<li><em>definition of mapping problem</em>:<ul>
+<li><em>given</em>: set of applications, use cases, set of candidate architectures</li>
+<li><em>find</em>: mapping of applications to processors, appropriate scheduling technique, target architecture</li>
+<li><em>objectives</em>: keep deadlines, maximize performance, minimize cost/ energy, ...</li>
+</ul>
+</li>
+<li><em>design space exploration</em> (DSE): exploration of possible architectural options</li>
+</ul>
+<h2>Scheduling in Real-Time Systems</h2>
+<ul>
+<li>One of the key issues to be solved.</li>
+<li>Already roughly considered in Specification.</li>
+</ul>
+<h3>Classification of Scheduling Algorithms</h3>
+<p><img alt="Scheduling Algorithm Classes" src="scheduling-algos.png" /></p>
+<ul>
+<li>classes used to classify schedulers:<ul>
+<li><em>soft and hard deadlines</em>:<ul>
+<li>soft =&gt; extension to OS-default</li>
+<li>hard =&gt; periodic and aperiodic</li>
+</ul>
+</li>
+<li><em>periodic and aperiodic tasks</em>:<ul>
+<li>periodic: Task must be executed once every <img class='latex-inline math-true' alt='p' id='p' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAZolEVJki7xAy3bvNq3a8lMgVAAAAPklEQVQI12NgEDJxNWBgM6lgK2BgY1Xg/MHAwGXAWMDA0M/ArcDA4M5gw8DAcFUQyGSoBGIGtg8gck4dkAAAAjoIh7YhRe8AAAAASUVORK5CYII='> units of time, <img class='latex-inline math-true' alt='p' id='p' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAZolEVJki7xAy3bvNq3a8lMgVAAAAPklEQVQI12NgEDJxNWBgM6lgK2BgY1Xg/MHAwGXAWMDA0M/ArcDA4M5gw8DAcFUQyGSoBGIGtg8gck4dkAAAAjoIh7YhRe8AAAAASUVORK5CYII='> is the period, each execution is a <em>job</em></li>
+<li>aperiodic: all other, if minimum time between two calls =&gt; <em>sporadic</em></li>
+</ul>
+</li>
+<li><em>preemptive and non-preemptive</em>:<ul>
+<li>preemptive: tasks may be interrupted</li>
+<li>non-preemptive: tasks run until finished</li>
+</ul>
+</li>
+<li><em>static and dynamic</em>:<ul>
+<li>static: decision about scheduling at compile/ design time (can respect resource requirements, dependences between tasks)</li>
+<li>=&gt; <em>entirely time triggered</em> (TT systems): totally controlled by a timer, <em>task descriptor list</em> (TDL) contains schedule</li>
+<li>dynamic: decision about scheduling at run-time (overhead run-time)</li>
+</ul>
+</li>
+<li><em>independent and dependent tasks</em>: dependencies between tasks in embSys rule</li>
+<li><em>mono- and multiprocessor</em>: single processor more simple, multi =&gt; distinguish between hetero- and homogeneous systems</li>
+<li><em>centralized and distributed</em>: scheduling algorithm can either be on one processor or distributed among many</li>
+<li><em>type and complexity of schedulability test</em>: exact prediction is often NP-hard =&gt; sufficient and necessary tests =&gt; can show, that no schedule exists, but schedule can still not exists, even if successful</li>
+<li><em>cost functions</em>: different algorithms aim at different minimizations<ul>
+<li><em>maximum lateness</em>: difference between deadline and completion, maximized over all tasks (negative =&gt; all tasks before deadline)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Aperiodic scheduling without precedence constrains</h3>
+<ul>
+<li><img class='latex-inline math-true' alt='ci' id='ci' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAJBAMAAAD0ltBnAAAAKlBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADmU0mKAAAADXRSTlMAiWZEEN0yuyJ2VJnNmokq/wAAADxJREFUCNdjYGBUVmBgYGAJY77AtoGBXYChAcjzBREMDLZArN3A4OvAMM2ngYFZahVDD1icQWgBmJppAAAUrgkxdZNytAAAAABJRU5ErkJggg=='> execution time, <img class='latex-inline math-true' alt='di' id='di' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANBAMAAABr8kJMAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdu8yImarEIm73c2ZRFTOoousAAAAUElEQVQI12NgYGAQEmAAAyYDCO0EoRjCwGRF6FQQxbKc/QsD8wEG7gZmBRDf34HxAIi+z8D9vCDGAajJ3pW52oGBUdRQjsEbakLrAwgteAEASoAODUyT5NkAAAAASUVORK5CYII='> deadline interval =&gt; <img class='latex-inline math-true' alt='lidici' id='lidici' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAANBAMAAAAaii7SAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEJki73aru2Yy3YnNVETy4cIOAAAAvklEQVQoz2Ng1DdgQAMhAQzYgAmGCMsErArDiNAKBhUYIm3YFX5G40t3oGvd8QJEci5g4FQA0unlQABkMC9k/AwRgQGpCe8ZJjEwcCugaufZwOkAZnCkAUEykFHNwAyWuICq0N6AFVUrI9Rt8pIMTQZIVr9n4Lko0IQUtnwfgKYrMzDM4uCUMUAJm/kWKCKMHxlYJx5mYGDrZLBBtok1YmosqsjruxeYD0C8fwE9yNBFuHvBVOgDdIXoIqxxDABr4iwF1cW59QAAAABJRU5ErkJggg=='> <strong>laxity</strong> or <strong>slack</strong> =&gt; denotes time that a process can still wait</li>
+</ul>
+<h4>Earliest Due Date (EDD)</h4>
+<ul>
+<li><em>static scheduling</em> deadlines known in advance (=&gt; preemption not used)</li>
+<li>sort tasks by deadline =&gt; <img class='latex-inline math-true' alt='mathcalOnlogn' id='mathcalOnlogn' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAAASBAMAAADRbS/HAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAiTIiq+92VJkQZs3du0THzzNdAAABbUlEQVQoz22Sv0vDQBzFX+8S06a0jT9AcJLq4GYRnUSMFAcnQdC5oIMUh4CL4FIq6CQcOKvpYCeF4h+gWd3q0sHF6CKCgyAOTvXu0ruktI8HOT7fx919vzlAqYhBRcyS1srUeouFAUYqwlypmfUdwGBRlTzGScXGpUHLR5lNH3OqPB8nFVuUxvJFALONuiqvxknFctJ4yIYwAgRDkoqlQmErIHzZoq1EstpgmdOpO82smnDOEdu7pA178mNPJtMeDbKeeaVZ3hU2fV41PctF8aZkTosk76lTCBOMtIQLYlJf4LS0hmsmkrfAedpZYppFSdPlyXsQ/tnCsTz9gCft5m7MotONH96QB357+o0O7Z3+nBKTVizqiP6GpC4nYrfxdyiShk+f0p8Jxnfixsr2i5jECW8ZZyHyr2WM7rN8t7uhWY4JK731v6JZRic0u5RG/MeSavCwZmPSSsTpS9rVZkUx6gjHeh/ykiM2Iv0Pv2VgarkFW9IAAAAASUVORK5CYII='></li>
+<li>EDD is an optimal scheduling algorithm</li>
+</ul>
+<h4>Earliest Deadline First (EDF)</h4>
+<ul>
+<li>is optimal with respect to maximum lateness</li>
+<li><em>dynamic scheduling</em>: every time a job arrives, it is inserted into a list sorted by deadlines</li>
+<li><em>preemption</em>: when task is inserted at head of list</li>
+<li>sorted lists =&gt; $\mathcal{O}(n^2)</li>
+</ul>
+<h4>Least Laxity (LL), Least lack Time First (LST), Minimum Laxity First (MLF)</h4>
+<ul>
+<li>task priorities are a monotonically decreasing function of laxity (less laxity =&gt; higher priority)</li>
+<li>negative laxities =&gt; deadline will be missed (early warning)</li>
+<li><em>preemptive</em> (not only when new tasks become available)</li>
+<li>optimal for mono-processor systems =&gt; it will find a schedule if one exists</li>
+</ul>
+<h4>Scheduling without preemption</h4>
+<ul>
+<li>processor may be forced to be idle sometimes for optimal schedule (tasks with early deadlines arrive late)</li>
+<li>needs knowledge about future (when will task with early deadline arrive)</li>
+<li>no knowledge about future? =&gt; EDF most optimal of all</li>
+<li>if arrival times known =&gt; NP-hard</li>
+</ul>
+<h3>Aperiodic scheduling with precedence constraints</h3>
+<h4>Latest Deadline First (LDF)</h4>
+<p><img alt="Latest Deadline First" src="ldf.png" /></p>
+<ul>
+<li><strong>a priory?</strong></li>
+<li>put task with no successor in queue, execution is opposite</li>
+<li>non-preemptive optimal for mono-processors</li>
+<li>asynchronous arrival =&gt; modified EDF</li>
+</ul>
+<h4>As-Soon-As-Possible (ASAP), As-Late-As-Possible (ALAP), Force-Directed (FDS), List (LS)</h4>
+<ul>
+<li>popular in high-level synthesis community (HLS)<ul>
+<li>dependencies between tasks</li>
+<li>multi-processor scheduling</li>
+<li>simplified resources (processor) model</li>
+<li>use heuristics (optimality not guaranteed)</li>
+<li>are typically fast</li>
+<li>almost never exploit global information about periodicity</li>
+</ul>
+</li>
+<li>ASAP and ALAP =&gt; no resource or time constraints</li>
+<li>LS =&gt; resources constraints</li>
+<li>FDS =&gt; global time constraint</li>
+<li>ASAP: start tasks as soon as all inputs are available</li>
+<li>ALAP: start with tasks that no other tasks depend on, build task list in negative time domain =&gt; run-time: shift all values to positive</li>
+<li>LS: requires some priority function</li>
+<li>FDS: probability (likelihood, that task is scheduled), define forces (move tasks away from "high pressure" areas)</li>
+</ul>
+<h3>Periodic scheduling without precedence</h3>
+<ul>
+<li><em>Optimal Schedule</em>: For periodic scheduling, a scheduler is <strong>optimal</strong>, iff it will find a schedule, if one exists.</li>
+<li>pi: period, ci: execution time, di: deadline, li=di-ci: laxity</li>
+<li>&#xB5; <em>utilization</em> (accumulated (execution time/period)) <img class='latex-inline math-false' alt='musumni1fraccipi' id='musumni1fraccip' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAAAtBAMAAAAUzYueAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEO9miVTNmd1EIjKru3YeAw3rAAABnUlEQVQ4y2NgwAL4ToZMYCAMNmgzOxChjCuBhxjTmB2YOIlQxr6Bx5BhIIHzZGJUSWyYT4yyKwxcDNuxiPP/TwOCDP3//38DeYy/cGjn+28Aprlf/AGSnB9wWXMfZkCQANC0jwx8zFXYlAn9gDK4QfE6JTRgYxY2ZZz/C6CsAFgMY7XV/ycqn8UUqzK2TwKonnqJPRn9TyAqfuK/YPMZA3pSZf+PJVGGMbCBvHT2LhBA/diviKmshIFfAE1o/3dE1IEBMC46GWag62TBNI3rA4M7N5qlEhsws8cHRuXdaGKpmE7jSTGeYoAqxPsAS/pagCFUjiXYNmE64wIWZSYYIjNg4YO3gODqggWLAf68BE2V90GmmkwNx16cpO8Ggp3Bz/tBeYFrqiKXAjZVPP9hAJQ6udgduD9yF2Aq494NA2DLOSYwKxCR9uQZeIkpEYMYpjGYLyCo7LixA7cYNmUwB8uCSW0gXobHGNZH0GQGLLsC8KhjAhHb9IDEO2wBDHMwE143Ax3MUl5eXkVAGdzBBJQ5BxBlGtTBnP6vkQQBPhx5Ocyeuo4AAAAASUVORK5CYII='></li>
+</ul>
+<p><img alt="task" src="task.png" /></p>
+<h4>Rate Monotonic Scheduling (RM)</h4>
+<ul>
+<li>Most well known for periodic processes.</li>
+<li>
+<p><em>RM assumptions</em> (when true: <em>the priority of tasks is a monotonically decreasing function of their period</em>):</p>
+<ol>
+<li>All tasks that have hard deadlines are periodic.</li>
+<li>All tasks are independent</li>
+<li>di=pi for all tasks</li>
+<li>ci is constant and is known for all tasks</li>
+<li>The time required for context switch is negligible.</li>
+<li>
+<p>For a single processor and <em>n</em> tasks, the following equation holds for &#xB5; :</p>
+<p><img class='latex-inline math-false' alt='musumni1fraccipileqn2frac1n1' id='musumni1fraccip' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ4AAAAtBAMAAACt9c+TAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEO9miVTNmd1EIjKru3YeAw3rAAAC0UlEQVRIx+VWS2sTURT+JjNpkpnJA9G2G2mLuLABjSQSUAuRICIIDa0aClqz8IWrCJVo8A/opgVT7UI0C3Hr+EDRqKkbRdwoKsWFNHThA1FSEXzieO90JslMbpPqzM6zmDlz5tzvnve9AIMCj3dOwEFSwnzCSTwxIztqH59w+ZzE8yjyevynlDzjKFy3crHlf9+Jv8N7ARG3Wim8bwMQVA8SOrxOVX+SL+5Huw3b4QXUiPaW3v2i7lSXjMc9ZSvMGiYNhYjSPAJ8nqUmKRa80V4gxVBc9s1YQXu4sCt19QgLr0vPx4xiSAjefVbG1KzOpYxuZuE9gHDyqElC8IQiQ3Pwu/lb2FBj3TV9KYsteEiyp6rVOp44zcDr+BwyZ6gWIv55Q4tza1DWp1A6lxvT8MDKiahmFkn9yzrvBbcaPRGLv9jOWrfvCxNu+auGj8v0UW6ckoXfJDNpkk9Yh7FHZU3Tric6ExsZncY9yh0H4sOmGjkP7EYHEcmvCc3o0vE+Bt4bvTCk6/0IYw/l+sF1SpVGpZvAGIIhy9Ly13r3aURTyO1YsFqUE6TKKZ6fZPuCcMeCdwpTVlMEln3gPi645lLcGdwlTB4hbApsNPsrVrFNsvjbrbATPKABXoG/UiT54BWuqb/S4KvcqpJFemCx5t9L63kAwRVFL3Auurlp362Q90cLEbPQX2k5UY7BMwJPESSuTf+eIdjccrklzFkf88AnM+ta8+nLHmTxHKH65kwlQUGsSThllE/LO8cNlvASq31PG5tFWjrMqoEK80TT+2CW2hmbTNu8yhwqEbo9/Hacnh/iZJ/YawtOVg2iY1X0JKR5KWsDTyoZpPntneDt2WehHvgdvVoO4SziRefwHkUTUqctPCP6K7Vn2Jjtdsk9pxU3naTJlBOALm3eriWPT7Yq2oi+y5kEkOgLZJDkncKrRd8pvGTKWfv06PsGP/zL6j+vWsJ7WysMDQAAAABJRU5ErkJggg=='>
+The right side is about 0.7</p>
+</li>
+</ol>
+</li>
+<li>
+<p>preemptive scheduling with fixed priorities</p>
+</li>
+<li>schedulability not guaranteed (especially when &#xB5; is high)</li>
+</ul>
+<h4>Earliest Deadline First (EDF)</h4>
+<ul>
+<li>can also be applied to periodic task sets</li>
+<li><em>hyper period</em>: least common multiple of the periods of the individual tasks</li>
+<li>=&gt; only need to solve scheduling for one hyper period</li>
+<li>EDF can also solve for di!=pi</li>
+</ul>
+<h3>Periodic Scheduling With Precedence Constraints</h3>
+<ul>
+<li>scheduling for dependent tasks more difficult (NP-complete)</li>
+<li>possible: add additional resources =&gt; scheduling becomes easier</li>
+<li>possible: partition scheduling into static and dynamic parts (make as many decisions at design time as possible)</li>
+</ul>
+<h3>Sporadic Events</h3>
+<ul>
+<li>connect to sporadic events via interrupt, execute the immediately if priority is highest</li>
+<li>=&gt; very unpredictable behavior for all other tasks</li>
+<li><strong>sporadic task servers</strong> =&gt; tasks, that are periodic and check for ready sporadic events</li>
+</ul>
+<h2>Hardware/ Software partitioning</h2>
+<ul>
+<li>What must be implemented in hardware, what in software?</li>
+<li>For each node in task graph =&gt; need information about effort and benefits of hardware/ software implementation</li>
+</ul>
+<h3>COOL (CO-design toOL)</h3>
+<ul>
+<li>partition on multi-processor infrastructure</li>
+<li>COOL input:<ul>
+<li><em>target technology</em>: available hardware platform components (only homogeneous processors)</li>
+<li><em>design constraints</em> required throughput, latency, maximum memory size, maximum area for application specific hardware, ...</li>
+<li><em>behavior</em> hierarchical task graphs (communication &amp; timing edges) in VHDL</li>
+</ul>
+</li>
+<li>partitioning:<ol>
+<li>Translation into internal graph model.</li>
+<li>Translation of behavior from VHDL to C</li>
+<li>Compilation of C programs for selected processor type</li>
+<li>Synthesis of hardware components: for each leaf node</li>
+<li>Flatten the hierarchy: extract flat task graph =&gt; no merging/ splitting of nodes, cost from compilation and hardware synthesis are added</li>
+<li>Generate and solve mathematical model of optimization problem: integer linear programming (ILP) to solve</li>
+<li>Iterative improvements: merge nodes on the same hardware (better communication estimates)</li>
+<li>Interface Synthesis: glue logic required for interfacing processors, application-specific hardware and memory is created.</li>
+</ol>
+</li>
+<li><strong>0/1-ILP</strong>-model:<ul>
+<li>sets: V -&gt; graph nodes, L -&gt; node types, M -&gt; component types, hardware can have multiple instances j, KP -&gt; processors</li>
+<li>decision variables: X_vm node-v-to-hardware-m, Y_vk node-v-to-processor-k, NY_lk node-of-type-l-to-processor-k, Type V-&gt;L from task graph node to type</li>
+<li>cost function: C = processor cost + memory cost + cost of application specific hardware</li>
+<li>implementation either in hardware, or in software</li>
+<li><em>resource constraints</em> =&gt; ensure, that "not too many" nodes on one component</li>
+<li><em>precedence constraint</em>: ensure that schedule is consistent with task graph</li>
+<li><em>design constraints</em>: put limit on cost of hardware components</li>
+<li><em>timing constraints</em>: input into COOL =&gt; convert to ILP</li>
+</ul>
+</li>
+</ul>
+<h2>Mapping to heterogeneous multi-processors</h2>
+<ul>
+<li>still research topic (<strong>2010</strong>)</li>
+<li>DOL tool from ETH<ul>
+<li><em>automatic selection of computation templates</em>: processor types can be completely heterogeneous (processors, micro-controllers, DSP, FPGA, etc)</li>
+<li><em>automatic selection of communication techniques</em>: interconnection schemes like central buses, hierarchical buses, rings, etc</li>
+<li><em>automatic selection of scheduling and arbitration</em>: DOL design space exploration tools choose rate monotonic, EDF, TDMA or priority based</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th colspan="1" rowspan="1">
+<p>Architecture fixed/
+Auto parallelizing</p>
+</th>
+<th colspan="1" rowspan="1">
+<p>Fixed Architecture
+</p>
+</th>
+<th colspan="1" rowspan="1">
+<p>Architecture to be
+designed</p>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Starting from a
+given model</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>HOPES, mapping to CELL
+proc., Q, Xu, T. Simunic</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>COOL, DOL
+SystemCodesigner</p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="2">
+<p>Auto-parallelizing</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Mnemee, O'Boyle and
+Franke</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Daedalus
+</p>
+</td>
+</tr>
+<tr>
+<td colspan="2" rowspan="1">
+<p>MAPS</p>
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>input of DOL consists of set of tasks together with use cases</li>
+<li>output of DOL describes the execution platform, the mapping of tasks to processors together with task schedules</li>
+<li>=&gt; specification graph<ul>
+<li><em>allocation &#120630;</em>: subset of architecture graph, representing hardware components</li>
+<li><em>binding &#120689;</em>: selected subset of edges between specifications and architecture denoting a relation =&gt; <em>bindings</em></li>
+<li><em>schedule &#120533;</em>: assigns start times to node</li>
+</ul>
+</li>
+</ul>
+<h2>Autosar (AUTomotive Open System ARchitecture)</h2>
+<p><img alt="Autosar approach" src="autosar.png" /></p>
+<ul>
+<li><em>AUTOSAR SW-C</em>: software components encapsulate an application which runs on AUTOSAR infrastructure =&gt; <em>SW-C Description</em></li>
+<li><em>Virtual Functional Bus</em> (VFB): sum of all communication mechanisms</li>
+<li><em>System Constraint and ECU Description</em>: to integrate AUTOSAR into a network of ECUs</li>
+<li><em>Mapping on ECUs</em></li>
+<li><em>Runtime Envinronment</em> (RTE): from the view of autosar software component =&gt; implements VFB functionality.</li>
+</ul>
+<h3>Components</h3>
+<ul>
+<li>separation between application and infrastructure</li>
+<li>autosar software component encapsulates the functionality of the application</li>
+<li>autosar software component is an atomic component =&gt; cannot be distributed over several ECU</li>
+<li>autosar software: complete formal description of software components</li>
+<li><em>autosar software component description</em><ul>
+<li>operations and data elements the component provides</li>
+<li>the requirements of the component for the infrastructure</li>
+<li>the resources needed by component (CPU, memory, etc)</li>
+<li>information on specific implementation of component</li>
+<li>=&gt; software component template</li>
+</ul>
+</li>
+<li>software component implementation is independent from<ul>
+<li>type of micro-controller of ECU</li>
+<li>type of ECU</li>
+<li>location of other autosar software components</li>
+<li>number of times a software component is instantiated</li>
+</ul>
+</li>
+<li>Sensor/ Actuator Software Components<ul>
+<li>encapsulate dependency on actuators, sensors</li>
+</ul>
+</li>
+<li>generic "Component"<ul>
+<li>logical interconnection between components may be modeled as component =&gt; composition</li>
+</ul>
+</li>
+</ul>
+<h3>VFB</h3>
+<ul>
+<li>components implemented independently from underlying hardware</li>
+<li>VFB is abstraction of global communication in vehicle</li>
+<li><em>autosar interface</em>: client/ server or sender/ receiver</li>
+<li>pport (provides), rport (requires)</li>
+<li><em>client/ server</em>: client initializes, + request a service, server responds<ul>
+<li>client can be blocked or not blocked</li>
+</ul>
+</li>
+<li><em>sender/ receiver</em>: solution for asynchronous distribution of information<ul>
+<li>sender is not blocked</li>
+<li>sender does not know the identity of receivers</li>
+</ul>
+</li>
+</ul>
+<h3>AUTOSAR ECU Software Architecture</h3>
+<p><img alt="ECU Software Architecture" src="ECU.png" /></p>
+<h2>AUTOSAR methodology</h2>
+<ul>
+<li>uses the <em>Software Process Engineering Meta-model</em> (SPEM) by OMG</li>
+<li><em>Work-Product</em>: Piece of information or physical entity produced by an activity</li>
+<li><em>Activity</em>: describes a piece of work performed by one or a group of persons</li>
+<li><em>Guidance</em>: associated with activities and represent additional information or tools</li>
+<li><em>Flow of Work-Products</em>: <img alt="Flow of Work Product" src="flow-work.png" /> from source to destination, states in-/output</li>
+<li><em>Dependency</em>: <img alt="Dependency" src="dependency.png" /> direction clarifies, who depends onf whom</li>
+</ul>
+<h3>Methodology Overview</h3>
+<p><img alt="AUTOSTAR Methodology Overview" src="methodology.png" /></p>
+<h3>System Configuration</h3>
+<p><img alt="AUTOSAR configuration" src="configuration.png" /></p>
+<h3>ECU Design and Configuration Methodology</h3>
+<p><img alt="AUTOSAR Design" src="design.png" /></p>
+<h3>Component Implementation</h3>
+<p><img alt="AUTOSAR implementation" src="implementation.png" /></p>
+<h2>Detailed ECU Architecture</h2>
+<h3>Layered Architecture</h3>
+<p><img alt="AUTOSAR architecture" src="architecture.png" />
+<img alt="AUTOSAR architecture" src="architecture2.png" /></p>
+<h3>The Runtime Environment</h3>
+<ul>
+<li>provide uniform environment, make implementation of software components independent from communication mechanisms and channels</li>
+</ul>
+<h3>Complex Device Driver</h3>
+<ul>
+<li>loosely coupled container, where specific software implementations can be placed</li>
+</ul>
+<p>end autosar: 366</p>

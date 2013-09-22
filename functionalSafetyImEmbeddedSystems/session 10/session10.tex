@@ -1,0 +1,113 @@
+\documentclass[a4paper, 10pt]{article}
+
+%\usepackage{scalefnt}
+%\usepackage{parcolumns}
+
+\usepackage{newclude}
+\include{../zusammenfassung}
+
+\begin{document}
+
+\Gruppe{Stephan Heidinger}{fses 10}
+\Header{Functional Safety in Embedded Systems}{Session 10 - Formal Methods for Functional Safety II}
+
+\section*{Formal Methods for Safety Assessment (ctd)}
+\subsubsection*{Model Checking}
+\begin{itemize}
+    \item complement simulation and testing
+    \item system is modeled as state transition system
+    \item check automatically, that specifications are met (exhaustively explore state space)
+    \item finite models \follows guaranteed termination
+    \item counterexample is produced, when failure state is found
+    \item check a \emph{Kripke}-structure \follows may be exponential in number of components
+    \item \emph{explicit model checking} SPIN: explicitly compute states
+    \item \emph{symbolic model checking} SMV, NuSMV, VIS\follows manipulate sets of states and transitions
+    \item \emph{binary decision diagrams} SMV: representation for logic formulae
+    \item \emph{bounded model checking} (symbolic) bound steps to a value $k$, uses modern SAT solvers
+    \item often run bdd and bmc in parallel, the first one to finishes, wins
+    \item \emph{timed model checking} UPAAL, KRONOS
+    \item \emph{probabilistic model checking} PRISM, MRMC
+    \item \emph{partial order reduction} \follows reduce state space
+    \item \emph{symmetry reduction} exploit symmetry in model
+\end{itemize}
+
+\subsubsection*{Using Model Checking for Requirements Validation}
+\begin{itemize}
+    \item validate a set of requirements (assumes, that requirements meet end-user expectations)
+    \item RAT tool provides way to asses quality of requirements
+    \begin{itemize}
+        \item \emph{property simulation} \follows behavior associated with each requirement
+        \item \emph{property assurance} check for logical consistency (=freedom from contradictions)
+        \begin{itemize}
+            \item if requirements are logically inconsistent \follows find subset, that is explanation for inconsistency
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Using Model Checking for Property Verification}
+\begin{itemize}
+    \item build formal model for system (state transition system)
+    \item checked by model checker
+    \item FSAP tool for formal verification and safety analysis, GUI on top of NuSMV
+\end{itemize}
+
+\subsection*{Formal Safety Analysis}
+\begin{itemize}
+    \item ESACS and ISAAC \follows ESACS methodology supported by formal methods, to assist system development and safety analysis
+    \item shared formal notations between design and safety analysis
+    \item decoupling between nominal model and fault model
+    \begin{enumerate}
+        \item formal model (design or safety engineer) \follows \emph{nominal system model} (only nominal behavior)
+        \item \emph{fault injection}: put nominal model into failure modes \follows extended model through model extension
+    \end{enumerate}
+    \begin{center}
+        \includegraphics[width=.5\linewidth]{images/esacs.png}
+    \end{center}
+\end{itemize}
+
+\subsubsection*{Fault Injection}
+\begin{center}
+    \includegraphics[width=\linewidth]{images/faultinjection.png}
+\end{center}
+
+\subsubsection*{Fault Models and Model Extension}
+\begin{itemize}
+    \item FSAP generic failure mode library: library of typical failure modes to be injected
+    \item model extension takes specification of fault to be added
+    \item \emph{fault configuration} subset of failure mode variables
+\end{itemize}
+
+\subsubsection*{Fault Tree Generation}
+\begin{itemize}
+    \item fault tree can be represented as collection: of minimal cut sets TLE and and conjunction of corresponding basic faults
+    \item generation of fault tree:
+    \begin{itemize}
+        \item need to remember, if fault has been activated during iterative traversal
+        \begin{center}
+            \includegraphics[width=.5\linewidth]{images/faultTreeGeneration.png}
+        \end{center}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{FMEA Table Generation}
+\begin{itemize}
+    \item input: set of failure modes + set of events to be analyzed
+    \item FSAP does this somehow (magic?)
+\end{itemize}
+
+\subsection*{Industrial Application of Formal Methods}
+\subsubsection*{IBMs Customer Information Control System}
+\begin{itemize}
+    \item more than $750\;000$ lines of code
+    \item more than $2\;000$ pages of formal specifications produced
+    \item reduction in development cost of about $9\%$
+\end{itemize}
+
+\subsection*{Conclusion}
+\begin{itemize}
+    \item formal methods in design and development become more pervasive
+    \item CounterExample Guided Abstraction Refinement (CEGAR) builds set of abstraction from set of predicates
+    \item nontrivial: systems with both digital and analogue parts (\emph{hybrid systems})
+\end{itemize}
+
+\end{document}

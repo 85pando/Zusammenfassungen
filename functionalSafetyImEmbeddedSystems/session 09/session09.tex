@@ -1,0 +1,237 @@
+\documentclass[a4paper, 10pt]{article}
+
+%\usepackage{scalefnt}
+%\usepackage{parcolumns}
+
+\usepackage{newclude}
+\include{../zusammenfassung}
+
+\begin{document}
+
+\Gruppe{Stephan Heidinger}{fses 09}
+\Header{Functional Safety in Embedded Systems}{Session 09 - Formal Methods for Functional Safety I}
+
+\section*{Formal Methods for Safety Assessment}
+\begin{itemize}
+    \item formal method \follows use of formalisms and techniques (based on mathematics) for specification, design, analysis
+    \item formalized methods: several notations, different sorts of diagrams, pseudocode, formality, but no formal foundation
+\end{itemize}
+
+\subsection*{Advantages of Formal Methods}
+\begin{itemize}
+    \item growing complexity of computer-based system
+    \item remove ambiguities in specification of requirements and models
+    \item \emph{verification} checking, whether a system correctly implements requirements
+    \item \emph{validation} check, whether the started requirements are the intended ones
+    \item traditional techniques: testing, simulation (not exhaustive)
+    \item formal methods: exhaustive, automation possible
+\end{itemize}
+
+\subsection*{Formal Methods in the Development Process}
+\begin{itemize}
+    \item formal methods can have high level ob abstraction
+    \item Rushby's four different levels:
+    \begin{description}
+        \item[Level 0] \emph{no use of formal methods} standard practice
+        \item[Level 1] \emph{use of concepts and notation from discrete mathematics} concepts and notations from discrete mathematics and mathematical logic
+        \item[Level 2] \emph{use of formalized specification languages with some mechanized support tools} formal notations with fixed syntax, at least limited tool support, proof performed manually
+        \item[Level 3] \emph{Use of fully formal specification languages with comprehensive support environments, including mechanized theorem proving or proof checking} fully formal specification languages, supported by tools, automatic generation of proofs, proofs are fully formalized
+    \end{description}
+    \item lower levels of rigor: not so safety relevant
+    \item high levels of rigor \follows fully safety critical systems
+    \item formal methods need not be applied everywhere \follows overall correctness not guaranteed
+    \item apply formal methods early or late?
+    \begin{description}
+        \item[early] specification bugs are the worst, work better at early stages than testing and simulation (which work good at code/ gate level)
+        \item[late] completed system will be verified
+    \end{description}
+    \item limit formal methods to certain subsystems
+    \item formal methods can be used for \emph{certification} of safety-critical systems
+\end{itemize}
+
+\subsection*{Problems and Limitations}
+\begin{itemize}
+    \bad formal methods are expensive
+    \good formal methods can find bugs in very early stages \follows save money in long run
+    \bad difficult to use, requires expertise
+    \bad maximum benefits only, if applied in every stage of development process
+    \good use lightweight formal methods (produce specifications of system, although no full coverage)
+    \bad single formalism not suited for whole process, use different formalisms \follows may cause problems when verification has to be assembled
+    \bad not fully automatic, problems often huge, computing power not enough
+    \bad formal languages are often hard to understand
+    \bad proof (by theorem prover/model checker may not be enough to convince certification authority)
+    \good counterexamples
+    \bad verifier may produce wrong results
+\end{itemize}
+
+\subsection*{Formal Models and Specifications}
+\begin{itemize}
+    \item categories for formal specification languages
+    \begin{description}
+        \item[algebraic languages]
+        \item[model-based languages]
+        \item[process algebras and calculi]
+        \item[logic-based languages]
+    \end{description}
+    \item
+    \begin{description}
+        \item[property-oriented] modeling in terms of properties, that system must satisfy
+        \item[model-oriented] mathematical model corresponding to particular implementation, closer to final implementation {\tiny (are used in later stages of design)}
+    \end{description}
+\end{itemize}
+
+\subsubsection{Algebraic Specification Languages}
+\begin{itemize}
+    \item characterize objects to be specified in terms of algebraic relationships between them
+    \item programs are many sorted algebras (collections of data, operations over data)
+    \item typically property oriented
+\end{itemize}
+
+\subsubsection*{Model-Based Specification Languages}
+\begin{itemize}
+    \item model-based style of specification, explicit mathematical model of system state and corresponding operations
+    \item state consists of set of external variables, preconditions, postconditions
+    \item Z, VDM (Vienna Development Method), Larch, Alloy
+    \item \emph{Z} based on typed set theory + first-order predicate logic, specification via set of schemas, typically based on a hierarchy of schemas
+    \item related to Z \follows B language and method
+    \begin{itemize}
+        \item a system is modeled as set of interdependent abstract machines
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Process Algebras and Calculi}
+\begin{itemize}
+    \item set of logical formalisms \follows describe concurrent and distributed systems, explicit model interaction, inter-process communication, synchronization
+    \item behavior is described using axiomatic approach and formalized terms (algebraic laws)
+    \item \emph{bisumulation equivalence} \follows formal reasoning about equivalence between processes
+    \item CSP (Communicating Sequential Processes), CCS (Calculus of Communicating Systems), ACP (Algebra of Communicating Processes), $\pi$-calculus, ambient-calculus, LOTOS
+\end{itemize}
+
+\subsubsection*{Logic-Based Languages}
+\begin{itemize}
+    \item logic in broad sense to describe systems and system properties
+    \item theorem provers, temporal (LTL, CTL) and interval logic (e.g. Duration Calculus)
+    \item state machines
+    \begin{description}
+        \item[moore machines] output depends only on state
+        \item[mealy machines] output depends on state and input
+    \end{description}
+    \item \emph{flowcharts} explicitly model program statements and control flow, hoare approach, dijkstras weakest transitions
+    \item \emph{petri nets}
+    \item \emph{kripke structures}
+\end{itemize}
+
+\subsubsection*{State Transition Systems}
+\begin{shaded}
+    $\mathcal{P}$ is a set of proposition, state transition system is tuple $\langle \mathcal{S}, \mathcal{I}, \mathcal{R}, \mathcal{L}\rangle$
+    \begin{itemize}
+        \item $\mathcal{S}$ finite set of states
+        \item $\mathcal{I} \subseteq \mathcal{S}$ set of initial states
+        \item $\mathcal{R} \subseteq \mathcal{S} \times \mathcal{S}$ transition relation
+        \item $\mathcal{L}:\mathcal{S}\longrightarrow 2^\mathcal{P}$
+    \end{itemize}
+\end{shaded}
+\begin{itemize}
+    \item \emph{trace} start in $\mathcal{I}$, repetedly append states reachable through $\mathcal{R}$
+    \item \emph{paths} infinite traces
+    \item state $s$ is \emph{reachable}, if there exists a path from $\mathcal{I}$
+    \item \emph{NuSMV}
+    \begin{itemize}
+        \item combination of components via
+        \begin{description}
+            \item[synchronous composition] (default in NuSMV), components evolve in parallel, perform transitions simultaneously
+            \item[asynchronous composition] interleaving model for evolution of component
+        \end{description}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Temporal Logic}
+\begin{itemize}
+    \item express properties of reactive systems modeled as Kripke structures
+    \begin{description}
+        \item[safety properties] nothing bad ever happens
+        \item[liveness properties] something desirable will eventually happen
+    \end{description}
+    \item most common: LTL (linear time temporal logic), CTL (computation tree logic)
+    \item \emph{PSL} (Property Specification Language), high level language for expressing temporal requirements
+    \begin{itemize}
+        \item origins in the hardware domain
+        \item superset of CTL and LTL
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Formal Methods for Verification and Validation}
+\subsubsection*{Testing and Simulation}
+\begin{itemize}
+    \item testing and simulation \follows commonly used for verification and validation
+    \item model must be executable
+    \begin{description}
+        \item[statically] execution of model
+        \item[dynamically] operation of real system
+    \end{description}
+    \item \emph{test-oracle} predict what system should do \follows from system requirements
+\end{itemize}
+\begin{description}
+    \item[simulation] use a model
+    \begin{itemize}
+        \item environmental simulation: simulate environment
+        \item good, when testing with environment is not possible (impossible: space flight, dangerous: nuclear power plant)
+    \end{itemize}
+    \item[forms of testing]
+    \begin{description}
+        \item[static testing] test without operating the system
+        \begin{description}
+            \item[walk-throughs, design reviews]  a form of code inspection, typically by peer-review
+            \item[fagan inspections] systematic methodology to find defects and omissions in development process
+            \item[formal proofs]
+            \item[type analysis] statically analyze type information, ensure that type errors don't occur at run-time
+            \item[control flow analysis] analyze control structure of program, formalized as graph
+            \item[data flow analysis] analyze flow of data of program, analyze operations on data, different forms of static analysis
+            \item[symbolic execution] run program using symbolic inputs, compare with expected result
+            \item[pointer analysis] analyze how program accesses pointers or heaps \follows memory leaks
+            \item[shape analysis] generalization of pointer analysis \follows determine information about heap-allocated data structures, also produces information for debugging
+        \end{description}
+        \item[dynamic testing] actual execution of system
+        \begin{description}
+            \item[behavioral testing] intended to evaluate behavior of system form perspective of external user
+            \begin{description}
+                \item[functional testing] evaluates compliance with functional requirements
+                \item[nonfunctional testing] evaluates nonfunctional characteristics (performance, reliability, safety)
+            \end{description}
+            \item[structural testing] test various routines and different execution paths, requires knowledge of internal implementation \follows white-box testing
+            \item[random testing] random choice about test cases
+        \end{description}
+        \item[black-box testing] tester has no knowledge about internal implementation of system, also \emph{requirement based testing}
+        \item[white-box testing] performed by test-engineers, knowledge of internal implementation
+    \end{description}
+    \item[test vector] set of inputs to be applied
+    \item[test coverage]
+    \begin{description}
+        \item[coverage-based testing] plan test activity according to test coverage
+        \item[requirements-based coverage] for how many requirements has been tested
+        \item[equivalence partitioning] partition test vectors into equivalence classes \follows similar, qualitative behaviors (black box view)
+        \item[boundary analysis] test vectors at extreme boundaries of equivalence class (at either side of boundary)
+        \item[state-transition testing] stimulate each transition of system \follows finite state machine
+        \item[structure based coverage] based on data-flow or control flow
+        \begin{description}
+            \item[statement coverage] measures portion of statements to be executed (often minimal requirement for coverage testing)
+            \item[branch coverage] measure coverage of paths
+            \item[call-graph coverage] each possible invocation tree of subroutines
+        \end{description}
+    \end{description}
+\end{description}
+
+\subsubsection*{Theorem Proving}
+\begin{itemize}
+    \item system and properties are expressed in common language
+    \item based on formal system \follows verify a property $\equiv$ general proof
+    \item generate lemmas as intermediate proofs
+    \item different theorem provers are based on different inference rules
+    \begin{description}
+        \item[automated theorem provers] fully automated
+        \item[interactive theorem provers] require human guidance
+        \item[proof checkers] no proof construction, verify existing proof to be valid
+    \end{description}
+\end{itemize}
+
+\end{document}

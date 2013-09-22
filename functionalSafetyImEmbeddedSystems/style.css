@@ -1,0 +1,32 @@
+table {
+
+    border-collapse:collapse;
+
+}
+
+
+
+table,th, td {
+
+    border: 1px solid black;
+
+}
+
+
+
+h5 {
+
+    font-size: 1em;
+
+    font-style: italic;
+    font-weight: normal;
+
+}
+
+
+
+h1, h2, h3, h4, h5 {
+
+    color: rgb(128,64,164);
+
+}

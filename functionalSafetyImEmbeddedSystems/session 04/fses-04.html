@@ -1,0 +1,461 @@
+ <link rel="stylesheet" type="text/css" href="../style.css"><style>img.latex-inline { vertical-align: middle; }</style>
+<h1>Functional Safety of Embedded Systems - Part 4 - Embedded Systems Software / Evaluation and Validation</h1>
+<ul>
+<li>reuse of <em>intellectual property</em> (IP) =&gt; saves cost &amp; effort<ul>
+<li>embedded operating systems</li>
+<li>middleware (intermediate layer between the OS and application software)<ul>
+<li>extend communication</li>
+<li>real time database</li>
+<li>API (of standard components)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Embedded Operating Systems</h2>
+<h3>General Requirements</h3>
+<ul>
+<li>very simple systems =&gt; does not need OS</li>
+<li>OS =&gt; task switching/ dispatching, I/O, scheduling<ul>
+<li>Special processors for this may exist.</li>
+</ul>
+</li>
+<li>systems with virtual memory =&gt; distinguish between address spaces, processes, threads,</li>
+<li><strong>Each process has its own address space, whereas several threads may share an address space.</strong></li>
+<li>RT-OS must have:<ul>
+<li>communication &amp; synchronization between processes &amp; threads</li>
+<li>must be small</li>
+<li>flexibly tailored towards application</li>
+<li>configurability (object orientation, aspect-oriented programming, conditional compiling, advanced compile-time evaluation, linker-based removal of unused functions)</li>
+</ul>
+</li>
+<li>peripheral devices<ul>
+<li>no hard-disk, no keyboard, no screen, no mouse</li>
+<li>devices =&gt; maybe direct handling by application =&gt; OS does not take care about this =&gt; drivers in "user space"</li>
+<li>connect interrupts to any process =&gt; use OS service calls</li>
+<li>=&gt; real-time operating systems</li>
+</ul>
+</li>
+</ul>
+<h3>Real-Time Operating Systems</h3>
+<p><em>"A real-time operating system is an operating system that supports the construction of real-time systems."</em></p>
+<ul>
+<li>key requirements:<ul>
+<li><em>timing</em> must be <em>predictable</em><ul>
+<li>upper bound must be guaranteed</li>
+<li>scheduling must be deterministic</li>
+<li>interrupts must be possible to disable</li>
+<li>prevent unpredictable disk head movement (if HDD is used)</li>
+</ul>
+</li>
+<li>manage <em>task scheduling</em><ul>
+<li>OS must be aware of deadlines</li>
+</ul>
+</li>
+<li><em>manage time</em> (if internal processing is linked to absolute time in physical environment)<ul>
+<li><em>global clock synchronization</em><ul>
+<li><em>Universal Time Coordinated</em> (UTC): defined by astronomical standards</li>
+<li>international atomic time (temps atomic internationale TAI)</li>
+</ul>
+</li>
+<li>networked embedded systems: synchronize via network</li>
+<li>sometimes only provision for precise local delay</li>
+</ul>
+</li>
+<li><em>must be fast</em></li>
+</ul>
+</li>
+<li>includes OS kernel: manages resources found in every real time operating system</li>
+<li>available RTOS:<ul>
+<li><em>fast proprietary kernels</em>: not for complex systems, tend to be not predictable</li>
+<li><em>real-time extensions to standard OS</em>: =&gt; hybrid systems<ul>
+<li>mainstream operating systems<ul>
+<li><em>RT-kernel</em> for RT-tasks, rest of OS is one of those tasks</li>
+<li>comforts:<ul>
+<li>standard OS API, GUI, filesystem, enhancement to OS</li>
+<li>problems in standard-OS don't affect RT-part</li>
+</ul>
+</li>
+<li>problems:<ul>
+<li>device drivers (OS brings it's own)</li>
+<li>RT-tasks generally cannot use the OS</li>
+</ul>
+</li>
+<li><em>research systems</em> that try to overcome those limitations: Melody, Gupta, MARS, Spring, MARUTI, Arts, Hartos, DARK</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Virtual Machines</h3>
+<ul>
+<li>emulate several processors on single processor =&gt; virtual machines</li>
+<li>=&gt; timing predictability may be lost</li>
+<li>PikeOS</li>
+</ul>
+<h3>Resource Access Protocols</h3>
+<h4>Priority Inversion</h4>
+<ul>
+<li>cases, where a process needs exclusive access to some resources (shared variables, ...) =&gt; <em>critical sections</em>, mutex primitives</li>
+<li>request operation P(S), release operation V(S), =&gt; <em>semaphore</em></li>
+<li>=&gt; mutually exclusive access to resources may change the priority of tasks (<strong>priority inversion</strong>) =&gt; preemption needed</li>
+</ul>
+<h4>Priority Inheritance</h4>
+<ul>
+<li>deal with priority inversion =&gt; <strong>priority inheritance</strong></li>
+<li>available in many RT-OS<ul>
+<li>tasks are scheduled according to priorities, same priority =&gt; first come, first serve</li>
+<li>when task T1 has high priority and requests access to a critical section occupied by T2 with lower priority, T2 inherits T1s priority</li>
+<li>when T2 frees the critical section, its priority is reduced back to its normal priority, the task with the highest priority waiting for the critical section get granted</li>
+<li>priority inheritance is transitive</li>
+</ul>
+</li>
+<li>This ensures, that the high priority process gets access to the critical section according to its own priority</li>
+<li>priority inheritance can still lead to deadlocks</li>
+<li>alternative approach: <strong>priority ceiling protocol</strong></li>
+</ul>
+<h2>ERIKA</h2>
+<ul>
+<li>entire application has to be hosted on small micro-controllers</li>
+<li>OS services =&gt; reduce to minimum (multi-threading, periodic and aperiodic tasks, shared resources)</li>
+<li>OSEK-group defined minimal set of services: OSEK/VDX</li>
+<li>quasi reference implementation for RT-micro-controller-OS, ERIKA (open source)<ul>
+<li>all kernel objects statically defined at compile-time (no dynamic memory allocation, no dynamic creation of tasks)</li>
+<li>configuration language <em>OIL</em></li>
+<li>provides stack sharing</li>
+</ul>
+</li>
+<li><em>Conformance Classes</em>: specify subset of OS-API<ul>
+<li><em>BCC1</em>: smallest, minimum of 8 tasks with different priority, 1 shared resource</li>
+<li><em>BCC2</em>: BCC1 + more than one task with same priority</li>
+<li><em>ECC1</em>: BCC1 + extended tasks, that can wait for event to disappear</li>
+<li><em>ECC2</em>: multiple activations + extended tasks</li>
+<li><em>EDF</em>: <em>earliest deadline first</em> scheduler</li>
+<li><em>FRSH</em>: extends EDF with resource reservation scheduler (based on IRIS algorithm)</li>
+</ul>
+</li>
+<li>API for controlling interrupts, <em>Interrupt Service Routine</em> (ISR):<ul>
+<li>category 1: simple and fast, does not implement call to scheduler</li>
+<li>category 2: call some primitives that change scheduling behavior, end of this ISR is <em>rescheduling point</em></li>
+</ul>
+</li>
+<li><em>ORTI</em> file/ language =&gt; describe where various objects are allocated, generated by OIL compiler</li>
+</ul>
+<h2>Hardware Abstraction Layer (HAL)</h2>
+<ul>
+<li>access hardware through API</li>
+<li>neither OS, nor middleware</li>
+</ul>
+<h2>Middleware</h2>
+<ul>
+<li>provide services to software, that OS does not provide</li>
+<li>e.g. communication over long distances and local communication</li>
+<li>for soft rt-systems OK, for hard rt-systems probably too much overhead</li>
+</ul>
+<h3>OSEK/VDX COM</h3>
+<ul>
+<li>communication standard for OSEK (automotive operating system)</li>
+<li>provides <em>interaction layer</em> as API</li>
+<li>communicates via <em>network layer</em> and <em>data link layer</em></li>
+</ul>
+<h3>CORBA (COmmon Request Broker Architecture)</h3>
+<ul>
+<li>adopted for embedded systems, communication</li>
+<li>object request broker (ORB)</li>
+<li>remote objects =&gt; standard interface, send information and parameters about the object to be accessed</li>
+<li><em>RT-CORBA</em> has predictability<ul>
+<li><em>end-to-end predictability</em> of timeliness in a fixed priority system</li>
+<li>addresses priority inversion (bound time, in which this can happen)</li>
+<li>thread priority management</li>
+</ul>
+</li>
+</ul>
+<h3>MPI (message passing interface)</h3>
+<ul>
+<li>alternative to CORBA, communication between different processors</li>
+<li>synchronous and asynchronous message passing library, designed for high performance computing</li>
+<li>partitioning of computations/ data among processors explicitly</li>
+<li>synchronization is implied, explicit synchronization is also possible</li>
+<li>much work for programmer due to much explicit stuff</li>
+<li>does not scale well for number of processors</li>
+<li>MPI/RT =&gt; real time version, layer between OS and normal MPI</li>
+<li>targets homogeneous processor designs, assumption, that memory access is faster than communication</li>
+</ul>
+<h3>POSIX Threads (Pthreads)</h3>
+<ul>
+<li>API for threads at OS level</li>
+<li>shared memory communication</li>
+<li>multi-core processors, mutual exclusion, completely synchronized</li>
+</ul>
+<h3>OpenMP</h3>
+<ul>
+<li>parallelism is explicit (via "pragma"), computation partitioning, communication, synchronization are implicit</li>
+<li>shared memory hardware</li>
+</ul>
+<h3>UPnP (Universal Plug 'n' Play)</h3>
+<ul>
+<li>extension of plug 'n' play for network connected devices</li>
+<li>only data is transfered</li>
+<li>may target: printers, storage, switches</li>
+</ul>
+<h3>DPWS (Device Profiles for Web Services)</h3>
+<ul>
+<li>more general than UPnP</li>
+<li>"minimal set of implementation constraints to enable secure web service messaging, discovery, description and eventing on resource constrained devices"</li>
+</ul>
+<h3>JXTA (JuXTApose)</h3>
+<ul>
+<li>loose coupling over Internet-based communication</li>
+<li>open-source peer-to-peer protocol specification</li>
+<li>set of XML messages</li>
+<li>creates virtual overlay network</li>
+</ul>
+<h2>Real-Time Databases</h2>
+<ul>
+<li>databases may have time-constraints<ul>
+<li>e.g. soft: flight reservation system</li>
+<li>e.g. hard: target recognition in military systems</li>
+</ul>
+</li>
+<li>main memory databases, use of flash memory (predictability)</li>
+<li>reduce ACID requirement (atomicity, consistency, isolation, durability)</li>
+</ul>
+<h2>Evaluation and Validation</h2>
+<ul>
+<li><strong>validation</strong>: The process of checking whether or not a certain design is appropriate for its purpose, meets all constraints and will perform as expected. =&gt; <em>(formal) verification</em><ul>
+<li>validation and design should be intertwined</li>
+</ul>
+</li>
+<li><strong>evaluation</strong>: process of computing quantitative information of some key characteristic of a certain (partial) design.</li>
+</ul>
+<h3>Multi-Objective Optimization</h3>
+<ul>
+<li>Design Evaluation =&gt; characterization by several criteria (worst case/ average execution time, energy consumption, code size, dependability, safety)</li>
+<li>Give the designer back a set of "reasonable designs" among which he has to choose.</li>
+<li>try to optimize several solutions with respect to multiple objectives</li>
+<li>=&gt; pareto-front/ pareto-equilibrium =&gt; will not be optimal for all objectives, but as good as possible for all</li>
+<li><em>Design Space Exploration</em> on pareto points (DSE) =&gt; try to find pareto optimal solution</li>
+</ul>
+<h3>Relevant Objectives</h3>
+<ol>
+<li><em>Average Performance</em>: simulation</li>
+<li><em>Worst-Case Performance/ Real-Time Behavior</em>: timing analysis</li>
+<li><em>Energy</em> Power Consumption_</li>
+<li><em>Temperature/ Thermal Behavior</em></li>
+<li><em>Reliability</em></li>
+<li><em>Electromagnetic Compatibility</em></li>
+<li><em>Numeric Precision</em></li>
+<li><em>Testability</em>: cost for testing can be quite large</li>
+<li><em>Cost</em>: silicon, ...</li>
+<li><em>Weight</em>, <em>Robustness</em>, <em>usability</em>, <em>extendability</em>, <em>security</em>, <em>safety</em>, <em>environmental friendliness</em>, ...</li>
+</ol>
+<h2>Performance Evaluation</h2>
+<ul>
+<li>predict performance of system</li>
+</ul>
+<h3>Early Phase</h3>
+<ul>
+<li><strong>Estimated Cost and Performance Values</strong>: generating sufficiently precise estimates requires considerable effort.</li>
+<li><strong>Accurate Cost and Performance Values</strong>: test real software on (near to) real hardware =&gt; more precise, but more expensive and more time consuming</li>
+</ul>
+<h3>WCET Estimation (Worst Case Execution Time)</h3>
+<ul>
+<li>WCET: largest amount of time for any input and any initial state</li>
+<li>=&gt; often not possible to compute (halting problem)</li>
+<li>=&gt; compute good <em>upper bounds</em> for WCET =&gt; <em>estimated worst case execution time</em><ol>
+<li><img class='latex-inline math-true' alt='WCETestleqWCET' id='WCETestleqWCET' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAAAOBAMAAADQ2JPBAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAie8QZpkiu82r3XZURDL7YI05AAABwklEQVQ4y62ST0gUURzHP9uMs26zzmgl4e6hPHgKcj0IgpELlV1CVyEPXlpI6WCwHkIvCuLN2+rBbnUoD9FlC6LAojnlRdBrFDldPIW7FRSiSL83z10amF08+GXm93t/PvN9b37vEft13uwe494MmCOv9rJ8/tvW3hVb69hvXyOsZB6icVIjT5fHc7AE49APzkt47dPyB74nMCtMhb3MRypG4hQZxirBY1gEaZS3YUDWvizffSMxzcOQlz0XpEi8xZdxy1PrJC8hPaNT0AQ0F/EdnzMl7v/v1TOvcyTuwBWsDJzj2hYmNFVk1pLVsrbUhoIf2lfvk+NGHdw6CmY/kt3J3wC3qOmd9IoeDuld1bsObleC3pbjl3fldwslPTtKTKXZms8HFYyObRrh8WltPUHhi2Q3K0HeFzgqHdTMngXReOs1wl3tXc7hrkpulmtiZzAOUfV1VA0uDPJ+aOp5Rpve9urjlHUZCh5uqyrhVRiSm/kbHugaxL0f1sxuMlfd4ka+Ll4tcTx4RJPpm8KkDtYvHmKP/iwxsOmRWmjyQicRifOmO01j9WEkGDt7Pc8pyL7zyf7qxTZV+9Zd0am4nlT/AIoUlstrjqGbAAAAAElFTkSuQmCC'> (bounds should be safe)</li>
+<li><img class='latex-inline math-true' alt='WCETextWCETWCET' id='WCETextWCETWCET' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPEAAAANBAMAAACKtZVYAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAie8QZpkiu82r3XZURDL7YI05AAACkElEQVQ4y71TTWgTURD+4m42aTe7SdUibcCmB0+CXXoSqiZqLQj+JDkU7KVbf/BQIfGiR0Hw4C0KKqK0gvYggqb+QSniCipUAum1CM0KWlAk2WibUtIW570XbcA0oQcd9u3szPvezsw38+D6sUXu6sfgBUCOjecjmFlsad3hGmtbah3D37IxeEencWDBdC+awKHg9s/QRs+3xKPtsdFrA1HgKjAA9AD6I+CpDa0EfGqC7GC4RuSNwb0puO9BSgPf0lB3ATkTeiCF41DIdwu4DNBHYRoIU1UhKmcWTUmcqxW5IVyasJnqGaEXeb0hqJTmCm04wGZyHrXpJ4rFKvB1QLMhdTIoz9PWbWxK41StyI3gygke+AwLzAp+42AW6A6QlWKM6cgDO6EYLI09WciEctg5qiOiUluQsFFTGsD1G8zC134xFSEp4yACDDLLhDSPl+zYKt99jUjOPAj4U+JsLnhduGtLfbjvjsHU1DNhqo6slWRyLQlbK06EuJtbWd0uzBHribTYjcPF1MW1YK9oHb5NYjaEf+Cl+x5XTvqcvL5K/VfKwnaHwGj3JEXSp5H4SNpPpDBiHlIrSJXXIt+vrrk+XGnjoYdGKjWWIsoKS3GeFrWomYaClF9kXYjCf5PdALphqgFpGWyAdNaKrX3au97A8AOjKnIduJhsi0/2XdH1BSKaMXWFFnUgTJs0bwUxFAkLfkaBQtftGBH0EzgrWuGxvmvuvmlftLrm9eEVmUqLhnMKKK8i+zhpQ6ZwWQNK8s9QePjDLkKwl7Dt5clty1DjxTTCGQteE26rOvL68N8ywyvSOOFJ/hAu9pxaMvRkcvyShRddQdSX3ZD2dkt28z4T/1nUI++/7H8LV+af/P0X99Hr8uq+QMAAAAAASUVORK5CYII='> (bounds should be safe)</li>
+</ol>
+</li>
+<li>architectural features to reduce average execution time often omitted.</li>
+<li><img class='latex-inline math-true' alt='BCET' id='BCET' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAALBAMAAADCerOgAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMARJm7iWYyEHbdVCLNq+9HnhJFAAAA+ElEQVQY0yWNMUvDYBCGn0+aNBJrnbq2oHNbtC4ullLEpVL8Bd/i4NQMjqJBFCsiav9AM3dphoKlgwV3If/ATs5RGhGh4H3pDXfPve/xHqhKrbkLHB8enKA+as1yKdNrLRo90ToenQ1OfZxPKIbY9RxWzFisO8j79hdkYzgSoV0gV2UitA3D8KIuFME7Nlqz7vMiwh/qmYoAIdmEe0NTbbpKBpshC9JS84eZmY/plnnC/nF/l9bKDJPMTrqtleCbRMiC1Qgtg+VlPsBNeBO6hcsACkhMahU9ziNeNZa8Hnq4VXBi45z1u1d74G7dtGHU717vBzjluQ//gZg97cUjndQAAAAASUVORK5CYII='> &amp; <img class='latex-inline math-true' alt='BCETsafe' id='BCETsafe' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE0AAAAPBAMAAABTt1/kAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMARJm7iWYyEHbdVCLNq+9HnhJFAAABUElEQVQoz42QvUtCcRSGH7/uvWF+TA4tGdVSoFK22JCEREWGRLUFF6IhGnJojJJIsiIq/wEvQQ0u3iEoGlJaI3Bsy6lWCw0RhH6iYFyQepf3Pec8cA4HTP5gZAJYmp3ZwPQWjPi81nS0MZ3GoO042242Eyjv0K8jhR3YytwbuWNwJaRPkMuwKBoxD44AD0ZuDHL6XlikIrwgoao4E9wZuTqmS/zNpCNXOW2mvGqkMFWzgzqNdlE5KzX9/Nc82nLrBdK3vdYqzCWaBzDe4SztQ3u98EVVJBv0FFGFUetwzra7NOxVnkQ6gn0NPIgFojxZZX4NeSGGdUUXH4uzW+RRxSZuz8WxB0ARH7JPblncV7AMIUljJ5M6CInuUDIGt5nU4ZSG4qskYK6QZwBGkOtZusvB6Dofbp6RC8S7c0qfZr4e1hF/SmZ1/tJNmH/ptbXyB5TtU1DTyCYHAAAAAElFTkSuQmCC'> are analogously defined</li>
+<li>=&gt; bounds must be computed from real machine code<ol>
+<li>executable object file</li>
+<li>control-flow graph</li>
+<li>loop transformations, recursive functions, virtual loop unrolling</li>
+<li>=&gt; CRL (control flow representation language)</li>
+<li>static analysis (reading designers annotations)</li>
+<li>value analysis (possible values for registers and local variables, predict access to memory)</li>
+<li>cache &amp; pipeline analysis (LRU - last recent usage, what is in cache</li>
+<li>=&gt; derive WCET (store in ILP model, take runtime of block, multiply by frequency of block) =&gt; <em>implicit path enumeration</em></li>
+</ol>
+</li>
+</ul>
+<h3>Real-Time Calculus (RTC)</h3>
+<ul>
+<li>works with rate of incoming events</li>
+</ul>
+<h2>Energy and Power Models</h2>
+<ul>
+<li>closely related (Energy is quadratic function of Power)</li>
+<li>Tiwari:<ul>
+<li>measurements of real systems</li>
+<li>values are associated with executed instructions</li>
+<li>=&gt; base cost, inter-instruction cost</li>
+</ul>
+</li>
+<li>Simunic:<ul>
+<li>based on data sheets</li>
+<li>computes contribution of all components of embedded system</li>
+<li>information from data sheet may be averaged/ less precise</li>
+</ul>
+</li>
+<li>Russel &amp; Jacome:<ul>
+<li>precise measurement of two fixed configurations</li>
+</ul>
+</li>
+<li>Lee:<ul>
+<li>detailed analysis of effects of pipeline</li>
+<li>no multicycle operations/ pipeline calls</li>
+</ul>
+</li>
+<li>Steinke:<ul>
+<li>precise measurement using real hardware</li>
+<li>consumption of processor and memory</li>
+<li>included in <em>energy-aware compiler</em> from TU Dortmund</li>
+</ul>
+</li>
+<li>WATTCH power estimation tool<ul>
+<li>estimates power consumption of microprocessor systems at architectural level, without information about circuits or layouts</li>
+</ul>
+</li>
+</ul>
+<h2>Thermal Models</h2>
+<ul>
+<li>more energy consumption =&gt; components get hot</li>
+<li>=&gt; failures</li>
+<li>=&gt; shortage of system life</li>
+<li>thermal models =&gt; laws of physics =&gt; thermal conductance/ thermal resistance</li>
+<li>equivalent models to electrical models (masses storing heat are capacitors)</li>
+<li><em>Tools</em>: HotSpot</li>
+</ul>
+<h2>Risk and Dependability Analysis</h2>
+<ul>
+<li>Embedded systems can cause danger to properties and lives. =&gt; Reduce probability of failure.</li>
+<li>Definitions<ul>
+<li><strong>Service</strong> is delivered by a system as perceived by its users. <strong>Correct Service</strong> is delivered, when the service implements the system function.</li>
+<li><strong>Service Failure</strong>, <strong>System failure</strong> or just <strong>Failure</strong> occurs, when the service of a system deviates from the correct service.</li>
+<li><strong>Error</strong> exist, if there are system states, that lead to a service failure.</li>
+<li>A <strong>Fault</strong> is the reason for an error.</li>
+<li><strong>Reliability</strong> <img class='latex-inline math-true' alt='Rt' id='Rt' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAASBAMAAAC+3HPqAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMARJm7iasiMhDv3VTNdmYuyMICAAAAy0lEQVQY00WPPwtBYRSHnyu5yJ/JTL7ANRiUhUVhMUlK3cFouIVBkZt8AJPZbnATszLc2WIwyCrlEyg5743rHZ7ep3Pe33kPfI9uCRz8M1OY/L2lEDRBM/LZJnpGeaghmNpUCchzF3LiNThYUSkuoCx+hDY9SEjzVvxF3KWPdumYpCTvvVvDHiISPpYZKx6ej/A8liFtMoSzuPQnHW62yiuGvLy0jYGat0xAnfmmQu9JwOR6h8Lv+1pJMZzz9/FuQcv3gUL3v6+mSic+sdknIBOccYwAAAAASUVORK5CYII='> is the probability of the time until the first failure occurs (after time <img class='latex-inline math-true' alt='t' id='t' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAKBAMAAABlIDIAAAAAJ1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAilU6eAAAADHRSTlMAzSLvZqtEdjK7VBDasT5UAAAAMElEQVQI12NgYFRgYFBmYGBwZWBINy1iYDBiYOAwYGBgD2Bg4FygwMCs4MDAXrIBAEWdBLCATlSAAAAAAElFTkSuQmCC'>)</li>
+<li><strong>Failure Rate</strong> <img class='latex-inline math-true' alt='lambdat' id='lambdat' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAASBAMAAABY9biuAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAiavvZs0iu0SZMhDddlRHAmAWAAAAuUlEQVQY0z1PIQ7CQBCcAu01B21qQKD6hIYQNOEFPOGAB9AngCUhIQgEHgGGc9h6TAVB9xlIZluOTWbuZjOZ3QWauhExXHUPJF062bLCA8JLSde6uRQaE2fAN1Ai+0QBrGjc8Ls2CObAjNESqBLoHPvRG6HEdDLEfCecRBMWH5E6a2SQHqFTRDSI+WLvllGqMhIVPuGXHNQ2U3gVemwWOCF6WSj723lb88OdUK+HoZM6IQXJ/+AdEQFfavUev3P9XngAAAAASUVORK5CYII='> is the probability of a system failure between time <img class='latex-inline math-true' alt='t' id='t' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAKBAMAAABlIDIAAAAAJ1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAilU6eAAAADHRSTlMAzSLvZqtEdjK7VBDasT5UAAAAMElEQVQI12NgYFRgYFBmYGBwZWBINy1iYDBiYOAwYGBgD2Bg4FygwMCs4MDAXrIBAEWdBLCATlSAAAAAAElFTkSuQmCC'> and <img class='latex-inline math-true' alt='tdeltat' id='tdeltat' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAMBAMAAADi7eJ+AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAzSLvZqtEdjK7VBCZ3Yk7Z8RqAAAAfklEQVQI12NggIICMMlReg1MMyqAqQAwycegABZQZkASZCmACLgiCzKYgQXSTYuQBNmDN4AFjJBUck9iLgAJcBgAOawzZ1rOnAOkF7AeAAmwByCp3M/AVwAS4FyA5KREBsYGkACzggNCcCNDK1iAvWQDQpCtqgAuAAIHGBAAAFkuGfinAWRzAAAAAElFTkSuQmCC'></li>
+<li><strong>Mean Time To Failure</strong> (MTTF) is the average time until the next failure, provided the system was initally working.</li>
+<li><strong>Mean Time Between Failures</strong> (MTBF) is the average time between to failures.</li>
+<li><strong>Mean Time To Repair</strong> (MTTR) is the average time until the system is repaired, provided it is initially broken.</li>
+<li><strong>Availability</strong> is the probability, that a system is in an operational state.</li>
+</ul>
+</li>
+<li>Faults can exist, without leading to a service failure</li>
+<li>failure rates typically not constant (bath-tub)</li>
+</ul>
+<p><img alt="Failure Rate bath tub" src="failure-rate.png" /></p>
+<ul>
+<li><img class='latex-inline math-true' alt='MTBFMTTFMTTR' id='MTBFMTTFMTTR' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAAAMBAMAAADhdi4TAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMARJm7Iu/diRAyq2Z2zVQt64PYAAACE0lEQVQ4y62Tz2sTQRTHP4mr2U3SJIqH6iUBsYIXg0F6EGVvehD15Ekx5h9oaWEjtYUggihIcxO8pJBDj9F/QGMF8aBYeq2H9SJ4sekPSGol+GY2u2bWgxfn8N3deZ+Z77w3byFxrgzWrfup2sLPuZp8Ttcvwsnd+sKQsWFiIdyZrnd8Fc6alHemszpVCpRju3NnXQm+qEJmmzSZHteg1aBVILEHr8aNTCyEiy6ZgoqmTWqFN1jdQHEGpG5K7G0PjvY4QbrMdXgP+S4pWXDcMDKwEPYkCXfcKKASTdpYX7X6aq/cvsQ+7GE/X6fJ4S5X4TxsuUyUbLdpGBlYCG/wyGHcKKBk7jbWE60N2Yu0nJvuNrmJWXm5oXcekrgHy34Kc8QwrfaQWQyjkLJUCiPN+3yStJ3mJpN5VejP+joPfpyS2eLiJb2wXZFR4i9sBPffrRtGEZXt6RbRWnzt+bpfVu1CUU1UlEhBHTnHFLGMYligyWqQUbtyIThORB0qE6lHpqpj8zmW1MQvJVJQdqCGFTcysECPlHCNjCJK+inSDd3DEvs2yReVdlhQ60AVH7N0MSzQZT88R2Q0olr6IlujW88O5PFdfht7/09BGzxbITeItUIcC3SrETOKqPGLHJDsOTy8U3jK/E6T7Om+JPp45uPaZSyv/9L0iWGBXpl5YBpF1NrdRfnUant919rs8p9G8l/Ab7tTzlDsIFByAAAAAElFTkSuQmCC'></li>
+</ul>
+<p><img alt="Mean Time correspondence" src="mean-time.png" /></p>
+<ul>
+<li><em>Fault Tree Analysis</em> (FTA): top-down method of analyzing risk. Starts with possible damage and possible scenarios. Connect them using AND and OR gates.</li>
+<li><em>Failure Mode and Effect Analysis</em> (FMEA): Starts with components and tries to estimate reliability. =&gt; compute reliability of system.</li>
+</ul>
+<h2>Simulation</h2>
+<ul>
+<li>common technique for evaluation and validation</li>
+<li>execute model on general purpose computers</li>
+<li>for Cyber physical systems, limitations exist:<ul>
+<li>Simulation is slower than actual system =&gt; timing may not work, when simulation system is directly interfaced with environment.</li>
+<li>Simulations in physical environment may be unsafe (car with simulated control software).</li>
+<li>Huge amounts of Data must be simulated.</li>
+<li>Actual systems are to complex to really simulate.</li>
+</ul>
+</li>
+</ul>
+<h2>Rapid Prototyping and Emulation</h2>
+<ul>
+<li><strong>Emulation</strong> is the process of executing a model of the system-under-design, where at least one component is not simulated on some host computer.</li>
+<li><strong>Fast Prototyping</strong> is the process of executing a model where no component is represented by simulation.</li>
+</ul>
+<h2>Formal Verification</h2>
+<ul>
+<li>verification techniques can be classified by use of type of logic</li>
+<li><em>Propositional Logic</em>: boolean logic, boolean checkers, tautology checkers, equivalence checkers</li>
+<li><em>First Order Logic</em> (FOL) includes <img class='latex-inline math-true' alt='exists' id='exists' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAMBAMAAABCcoqQAAAAFVBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAA9huxxAAAABnRSTlMAIquZEN0Pr9q2AAAAHUlEQVQI12MQUlJSYgABZgecJJOSkipuWaAJqgwAiNwD+vhbOUEAAAAASUVORK5CYII='> and <img class='latex-inline math-true' alt='forall' id='forall' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAANBAMAAABiGeI2AAAAJ1BMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAilU6eAAAADHRSTlMAZkQQq7siiZlUdt11XG9zAAAAQklEQVQI12MQYGBgUGZwBpIBDIoMDGwFDKwMDBwJDOwuLq5g7kSwlAOQlGQGkSZcCkCSxRRIMDBFgUiGzWDSgIEBAAfNBmh5Cl0lAAAAAElFTkSuQmCC'> =&gt; Hoare calculus</li>
+<li><em>Higher Order Logic</em> (HOL) based on lambda-calculus and allows functions to be manipulated like objects.</li>
+<li><em>Model Checking</em>: Need model to be verified and properties to be verified.</li>
+</ul>
+<h2>Testing</h2>
+<ul>
+<li>Expectations for embedded/ cyber-physical systems are higher, as they may be safety-critical.</li>
+<li>Testing of timing-critical applications has to validate timing behavior.</li>
+<li>Testing in final environment may be dangerous (e.g. nuclear power plant).</li>
+<li><em>Early consideration</em> and planning of testing important, although not common practice.</li>
+<li>SUD =&gt; DUT (design under test) =&gt; <em>test patters</em><ol>
+<li>test pattern generation</li>
+<li>test pattern application</li>
+<li>response observation</li>
+<li>result comparision</li>
+</ol>
+</li>
+</ul>
+<h3>Test Pattern Generation for Gate Level Models</h3>
+<ul>
+<li>Identify set of patterns, that distinguish correct from faulty system. =&gt; usually based on <em>fault modes</em></li>
+<li>Many techniques for test pattern generation are based on stuck-at-fault model.</li>
+</ul>
+<h3>Self-Test Programs</h3>
+<ul>
+<li>Hard to access internals of integrated circuits, especially at full speed (testers must be at least as fast as the system).</li>
+<li>Self-Test/ Diagnostic Programs for processors have existed for years.</li>
+</ul>
+<h3>Fault Coverage</h3>
+<ul>
+<li><em>fault coverage</em>: percentage of potential faults that can be found by a test pattern set. Good product quality: fault coverage of 98-99% needed</li>
+<li><em>correctness coverage</em>: the correct system must be recognized as correct.</li>
+</ul>
+<h3>Fault Simulation</h3>
+<ul>
+<li>Not feasible to predict complete behavior of system in the presence of faults. =&gt; Behavior often simulated =&gt; fault simulation<ul>
+<li>Know the effect of a fault on all components.</li>
+<li><em>Redundant Faults</em>: Do not affect the behavior of the system.</li>
+<li>Know, whether mechanism for improving fault tolerance actually works.</li>
+</ul>
+</li>
+<li>Large input space, large number of possible faults =&gt; fault simulation is time consuming and expensive.</li>
+<li><em>Parallel Fault Simulation</em>: Test n different patterns in parallel. n is the machine word size.</li>
+</ul>
+<h3>Fault Injection</h3>
+<ul>
+<li>For actual systems =&gt; use fault injection (bring the system into a faulty state).<ul>
+<li>Local faults in the system</li>
+<li>faults in the environment</li>
+</ul>
+</li>
+<li>several kinds of fault injection:<ul>
+<li>fault injection at hardware level (pin manipulation, radiation)</li>
+<li>fault injection at software level (e.g. toggling some memory bits)</li>
+</ul>
+</li>
+</ul>
+<h2>Design for Testability (DfT)</h2>
+<ul>
+<li>Testing should not come as an afterthought, else testing may be very hard.</li>
+</ul>
+<h3>Scan Design</h3>
+<ul>
+<li>All flip-flops storing states are connected to form serial shift registers.</li>
+<li>JTAG is standard for this.</li>
+</ul>
+<h3>Signature Analysis</h3>
+<ul>
+<li>Responses can be compacted =&gt; avoid shifting out the response.</li>
+<li>Response becomes <em>signature</em>. <em>linear feedback shift register</em> (LFSR)</li>
+</ul>
+<h3>Pseudo-Random Test Pattern Generation</h3>
+<ul>
+<li>For large chips this will speed up shifting the test pattern.</li>
+</ul>
+<h3>Built-In Logic Block Observer (BILBO)</h3>
+<ul>
+<li>Proposed as circuit combining test pattern generation, test response compaction and serial scan thing.</li>
+</ul>

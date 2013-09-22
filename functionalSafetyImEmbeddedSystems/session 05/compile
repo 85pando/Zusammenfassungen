@@ -1,0 +1,15 @@
+#!/bin/bash
+
+name=$1
+
+echo "Converting $1.md to $1.html"
+#mdlatextab $1.md > $1.html
+python -m markdown -x latex -x gridTable $1.md > $1.html
+
+echo 'Including the stylesheet'
+sed -i '' -e '1s%^% <link rel="stylesheet" type="text/css" href="../style.css">%' $1.html
+
+echo 'removing cache file'
+rm latex.cache
+
+echo '    ...done'

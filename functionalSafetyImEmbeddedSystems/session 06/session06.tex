@@ -1,0 +1,335 @@
+\documentclass[a4paper, 10pt]{article}
+
+%\usepackage{scalefnt}
+%\usepackage{parcolumns}
+
+\usepackage{newclude}
+\include{../zusammenfassung}
+
+\begin{document}
+
+\Gruppe{Stephan Heidinger}{fses - Introduction \& Concepts}
+\Header{Functional Safety in Embedded Systems}{Session - 06}{Stephan Heidinger}
+
+%\begin{shaded}
+%Dieses Dokument wurde unter der Creative Commons - Namensnennung-NichtKommerziell-Weitergabe unter gleichen Bedingungen (\textbf{CC by-nc-sa}) veröffentlicht. Die Bedingungen finden sich unter \href{http://creativecommons.org/licenses/by-nc-sa/3.0/de}{diesem Link}. \\
+%\centerline{\includegraphics[scale=1]{../cc-by-nc-sa.png} }
+%\end{shaded}
+
+%\textit{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}
+%Find any errors? Please send them back, I want to keep them!}
+
+%\section*{something}
+
+%\section*{more}
+
+\section*{Introduction}
+\subsection*{Complex Safety-Critical Systems}
+\begin{shaded}
+    A \emph{complex safety-critical system} is a system, whose safety cannot be shown solely be test, whose logic is difficult to comprehend without the aid of analytical tools, and that might directly or indirectly contribute to put human lives at risk, damage the environment, or cause big economical losses.
+\end{shaded}
+\begin{itemize}
+    \item higher performance and lower price gained through increasing complexity \follows software size is growing exponentially
+    \item reasons for complexity:
+    \begin{description}
+        \item[number of functions]
+        \item[number of states]
+        \item[discrete behavior] discrete systems with discontinuous behavior \follows small input deviation may cause large output deviations
+        \item[invisibility] at least 5 of 9 diagram types must be used to properly model systems architecture
+    \end{description}
+    \item different levels of critical systems
+    \begin{description}
+        \item[buisnes-critical] high economical loss
+        \item[mission-critical] failures will lead to mission not possible
+        \item[safety-critical] risk to human life
+    \end{description}
+    \item what to do on failures
+    \begin{description}
+        \item[fail-operational] required to operate also in degraded conditions (some parts of the system not working)
+        \item[fail-safe] safely shut-down in case of single or multiple failures
+    \end{description}
+    \item reasons for systems to fail
+    \begin{description}
+        \item[inherently incapable design] errors during development lead to inadequate system
+        \item[overstressed system] operation in conditions, for which system was not designed
+        \item[variation in the production and design] variations in materials, production processes, quality assurance, \dots
+        \item[wear-out, time-related phenomena] components become weaker with use and age \follows probability of failure increases over time
+        \item[errors] just errors
+    \end{description}
+    \item consider safety and failure in design phase \follows degraded environment requirements
+\end{itemize}
+
+\subsection*{Dealing with Failures}
+\begin{itemize}
+    \item in the past: ``fix-fly-fix''
+\end{itemize}
+
+\subsection*{Role of Formal Methods}
+\begin{itemize}
+    \item formal verification still in early stages
+    \item difference: verification used for correctness, in safety degraded performance also important
+\end{itemize}
+
+\section*{Dependability, Reliability and Safety Assessment}
+\subsection*{Introduction}
+\begin{description}
+    \item[fault] presence of a defect or anomaly in an item or system
+    \item[dormant fault] fault that has not yet lead to an error
+    \item[error] event: deviation of the desired behavior
+    \item[latent error] error has the potential to cause a failure, but, but has not yet done so
+    \item[failure] inability of a system to perform required function
+    \item[permanent fault] a fault that will not vanish on its own
+    \item[transient fault] a fault that will will vanish with time
+\end{description}
+
+\subsection*{Concepts}
+\begin{description}
+    \item[safety-critical system] (safety-related system, safety instrumented system) a system designed to ensure safe operation of equipment or plant it controls
+    \begin{itemize}
+        \item external vs internal requirements
+        \item functional vs nonfunctional requirements
+    \end{itemize}
+    \item[Safety] system not endangering or causing harm to humans or the environment \follows absence catastrophic failures
+    \begin{description}
+        \item[primary safety] direct effects of system
+        \item[functional safety] safe operation of system under control
+        \item[indirect safety] indirect consequences of failure, e.g. unavailability of service
+    \end{description}
+    \item[Reliability] characteristics of a system to operate correctly over a given period of time \follows continuous service
+    \begin{description}
+        \item[failure rate] rate at which a system fails
+        \item[time to failure] time interval between beginning of system operation
+        \item[failsafe state] a state which is completely safe, even if no operation is possible \follows all traffic lights are red
+    \end{description}
+    \item[Availability] probability of a system to operate correctly at time $t$
+    \item[Integrity] possibility, that a system will detect faults during operation \follows fault detection
+    \begin{description}
+        \item[fault recovery] system is able to restore correct operation
+        \item[data integrity] where consistency of data is important
+        \item[safety integrity] capability of system, to perform all required safety functions satisfactory within the stated period of time
+        \item[safety integrity level] related to classification in risk analysis
+        \item[high-integrity system] reliability and availability \follows dependable system
+    \end{description}
+    \item[maintainability] possibility, that a given system can be maintained (prior-to-failure maintenance (e.g. aircraft maintenance) and restore a failed system to operational state)
+    \item[dependability] a system for which reliance can justifiably be placed on the service it delivers
+\end{description}
+
+\subsection*{Classification of Faults}
+\begin{description}
+    \item[nature]
+    \begin{description}
+        \item[systemic] inherent in given system \follows wrong design or software bug
+        \item[random] nondeterministically, at any time, e.g. through hardware wear-out, stress conditions
+        \item[accidental] not on purpose
+        \item[intentional] sabotage, often security related
+    \end{description}
+    \item[equipment]
+    \begin{description}
+        \item[hardware] random or systemic
+        \item[software] always systemic
+    \end{description}
+    \item[phase of creation]
+    \begin{description}
+        \item[design] introduced during development
+        \item[operational] wear.out, incorrect operation, unforeseen operation
+    \end{description}
+    \item[extent and system boundaries]
+    \begin{description}
+        \item[localized] e.g. affecting only single module
+        \item[global] i.e. affecting the whole systems
+        \item[internal] inside of the system
+        \item[external] outside of the system
+    \end{description}
+    \item[duration]
+    \begin{description}
+        \item[permanent] do not go away, e.g. all systemic faults
+        \item[transient/sporadic] also transient faults may lead to permanent errors
+        \item[intermittent] appears and disappears
+    \end{description}
+    \item[hardware level]
+    \begin{description}
+        \item[transistor-level]
+        \item[atomic-level]
+        \item[gate-level]
+    \end{description}
+\end{description}
+
+\subsection*{Fault Models}
+\begin{itemize}
+    \item logical characterization, timing models \follows fault model
+    \item automatically generate fault vectors
+    \item hardware fault models are easier to identify and formalize
+\end{itemize}
+
+\subsubsection*{Stuck-At Fault Model}
+\begin{itemize}
+    \item fault in digital circuit where some module has an input or output bit stuck
+    \item stuck-at-0 (sa0) or stuck-at-1 (sa1)
+\end{itemize}
+
+\subsubsection*{Stuck-Open/Stuck-On \& Stuck-Closed/Stuck-Off Fault Model}
+\begin{itemize}
+    \item transistor-level fault model \follows CMOS gate fault
+    \item dependent on exact circuit
+\end{itemize}
+
+\subsubsection*{Bridging Fault Model}
+\begin{itemize}
+    \item two circuit components are shorted together
+    \item Wired-AND (positive logic bridging) or WIRED-OR (negative logic bridging)
+\end{itemize}
+
+\subsubsection*{Delay Fault Model}
+\begin{itemize}
+    \item element is delayed in assuming new state/ value (rarely: more quickly)
+    \item gate-delay/ transitional fault model: delay of single circuit or gate
+    \item path-delay: total delay along a path
+\end{itemize}
+
+\subsection*{Managing Faults}
+\begin{description}
+    \item[fault avoidance] keep faults out of the design (formal methods, quality control)
+    \item[fault removal] remove fault from the final product (system testing, formal verification)
+    \item[fault detection] detect faults during service, conduct countermeasures
+    \item[fault tolerance] system operates correctly, even if failures occur, can be combined with fault detection
+\end{description}
+
+\subsection*{Fault Detection}
+\begin{description}
+    \item[model-free approach] based on data-analysis \follows detect faults by comparing actual data with historical data, requires prior acquisition of data
+    \item[knowledge-based approach] exploit expert knowledge to detect faults, requires the prior acquisition of knowledge
+    \item[mode-based approach] description of nominal system behavior in terms of nominal model, compare actual behavior
+\end{description}
+
+for all approaches:
+\begin{description}
+    \item[online] during system operation
+    \item[offline] post-mortem
+\end{description}
+
+\subsubsection*{Functionality Checking}
+\begin{itemize}
+    \item detect wrong operation of hardware components using routines to check their functionality, typically check memory, processor, network
+\end{itemize}
+
+\subsubsection*{Consistency Checking}
+\begin{itemize}
+    \item detect faults by comparing the actual output of software/ hardware with expected ranges
+\end{itemize}
+
+\subsubsection*{Signal Comparison}
+\begin{itemize}
+    \item check signals withing redundant systems
+\end{itemize}
+
+\subsubsection*{Instruction and Bus Monitoring}
+\begin{itemize}
+    \item check operation of processor, check instructions before being fetched to memory, monitor bus for illegal access
+\end{itemize}
+
+\subsubsection*{Information Redundancy}
+\begin{itemize}
+    \item include: parity checks, checksums, error correcting codes
+\end{itemize}
+
+\subsubsection*{Loopback Testing}
+\begin{itemize}
+    \item check, that signal from sender to receiver is unchanged
+\end{itemize}
+
+\subsubsection*{Watchdog and Healthc Monitoring}
+\begin{itemize}
+    \item set watchdog, during operation increase or reset counter, when watchdog times out, something is wrong
+\end{itemize}
+
+\subsection*{Fault Prediction}
+\begin{itemize}
+    \item evaluate the likelihood that a given system or component will fail over a period of time
+    \item dependent of nature of fault
+\end{itemize}
+
+\subsection*{Fault Tolerance}
+\begin{itemize}
+    \item fault tolerance most often achieved through some kind of replication of critical components
+\end{itemize}
+
+\subsubsection*{Triple Modular Redundancy (TMR)}
+\begin{itemize}
+    \item replicate critical component
+    \item three versions
+    \item have voter for output
+    \begin{itemize}
+        \item majority vote
+        \item average/ median vote
+    \end{itemize}
+    \item TMR provides fault tolerance, if:
+    \begin{description}
+        \item[at most, one component fails] obvious for majority voting, but also for the other
+        \item[the voting mechanism does not fail] voting is not replicated, single point of failure
+        \item[no systemic failures] the different instances fail independently
+        \item[Isolation of failed component is not an issue] i.e. masking a faulty output is sufficient to guarantee that the system will operate as expected
+    \end{description}
+\end{itemize}
+
+\subsubsection*{Dealing with Multiple Failures}
+\begin{itemize}
+    \item increase redundancy: $N$ replications, $N$ should be an odd number \follows $N$-modular redundancy
+    \item often not feasible due to cost
+\end{itemize}
+
+\subsubsection*{Dealing with Failure of Voting Component}
+\begin{itemize}
+    \item simple architecture \follows more secure than complex component
+    \item replicate voting component, e.g. triple voting component
+\end{itemize}
+
+\subsubsection*{Deadling with Systemic Failures}
+\begin{itemize}
+    \item TMR not robust against systemic failures (design) \follows \textbf{common mode faults}
+    \item $N$-version programming
+\end{itemize}
+
+\subsubsection*{Fault Tolerance and Fault Detection}
+\begin{description}
+    \item[hot stand-by] redundant component runs in parallel, control can immediately be switched
+    \item[cold stand-by] redundant component is switched off, probability of failing back-up is lower
+    \item[warm stand-by] redundant component is powered but idle
+\end{description}
+
+\subsubsection*{Dealing with Transient Failures}
+\begin{itemize}
+    \item must be able to detect and replace failure
+\end{itemize}
+
+\subsubsection*{Emergency Shutdown Systems}
+\begin{itemize}
+    \item failsafe \follows system can be brought into safe state \follows emergency shutdown architecture
+\end{itemize}
+
+\subsection*{Fault Coverage}
+\begin{itemize}
+    \item fault coverage is a measure for the degree of success of above techniques
+    \item very hard for fault avoidance (how many faults have been avoided)
+    \item fault removal, detection, tolerance \follows could be experimentally tested, for real systems not really possible
+    \item fault coverage is evaluated over fault model
+\end{itemize}
+
+\subsection*{Reliability Modeling}
+\begin{itemize}
+    \item quantitative measuring for system reliability
+    \item failure probability \follows probability that a system will fail
+    \item failure rate \follows frequency of failure of the component
+    \item Mean Time To Failure $MTTF$: how long does it take on average, until the first failure occurs
+    \item Mean Time To Repair $MTTR$: average time needed to repair a system or component
+    \item Mean Time Between Failures $MTBF=MTTF+MTTR$
+    \item $availability=\frac{MTTF}{MTTF+MTTR} = \frac{MTTF}{MTTB}$
+\end{itemize}
+
+\subsection*{System Reliability}
+\begin{itemize}
+    \item reliability of system: prototypical system structures \follows series structure, parallel structure
+    \item more complex systems \follows put together from serial and parallel structures
+\end{itemize}
+
+% p 419
+\end{document}

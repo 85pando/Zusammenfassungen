@@ -1,0 +1,62 @@
+\begin{tikzpicture}[
+every node/.style={node distance=50,},
+dire/.style={draw,thick,->,>=latex,},
+area/.style={draw,thick,<->,>=latex,},
+]
+
+\node (X) at (0,0) {X};
+\node[below right of = X] (0) {0};
+\node[above right of = X] (1) {1};
+\node[below right of = 1] (W) {W};
+\node[below right of = W] (L) {L};
+\node[above right of = W] (H) {H};
+\node[below right of = H] (w) {w};
+\node[below right of = w] (l) {l};
+\node[above right of = w] (h) {h};
+\node[below right of = h] (Z) {Z};
+
+\path[dire] (X) to (1);
+\path[dire] (X) to (0);
+
+\path[dire] (1) to (W);
+\path[dire] (0) to (W);
+
+\path[dire] (W) to (H);
+\path[dire] (W) to (L);
+
+\path[dire] (H) to (w);
+\path[dire] (L) to (w);
+
+\path[dire] (w) to (h);
+\path[dire] (w) to (l);
+
+\path[dire] (h) to (Z);
+\path[dire] (l) to (Z);
+
+\node[above of = X, node distance = 80] (aX) {};
+\node[above of = 1, node distance = 45] (a1) {};
+\node[above of = W, node distance = 80] (aW) {};
+\node[above of = H, node distance = 45] (aH) {};
+\node[above of = w, node distance = 80] (aw) {};
+\node[above of = h, node distance = 45] (ah) {};
+\node[above of = Z, node distance = 80] (aZ) {};
+
+\path[area]
+	(aX) edge node[above] {strongest} (a1)
+    (aW) edge node[above] {medium} (aH)
+    (aw) edge node[above] {pre-charged} (ah)
+;
+\path[] (aZ) edge node[above] {weakest} (aZ) ;
+
+
+\path[dashed]
+	(X) edge (aX)
+    (1) edge (a1)
+    (W) edge (aW)
+    (H) edge (aH)
+    (w) edge (aw)
+    (h) edge (ah)
+    (Z) edge (aZ)
+;
+
+\end{tikzpicture}
