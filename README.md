@@ -15,3 +15,17 @@ Was man so braucht/What you need:
 * LaTeX + Texteditor/text editor
 * tikz-uml http://www.ensta-paristech.fr/~kielbasi/tikzuml/index.php?lang=en
 * tikz-er2 http://www.assembla.com/code/tikz-er2/subversion/nodes/tikz-er2.sty
+
+## Which is which?
+
+* **AlgoDat**: Algorithmen und Datenstrukturen
+* **CGIS**: Computergrafik und interaktive Systeme
+* **DAA**: Design and Analysis of Algorithms
+* **DBS**: Datenbanksysteme
+* **DS**: Diskrete Strukturen
+* **funcSaf**: functional safety in embedded systems
+* **MCSS**: Model Checking of Software Systems
+* **MGI**: Mathematische Grundlagen der Informatik
+* **RSN**: Rechnersysteme und Netze
+* **SEng**: Software Engineering
+* **TI**:Theoretische Informatik
