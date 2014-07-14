@@ -1,0 +1,67 @@
+\begin{tikzpicture}[
+arrow/.style={draw,->,>=stealth},
+dot/.style={draw,fill=black,shape=circle,scale=.75},
+label/.style={draw,rounded corners},
+labelarrow/.style={draw,dotted,thick,->,>=latex},
+]
+\draw (0,0) grid[step=1] (3.5,3.5);
+\draw[arrow] (0,0) -- (3.6,0) node[below] {$x$};
+\path (0,-.1) -- (3,-.1) node[pos=0,below]{0} node[pos=0.33,below]{1} node[pos=0.66,below]{2} node[pos=1,below]{3};
+\path (-.1,0) -- (-.1,3) node[pos=0,left]{0} node[pos=0.33,left]{1} node[pos=0.66,left]{2} node[pos=1,left]{3};
+\draw[arrow] (0,0) -- (0,3.6) node[left] {$y$};
+
+\draw  (0,3) -- (0.5,3.5);
+\draw  (0,2) -- (1.5,3.5);
+\draw  (0,1) -- (2.5,3.5);
+\draw  (0,0) -- (3.5,3.5);
+\draw  (1,0) -- (3.5,2.5);
+\draw  (2,0) -- (3.5,1.5);
+\draw  (3,0) -- (3.5,0.5);
+
+% this is the vertical line
+\draw[green,ultra thick] (3,0) edge (3,1);
+% diagonal line
+\draw[green,ultra thick] (2,1) edge (3,2);
+% upper triangle
+\draw[fill=green] (2,2) -- (3,3) -- (2,3) --cycle;
+% lower triangle
+\draw[fill=green] (0,2) -- (1,2) -- (1,3) --cycle;
+% nodes
+\node[dot] (00) at (0,0) {};
+\node[dot] (10) at (1,0) {};
+\node[dot] (20) at (2,0) {};
+\node[dot] (30) at (3,0) {};
+\node[dot] (01) at (0,1) {};
+\node[dot] (11) at (1,1) {};
+\node[dot] (21) at (2,1) {};
+\node[dot] (31) at (3,1) {};
+\node[dot] (02) at (0,2) {};
+\node[dot] (12) at (1,2) {};
+\node[dot] (22) at (2,2) {};
+\node[dot,fill=green] (32) at (3,2) {};
+\node[dot] (03) at (0,3) {};
+\node[dot] (13) at (1,3) {};
+\node[dot] (23) at (2,3) {};
+\node[dot] (33) at (3,3) {};
+
+% labels
+% node
+\node[label] (32l) at (5,3) {$x=3,y=2$};
+\draw[labelarrow] (32l) edge[bend left] (32);
+
+%line
+\node[label] (30l) at (5.5,.5) {$x=3,0<y<1$};
+\draw[labelarrow] (30l) edge (3,.5);
+
+% vertical line
+\node[label] (21d) at (6.5,1.5) {$2<x<3,\,1<y<2,\,x-y=1$};
+\draw[labelarrow] (21d) edge (2.5,1.5);
+
+% upper triangle
+\node[label] (25u) at (4,4) {$2<x<3,\,2<y<3,\,x-y<1$};
+\draw[labelarrow] (25u) edge (2.3,2.7);
+
+% lower triangle
+\node[label] (01l) at (2,5) {$0<x<1,\,2<y<3,\,x-y>-2$};
+\draw[labelarrow] (01l) edge[bend right] (.7,2.25);
+\end{tikzpicture}

@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+state/.style={draw,rounded corners,node distance=60},
+arrow/.style={draw,->,>=latex},
+label/.style={black!50},
+]
+\node[state] (idle) at (0,0) {$idle$};
+\node[state,above right of = idle] (orig) {$orig$};
+\node[state,below right of = idle] (term) {$term$};
+\node[state,below right of = orig] (con) {$con$};
+
+\path[arrow]
+(idle) edge node[above left,label] {off-hook} (orig)
+(idle) edge node[below left,label] {ringing}(term)
+(orig) edge node[above right,label] {digits}(con)
+(term) edge node[below right,label] {off-hook} (con)
+(con)  edge node[above,label] {on-hook} node [below,label] {end-of-call} (idle)
+;
+
+\end{tikzpicture}

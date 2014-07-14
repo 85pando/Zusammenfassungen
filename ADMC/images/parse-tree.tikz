@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+state/.style={draw,rounded corners,text width=.5cm,align=center},
+arrow/.style={draw,->,>=latex},
+]
+\node[state] (root) {$\wedge$};
+\node[state,below left of=root] (l) {$\exists\circ$};
+\node[state,below right of=root] (r) {$\exists\mathcal{U}$};
+\node[state,below left of=l] (ll) {$a$};
+\node[state,below left of=r] (rl) {$b$};
+\node[state,below right of=r] (rr) {$c$};
+
+\draw[arrow]
+(root) edge (l)
+(root) edge (r)
+(l) edge (ll)
+(r) edge (rl)
+(r) edge (rr)
+;
+\end{tikzpicture}

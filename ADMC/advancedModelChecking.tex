@@ -6,21 +6,1182 @@
 \usepackage{newclude}
 \include{../zusammenfassung}
 
+
+% \newmdenv[%
+% roundcorner=5pt,
+% subtitlebelowline=true,subtitleaboveline=true,
+% subtitlebackgroundcolor=yellow!70!white,
+% backgroundcolor=blue!20!white,
+% frametitle={Theorem},frametitlerule=true,
+% frametitlebackgroundcolor=yellow!70!white,
+% ]{subtitleenv}
+
+\newcommand{\until}{\,\mathcal{U}\,}
+\newcommand{\wuntil}{\,\mathcal{W}\,}
+\renewcommand{\O}{\mathcal{O}}
+
 \begin{document}
 
 \Gruppe{Stephan Heidinger}{ADMC - Zusammenfassung v0.1}
 \Header{advanced Model Checking}{SS 14}{Stephan Heidinger}
 
-\begin{shaded}
-This document has been published under a Creative Commons - Attribution-NonCommercial-ShareAlike (\textbf{CC by-nc-sa}). The conditions of the licence can be found \href{http://creativecommons.org/licenses/by-nc-sa/3.0/}{here}. \\
-\centerline{\href{http://creativecommons.org/licenses/by-nc-sa/3.0/}{\includegraphics[scale=1]{../cc-by-nc-sa.png} } }
-\end{shaded}
+% \begin{shaded}
+% This document has been published under a Creative Commons - Attribution-NonCommercial-ShareAlike (\textbf{CC by-nc-sa}). The conditions of the licence can be found \href{http://creativecommons.org/licenses/by-nc-sa/3.0/}{here}. \\
+% \centerline{\href{http://creativecommons.org/licenses/by-nc-sa/3.0/}{\includegraphics[scale=1]{../cc-by-nc-sa.png} } }
+% \end{shaded}
 
 \textit{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}
 Find any errors? Please send them back, I want to keep them!}
 
-%\section*{something}
+\section{Preliminaries}
 
-%\section*{more}
+\begin{definition}
+Some things probably important:
+\mdfsubtitle{Transformational Systems}
+Transform set of input data into output data: $S_i\to S_k$. E.g. Compilers, database processing. \\
+Correctness criteria: Termination, Correctness of $S_i\to S_k$
+\mdfsubtitle{Reactive Systems}
+Ongoing interaction with environment, driven by events/stimuli. E.g. Operating Systems, Control Systems.\\
+Correctness: non-termination, correctness of stimuli-response pair.
+\mdfsubtitle{Embedded Systems}
+Usually reactive systems, tightly connected to the hardware they control.
+\mdfsubtitle{Cyber-Physical systems}
+Integration of computation and physical processes, often networked, e.g. sensor-/actuator systems, automotive control systems.
+\mdfsubtitle{Real-Time Systems}
+Correctness depends on time bounds:
+\begin{description}
+    \item[soft:] violating soft time bounds will decrease quality of system.
+    \item[hard:] violating hard time bounds will make the system fail.
+\end{description}
+\mdfsubtitle{Hybrid systems}
+Systems characterized by discrete and continuous variables. E.g. thermostat, \dots
+\mdfsubtitle{Fault}
+Mistake made by a human during software development/production.
+\mdfsubtitle{Failure}
+Behaviour of a system deviating from its specified behaviour. This is most often the result of a fault being executed.
+\mdfsubtitle{Safety-Critical Systems}
+When a safety-critical system fails, people, the environment or damage to property or assets may occur.
+\end{definition}
+
+\subsection{System Correctness}
+When is a system correct?
+\begin{enumerate}
+    \item It does what we expect it to do. \follows functional model checking
+    \item It does so in a timely manner. \follows real time or probabilistic model checking.
+    \item It does so with a certain probability over a certain period of time. \follows probabilistic model checking
+\end{enumerate}
+
+\begin{minipage}[t]{3cm}
+\begin{center}
+\scalebox{1}{\input{images/model-spec.tikz}}
+\end{center}
+\end{minipage}
+\begin{minipage}[t]{12cm}
+\begin{itemize}
+    \item Given a \blue{model} and a \red{specification}: \\ Does $\blue{M}\models\red{S}$?
+    \item When every behaviour of \blue{M} is also behaviour of \red{M} this is the case. \follows Model does not reveal properties violating the specification.
+    \item Model of course has to represent the behaviour of the system.
+\end{itemize}
+\end{minipage}
+
+\section{CTL and CTL Model Checking}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!50,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!50,
+frametitle={State}
+]
+Characterizes the salient features of a system at a given point of observation. \follows A state can be observed as long as the features of interest don't change.
+\end{mdframed}
+
+\subsection{State-Based Modelling}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!50,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!50,
+frametitle={State Transition in Discrete Systems}
+]
+Instantaneous change of observed features of systems. Represents computation step.
+\mdfsubtitle{real-time models}
+time passes in a state \& state must be left when time-bound is reached
+\mdfsubtitle{stochastic systems}
+state transitions are labeled with probabilities
+\mdfsubtitle{hybrid systems}
+\begin{itemize}
+    \item continuous state variables change in a state
+    \item discrete state variables change during state transition
+\end{itemize}
+\end{mdframed}
+
+State transitions:
+\begin{itemize}
+    \item In a given state a certain number of events are possible (Leading to several different successor states).
+    \item Represent valid sequence of computations.
+    \item They encode history information (a state can only be reached trough a series of transitions).
+\end{itemize}
+
+Guidelines:
+\begin{description}
+    \item[Abstraction:] Focus only on important facts, disregard the rest.
+    \item[Simplicity:] Find simplest abstraction that still reveals phenomena of interest.
+\end{description}
+
+Characterization of reactive systems:
+\begin{itemize}
+    \item State of the system.
+    \item State transitions (caused by events/stimuli).
+    \item Reactions triggered by transitions
+\end{itemize}
+
+\subsection{Transition Systems}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!50,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!50,
+frametitle={Transition System}
+]
+A \emph{Transition System} TS is a tuple $(S,Act,\rightarrow, I, AP, L)$ where:\\
+\begin{tabular}{ll}
+$S$ & set of states\\
+$Act$ & set of actions\\
+$\rightarrow\subseteq S\times Act\times S$ & transition relation\\
+$I\subseteq S$ & set of initial states\\
+$AP$ & atomic propositions\\
+$L:S\rightarrow 2^{AP}$ & labeling function\\
+\end{tabular}
+\begin{itemize}
+    \item $(s,\alpha.s')$ can be written as $s\rightarrow^\alpha s'$ or $s\overset{\alpha}{\longrightarrow}s'$.
+\end{itemize}
+\end{mdframed}
+\begin{center}
+\scalebox{1.5}{\input{images/TS.tikz}}
+\end{center}
+
+Atomic Propositions:
+\begin{itemize}
+    \item logical representation of facts that may hold in a given state.
+    \item AP set of all atomic propositions used in the system model.
+\end{itemize}
+
+Labeling functions:
+\begin{itemize}
+    \item which atomic propositions actually hold in a given state.
+\end{itemize}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!50,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!50,
+frametitle={Predecessors and Successors}
+]
+\begin{align*}
+Post(s,\alpha)&= \left\{ s'\in S | s\overset{\alpha}{\longrightarrow}s' \right\} &
+Post(s) &= \bigcup_{\alpha\in Act} Post(s\alpha)
+\\
+Pre(s,\alpha)&= \left\{ s'\in S | s'\overset{\alpha}{\longrightarrow}s \right\} &
+Pre(s) &= \bigcup_{\alpha\in Act} Pre(s\alpha)
+\\
+Post(C,\alpha) &= \bigcup_{s\in C} Post(s,\alpha) &
+Post(C) &= \bigcup_{s\in C} Post(s) \text{ for } C\subseteq S
+\\
+Pre(C,\alpha) &= \bigcup_{s\in C} Pre(s,\alpha) &
+Pre(C) &= \bigcup_{s\in C} Pre(s) \text{ for } C\subseteq S
+\end{align*}
+\mdfsubtitle{Terminal/Final State}
+a state for which $Post(s)=\varnothing$
+\mdfsubtitle{Action-Determinism}
+A TS is \emph{action-deterministic}, iff for all $s,\alpha$
+\begin{itemize}
+    \item $|I|\leq 1$
+    \item $|Post(s,\alpha)|\leq 1$
+\end{itemize}
+otherwise it is \emph{action-nondeterministic}. In other words: For every state $s$ and every action $\alpha$ there is at most one outgoing transition labeled with $\alpha$.
+\mdfsubtitle{$AP-Determinism$}
+A TS is \emph{$AP$-deterministic}, iff for all $s,A\in 2^{AP}$
+\begin{itemize}
+    \item $|I|\leq 1$
+    \item $|Post(s)\cap\{ s'\in S | L(s')=A \} | \leq 1$
+\end{itemize}
+where $|Post(s)\cap\{ s'\in S | L(s')=A \}$ denotes the set of all equally labeled successors of $s$. In other words: For every state $s$, every successor state has a unique $AP$ labeling.
+\end{mdframed}
+
+Nondeterminism can be used to implement abstraction and concurrency.
+
+\subsection{System Executions}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Finite Execution Fragment}
+]
+A \emph{finite execution fragment} $\varrho$ of TS is an alternating sequence of states and executions ending with a state:
+\[ \varrho=s_0\alpha_1 s_2 \alpha_2\dots\alpha_n s_n \text{ such that } s_i\overset{\alpha_{i+1}}{\longrightarrow} s_{i+1} \text{ for all } 0\leq i<n \]
+\mdfsubtitle{infinite execution fragment}
+An \emph{infinite execution fragment} $\varrho$ of TS is an alternating sequence of states and executions ending with a state:
+\[ \varrho=s_0\alpha_1 s_2 \alpha_2\dots \text{ such that } s_i\overset{\alpha_{i+1}}{\longrightarrow} s_{i+1} \text{ for all } 0\leq i \]
+\mdfsubtitle{maximal execution fragment}
+An execution fragment, that is
+\begin{description}
+    \item[either] finite and ending in terminal state
+    \item[or] infinite.
+\end{description}
+\mdfsubtitle{initial execution fragment}
+An execution fragment is initial, iff $s_0\in I$.
+\mdfsubtitle{Execution}
+A initial, maximal execution fragment.
+\mdfsubtitle{Reachability}
+State $s\in S$ is called \emph{reachable} in a TS, if there exists an initial, finite execution fragment $s_0\alpha_1 s_1\alpha_2\dots\alpha_n s_n$ such that $s_n=s$.\\
+$Reach(TS)$ denotes the set of all reachable states in TS.
+\mdfsubtitle{State Graph}
+The \emph{State Graph} of TS, $G(TS)$, is the directed Graph $(V,E)$ with vertices $V=S$ and edges $E=\{s,s'\}\in S\times S | s'\in Post(s)\}$.
+\mdfsubtitle{Transitive Post Hull}
+\begin{align*}
+Post^*(s) & \text{ is the set of states reachable from } s &
+Post^*(C) &= \bigcup_{s\in C} Post^*(s), \text{ for } C\subseteq S \\
+Pre^*(s) & \text{ is the set of states from which } s \text{ is reachable} &
+Pre^*(C) &= \bigcup_{s\in C} Pre^*(s), \text{ for } C\subseteq S \\
+Reach(TS) &= Post^*(I)
+\end{align*}
+\mdfsubtitle{Path fragments}
+A \emph{path fragment} is an exeuction fragment without actions.
+\mdfsubtitle{Finite Path fragments}
+A \emph{Finite path fragment} $\hat{\pi}$ of $TS$ is a state sequence:
+\[ \hat{\pi} = s_0s_1\dots s_n \text{ such that } s_{i+1}\in Post(s_i) \text{ for all } 0\leq i\leq n \text{ where } n\geq0\]
+\mdfsubtitle{Infinite Path fragments}
+An \emph{Infinite path fragment} $\hat{\pi}$ of $TS$ is a infite state sequence:
+\[ \hat{\pi} = s_0s_1\dots \text{ such that } s_{i+1}\in Post(s_i) \text{ for all } i\geq 0 \]
+\mdfsubtitle{Path}
+A \emph{Path} is a maximal, initial path fragment
+\mdfsubtitle{Trace}
+When only registering the atomic propositions along execution, this is called a \emph{trace}.
+\begin{align*}
+\hat{\pi}&=s_0s_1\dots,s_n &
+trace(\hat{\pi})&=L(s_0)L(s_1)\dots L(s_n)
+\\
+Traces(s) &= trace(Paths(s)) &
+Traces(TS) &= \bigcup_{s\in I} Traces(s)
+\\
+Traces_{fin} &= trace(Paths_{fin}(s)) &
+Traces_{fin}(s)(TS) &= \bigcup_{s\in I} Traces_{fin}(s)
+\end{align*}
+\end{mdframed}
+
+\subsection{Structural Operational Semsantics}
+
+Semantics of a program in terms of computation steps defined by transition system: \[ \frac{premise}{conclusion} \]
+If the premise holds, the conclusion holds (and can be used to trigger a new inference rule).
+Can be recursively applied \follows structural inductive creation.
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Interleaving}
+]
+\[ TS_1 ||| TS_2 = (S_1\times S_2, Act_1 \uplus Act_2,\longrightarrow, I_1\times I_2, AP_1\uplus AP_2, L) \]
+    where $L(\langle s_1,s_2\rangle) = L_1(s_1) \cup L_2(s_2)$ and the transition relation $\longrightarrow$ is defined by:
+    \begin{align*}
+    \frac{s_1\overset{\alpha}{\longrightarrow}_1 \red{s'_1}}
+    {\langle s_1,s_2\rangle\overset{\alpha}{\longrightarrow}\langle \red{s'_1},s_2\rangle}
+    \text{ and }
+    \frac{s_2\overset{\alpha}{\longrightarrow}_2 \red{s'_2}}
+    {\langle s_1,s_2\rangle\overset{\alpha}{\longrightarrow}\langle s_1,\red{s'_2}\rangle}
+    \end{align*}
+\end{mdframed}
+
+A Computation tree is obtained from transition system by unfolding operation:
+\begin{itemize}
+    \item $s_k$ is a successor node of $s_i$ in the computation tree, iff there is a transition from $s_i$ to $s_k$ in the transition system.
+\end{itemize}
+
+\subsection{Property Specification}
+
+based on modal logic:
+\begin{description}
+    \item[$Lp$] it is \emph{necessary} that $p$
+    \item[$Mp$] it is \emph{possible} that $p$
+    \item[$\neg Lp$] it is \emph{not necessary} that $p$
+    \item[$\neg Mp$] it is \emph{not possible} that $p$
+\end{description}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Kripke-Structure}
+]
+Let
+\begin{itemize}
+    \item $M=W,V,A$ be a Kripke-Structure:
+    \item $\Pi$ a set of atomic propositions and $p\in\Pi$
+    \item $w,v\in W$
+    \item $\Phi,\rho$ formulae
+\end{itemize}
+then we define the relation $\models$ (satisfaction relation) for $M$:
+\begin{align*}
+(M,w)&\models p & \iff&& A(w,p)&=true \\
+(M,w)&\models\neg p& \iff&& A(w,p)&=false \\
+(M,w)&\models\Phi\wedge\rho & \iff&& (M,w)&\models\Phi \text{ and } (M,w)\models \rho \\
+(M,w)&\models L\Phi& \iff& & (\forall v:(w,v)&\in V)((M,v)\models\Phi) \\
+(M,w)&\models M\Phi& \iff& & (\exists v:(w,v)&\in V)((M,v)\models\Phi)
+\end{align*}
+
+Further syntactic definitions:
+
+\begin{align*}
+\Phi&\vee\rho & \cong && &\neg(\neg\Phi\wedge\neg\rho) \\
+\Phi&\supset\rho & \cong && &\neg\Phi\vee\rho & \text{\tiny implies}\\
+\Phi&\equiv\rho & \cong && &(\Phi\supset\rho)\wedge(\rho\supset\Phi)\\
+M\Phi& &\cong&& &\neg L\neg\Phi
+\end{align*}
+\end{mdframed}
+
+In temporal logic:
+\begin{itemize}
+    \item $Mp$ corresponds to $\square p$
+    \item $Lp$ corresponds to $\diamond p$
+\end{itemize}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Computation Tree Logic Syntax (CTL Syntax)}
+]
+$a\in AP$
+\\
+CTL state formula $\Phi$:
+\begin{align*}
+true && \neg\Phi \\
+a && \exists\upvarphi \\
+\Phi_1\wedge\Phi_2 && \forall\upvarphi
+\end{align*}
+CTL path formula
+\begin{align*}
+\circ\Phi && \Phi_1\until\Phi_2
+\end{align*}
+To be syntactically correct, temporal operators and path quantifiers alternate.
+
+Derived Operators:
+\begin{align*}
+potentially\ \Phi: && \exists\diamond\Phi&=\exists(true\until\Phi) \\
+inevitably\ \Phi: && \forall\diamond\Phi&=\forall(true\until\Phi) \\
+potentially\ always \Phi: && \exists\square\Phi&=\neg\forall\diamond\neg\Phi \\
+invariantly\ \Phi: && \forall\square\Phi&=\neg\exists\diamond\neg\Phi \\
+weak\ until\ \Phi: && \exists(\Phi\wuntil\Psi) &= \neg\forall((\Phi\wedge\neg\Psi)\until(\neg\Phi\wedge\neg\Psi)) \\
+&& \forall(\Phi\wuntil\Psi)&=\neg\exists((\Phi\wedge\neg\Psi)\until(\neg\Phi\wedge\neg\Psi))
+\end{align*}
+\mdfsubtitle{Computation Tree Logic Semantic (CTL Semantic)}
+CTL state formulae:
+\begin{align*}
+s&\models a & \iff& & a&\in L(s) \\
+s&\models\neg\Phi &\iff& & \neg(s&\models\Phi) \\
+s&\models\Phi\wedge\Psi &\iff&& (s&\models\Phi)\wedge(s\models\Psi) \\
+s&\models\red\exists\varphi &\iff&& \pi&\models\varphi \text{ for \red{some} path $\pi$ that starts in $s$} \\
+s&\models\red\forall\varphi &\iff&& \pi&\models\varphi \text{ for \red{all} path $\pi$ that starts in $s$} \\
+\end{align*}
+\mdfsubtitle{Satisfaction Set}
+The satisfaction set $Sat(\Phi)$ for a CTL formula is defined by: \[ Sat(\Phi)=\{ s\in S| s\models\Phi \} \]
+A $TS$ satisfies a CTL formula $\Phi$ if $\Phi$ holds in all initial states: \[ TS\models\Phi \; \iff\; \forall s_0\in I: s_0\models\Phi \]
+\mdfsubtitle{CTL Equivalence}
+CTL formulas $\Phi$ and $\Psi$ are \emph{equivalent}, $\Phi\equiv\Psi$ iff $Sat(\Phi)=Sat(\Psi)$.
+\[ \Phi\equiv\Psi\;\iff\;(TS\models\Phi\,\iff\,TS\models\Psi) \]
+\mdfsubtitle{Equivalence-based Rewrite Rules}
+Duality Laws:
+\begin{align*}
+\forall\circ\Phi &\equiv \neg\exists\circ\neg\Phi \\
+\exists\circ\Phi &\equiv \neg\forall\circ\neg\Phi \\
+\forall\diamond\Phi &\equiv \neg\exists\square\neg\Phi \\
+\exists\diamond\Phi &\equiv \neg\forall\square\neg\Phi \\
+\forall(\Phi\until\Psi) &\equiv \neg\exists((\Phi\wedge\neg\Psi)\wuntil(\neg\Phi\wedge\neg\Psi))
+\end{align*}
+Expansion Laws:
+\begin{align*}
+\forall(\Phi\until\Psi) &\equiv \Psi\vee(\Phi\wedge\forall\circ\forall(\Phi\until\Psi)) \\
+\forall\diamond\Phi &\equiv \Phi\vee\forall\circ\forall\diamond\Phi \\
+\forall\square\Phi &\equiv \Phi\wedge\forall\circ\forall\square\Phi \\
+\exists(\Phi\until\Psi) &\equiv \Psi\vee(\Phi\wedge\exists\circ\exists(\Phi\until\Psi)) \\
+\exists\diamond\Phi &\equiv \Phi\vee\exists\circ\exists\diamond\Phi \\
+\exists\square\Phi &\equiv \Phi\wedge\exists\circ\exists\square\Phi
+\end{align*}
+Distributive Laws:
+\begin{align*}
+\forall\square(\Phi\wedge\Psi) &\equiv \forall\square\Phi\wedge\forall\square\Psi \\
+\exists\diamond(\Phi\wedge\Psi) &\equiv \exists\diamond\Phi\wedge\exists\diamond\Psi
+\end{align*}
+But:
+\begin{align*}
+\exists\square(\Phi\wedge\Psi) &\not\equiv \exists\square\Phi\wedge\exists\square\Psi \\
+\forall\diamond(\Phi\wedge\Psi) &\not\equiv \forall\diamond\Phi\wedge\forall\diamond\Psi
+\end{align*}
+\end{mdframed}
+
+\subsubsection{LTL}
+\begin{missing}
+    Definition and Explanation of LTL, see Model Checking aggregation.
+\end{missing}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={CTL and LTL equivalence}
+]
+CTL formula $\Phi$ and LTL formula $\psi$ are \emph{equivalent}, $\Phi\equiv\psi$, iff for any transition system $TS$ over $AP$
+\[ TS\models\Phi \iff TS\models\psi \]
+\\
+There can only be equivalent $\Phi$ and $\psi$ if by omitting all path quantifiers from $\Phi$ yields \[ \Phi\equiv\psi \] otherwise there does not exist an equivalent LTL formula.
+\\
+\follows LTL and CTL have incomparable expressiveness.
+\end{mdframed}
+
+\subsubsection{CTL*}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={CTL$^*$}
+]
+State formula: $\Phi\;:=\;true\;|\;a\;|\;\Phi_1\wedge\Phi_2\;|\;\neg\Phi\;|\;\exists\varphi$
+\\
+path formula: $\varphi\;:=\;\Phi\;|\varphi_1\wedge\varphi_2\;|\;\neg\varphi\;\circ\varphi\;|\varphi_1\until\varphi_2$
+\mdfsubtitle{CTL$^*$ Semantics}
+\begin{align*}
+s&\models a &\iff&& a&\in L(s) \\
+s&\models \neg\Phi &\iff&& not\,s&\models\Phi \\
+s&\models \Phi\wedge\Psi &\iff&& (s&\models\Phi) \text{ and }(s\models\Psi) \\
+s&\models \exists\varphi &\iff&& \pi&\models\varphi \text{ for some } \pi\in Paths(s)\\
+\pi&\models\Phi &\iff&& \pi[0]&\models\Phi\\
+\pi&\models \varphi_1\wedge\varphi_2 &\iff&& \pi&\models\varphi_1 \text{ and } \pi\models\varphi_2\\
+\pi&\models \neg\varphi &\iff&& \pi&\not\models\varphi\\
+\pi&\models \circ\varphi &\iff&& \pi[1..]&\models\varphi\\
+\pi&\models \varphi_1\until\varphi_2&\iff&& \exists j&\geq0.(\pi[j..]\models\varphi_2\wedge(\forall 0\leq k<j.\pi[k..]\models\varphi_1))
+\end{align*}
+Satisfaction set and TS satisfaction is same as for CTL.
+\begin{center}
+\scalebox{1}{\input{images/ltlctlctlstar.tikz}}
+\end{center}
+\end{mdframed}
+
+\subsubsection{CTL Model Checking Procedure}
+
+\begin{enumerate}
+    \item convert CTL formula $\Phi'$ into an equivalent CTL formula $\Phi$ in \emph{Existential Normal Form (ENF)}
+    \item recursively compute the set $Sat(\Phi)=\{s\in S|s\models\Phi\}$
+    \item $TS\models\Phi$ iff \emph{each initial sate} of TS belongs to $Sat(\Phi)$
+\end{enumerate}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={ENF Conversion}
+]
+ENF Subset of CTL:
+\[ \Phi\;:=\;true\;|\;a\;|\;\Phi_1\wedge\Phi_2\;|\;\neg\Phi\;|\;\exists\circ\Phi\;|\;\exists(\Phi_1\until\Phi_2\;|\;\exists\square\Phi) \]
+Conversion Rules:
+\begin{align*}
+\forall&\circ\Phi &\equiv&& \neg\exists&\circ\neg\Phi \\
+\forall&(\Phi\until\Psi) &\equiv&& \neg\exists&(\neg\Psi\until(\neg\Phi\wedge\neg\Psi))\wedge\neg\exists\square\neg\Psi
+\end{align*}
+\mdfsubtitle{Computation of $Sat(\Phi)$}
+\begin{multicols}{2}
+\begin{enumerate}
+    \item create \emph{parse tree} from formula
+    \item compute $Sat(a_i)$ for leaf nodes
+    \item move up in the parse tree by level, computing $Sat(.)$ from child nodes
+    \item when all root tree is computed, check if $I\in Sat(\Phi)$
+\end{enumerate}
+\begin{center}
+\scalebox{1}{\input{images/parse-tree.tikz}}
+\end{center}
+\end{multicols}
+Computation of $Sat(a_i)$
+\begin{align*}
+Sat(true) &= S \\
+Sat(a) &= \{s\in S | a\in L(s)\} \text{ for any } a\in AP \\
+Sat(\blue\Phi\wedge\red\Psi) &= Sat(\blue\Phi) \cap Sat(\red\Psi) \\
+Sat(\neg\Phi) &= s\setminus Sat(\Phi) \\
+Sat(\exists\circ\Phi) &= \{s\in S | Post(s)\cap Sat(\Phi)\not=\varnothing\} \\
+%
+Sat(\exists(\blue\Phi\until\red\Psi)) &\text{ is the smallest subset $T$ of $S$, such that } \\
+&Sat(\red\Psi)\subseteq T \text{ and} \\
+&(s\in Sat(\blue\Phi) \text{ and } Post(s)\cap T\not=\varnothing)\Rightarrow s\in T \\
+%
+Sat(\exists\square\Phi) &\text{ is the largest subset $T$ of $S$, such that} \\
+&T\subseteq Sat(\Phi) \text{ and} \\
+&s\in T \longrightarrow Post(s)\cap T\not=\varnothing
+\end{align*}
+smallest Fixpoint calculation: $\exists(\Phi_1\until\Phi_2)$\\
+\begin{algorithm}[H]
+$T:=Sat(\Phi_2);$ \\
+\While{$\{ s\in Sat(\Phi_1)\setminus T | Post(s)\cap T\not=\varnothing\}\not=\varnothing$}{
+    $\{ s\in Sat(\Phi_1)\setminus T | Post(s)\cap T\not=\varnothing\}\not=\varnothing$ \\
+    $T:=T\cup\{ s \}$
+}
+\end{algorithm}
+\ \\
+greatest Fixpoint calculation: $\exists\square\Phi$\\
+\begin{algorithm}[H]
+\While{$\{s\in T | Post(s)\cap T=\varnothing\}\not=\varnothing$}{
+    let $\{s\in T | Post(s)\cap T=\varnothing\}$ \\
+    $T:=T\setminus\{s\}$;
+}
+\end{algorithm}
+\ \\ Compute $Sat(\exists(\blue\Phi\until\red\Psi))$ by \emph{Enumerative Backward Search} \\
+\begin{algorithm}[H]
+$T:=Sat(\red\Psi);$ \\
+$E:=T$\\
+\While{$E\not=\varnothing$}{
+    $s'\in E;$ \\
+    $E:=E\setminus\{s'\};$ \\
+    \For{ all $s\in Pre(s')$ }{
+    \If{$s\in Sat(\blue\Phi)\setminus T$}{
+        $E:=E\cup \{s\};$ \\
+        $T:=T\cup\{s\};$
+        }
+    }
+}
+\Return T
+\end{algorithm}
+\ \\ Compute $Sat(\exists\square\Phi)$ by \emph{Enumerative Backwards Search} \\
+\begin{algorithm}[H]
+$E:=S\setminus Sat(\Phi)$ \tcc*{$E$ contains any unvisited $s'$ with
+$s'\not\models\exists\square\Phi$}
+$T:=Sat(\Phi)$ \tcc*{$T$ contains any $s$ for which $s\models\exists\square\Phi$ is not disproven}
+\For{all $s\in Sat(\Phi)$}{
+    $c[s]:= |Post(s)|;$
+}
+\While{$E\not=\varnothing$}{
+    $s'\in E;$ \\
+    $E:=E\setminus\{s'\};$ \tcc*{$s'$ has been considered}
+    \For{all $s\in Pre(s')$}{
+        \If{$s\in T$}{
+            $c[s]:=c[s]-1;$ \tcc*{update counter $c[s]$ for predecessor $s$ of $s'$}
+            \If{$c[s]=0$}{
+                $T:=T\setminus\{s\};$ \\
+                $E:=E\cup\{s\}$
+            }
+        }
+    }
+}
+\Return T
+\end{algorithm}
+\ \\ Alternative Algorithm for $Sat(\exists\square\Phi)$: \\
+\begin{enumerate}
+    \item Consider state $s$ only if $s\models\Phi$, otherwise \emph{eliminate} $s$
+    \begin{itemize}
+        \item change $TS$ into $TS[\Phi]=(S',Act,\to',I',AP,L')$ with $S'=Sat(\Phi)$
+        \item $\to'=\to\cap(S'\times Act\times S'), I'=I\cap S', L'(s)=L(s)$ for $s\in S'$
+        \item[\follows] all removed states do not satisfy $\exists\square\Phi$ and can therefore be removed
+    \end{itemize}
+    \item Dtermine all \emph{non-trivial strongly connected components} in $TS[\Phi]$
+    \begin{itemize}
+        \item non-trivial SCC \follows maximal, connected subgraph with at least one transition
+        \item[\follows] any state in such SCC satisfies $\exists\square\Phi$
+    \end{itemize}
+    \item $s\models\exists\square\Phi$ is equivalent to ``some SCC is reachable from $s$''
+    \begin{itemize}
+        \item simple reachability search (backward manner)
+    \end{itemize}
+\end{enumerate}
+\end{mdframed}
+
+\subsubsection{Time Complexity}
+
+The CTL Model Checking Problem $TS\models\Phi$ can be determined in $\mathcal{O}(|\Phi|\cdot(N+M)$, where $N$ is the number of states and $M$ the number of transitions, $N+M$ is the size of the transition system, which can be exponentially large.
+\\
+LTL Model Checking can be done in $\mathcal{O}((N+M)\cdot 2^{|\Phi|}$. But LTL formulae can be exponentially shorter.
+
+\subsubsection{Counterexamples}
+
+\begin{missing}
+    Counterexamples in LTL, see Model Checking aggregation.
+\end{missing}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Counterexample and Witnesses}
+]
+\begin{itemize}
+    \item counterexample: path fragment $s\to s'$ such that
+    \begin{itemize}
+        \item $s\in I$ and $s'\in Post(s)$ with $s'\not\models\Phi$
+    \end{itemize}
+    \item witness: a path fragment $s\to s'$ such that
+    \begin{itemize}
+        \item $s\in I$ and $s'\in Post(s)$ with $s'\models\Phi$
+    \end{itemize}
+    \item algorithmic computation: Inspection of direct successors of initial states.
+\end{itemize}
+\mdfsubtitle{Witness for $\Phi\until\Psi$}
+backwards search starting in $Sat(\Psi)$
+\mdfsubtitle{Counterexample for $\Phi\until\Psi$}
+has one of the forms:
+\begin{itemize}
+    \item $\underset{\text{satisfy } \Phi\wedge\neg\Psi}{\underbrace{s_0\dots s_{n-1}\underset{cycle}{\underbrace{s_ns_1'\dots s'_r}}}}$ with $s_n=s'_r$ (would work for $\wuntil$, but not $\until$)
+    \item $s_0\dots s_{n-1}s_n$ where $s_n\models\neg\Phi\wedge\neg\Psi$
+\end{itemize}
+Computing Counterexample:
+\begin{itemize}
+    \item let $G=(S,E)$ a directed graph, where $S$ is the set of states of the $TS$ and $E=\{(s,s')\in S\times S | s'\in Post(s)\wedge s\models\Phi\wedge\neg\Psi\}$
+    \item Each path in $G$ starting in an $s_0\in I$ leading to an trivial or non-trivial SCC yields a counterexample.
+    \item[\follows] counterexample generation requires SCC computation (e.g. Tarjans Algorithm)
+\end{itemize}
+\end{mdframed}
+
+\section{CTL* Model Checking}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={CTL$^*$ Model Checking}
+]
+Follow same recursive pattern using parse tree as for CTL model checking.
+\\
+\begin{itemize}
+    \item replace maximal proper state formula by new proposition $a_\Psi$
+    \item $\Psi$ is a \emph{maximal proper state subformula} of $\Phi$ whenever $\Psi$ is a subformula of $\Phi$ that differs from $\Phi$ and that is not contained in any other proper state formula of $\Phi$.
+    \item adjust labeling of $TS$ such that $a_\Psi\in L(s)$ iff $s\in Sat(\Psi)$
+    \item[\follows] LTL formula \[ s\models\exists\varphi \;\iff\; s\not\models_{CTL^*}\forall\neg\varphi \;\iff\; s\not\models_{LTL}\neg\varphi \]
+\end{itemize}
+\mdfsubtitle{Algorithm}
+\begin{algorithm}[H]
+\For{all $i\leq|\Phi|$}{
+    \For{all $\Psi\in Sub(\Phi)$ with $|\Psi|=i$}{
+        \Switch{$\Psi$}{
+            \begin{align*}
+            true &:& Sat(\Psi)&:=S \\
+            a &:& Sat(\Psi)&:=\{s\in S|a\in L(s)\}; \\
+            a_1\wedge a_2 &:& Sat(\Psi)&:=Sat(a_1)\cap Sat(a_2); \\
+            \neg a &:& Sat(\Psi)&:=S\setminus Sat(a); \\
+            \exists\varphi &:& determine &Sat_{LTL}(\neg\varphi); \\
+             &:& Sat(\Psi)&:=S\setminus Sat_{LTL}(\neg\varphi)
+            \end{align*}
+        }
+        $AP:=AP\cup\{a_\Psi\};$ \tcc*{introduce fresh atomic proposition}
+        replace $\Psi$ with $a_\Psi;$
+        \For{all $s\in Sat(\Psi)$}{
+            $L(s)\cup\{a_\Psi\};$
+        }
+    }
+}
+\Return $I\subseteq Sat(\Phi)$
+\end{algorithm}
+\end{mdframed}
+
+\subsection{Time Complexity}
+
+For transition systems with $N$ states and $M$ transitions the CTL$^*$ model checking problem $TS\models\Phi$ can be determined in $\mathcal{O}(N+M)\cdot2^{|\Phi|}$
+
+\subsection{Fairness}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Fairness}
+]
+\emph{Fairness Constraints} \follows rule out unrealistic executions by putting constraints on actions that occur along infinite executions
+\begin{align*}
+unconditional && \Rightarrow && strong && \Rightarrow && weak
+\end{align*}
+weak rules out the least executions\\
+\emph{Fairness Assumptions \follows distinct constraints on distinct action sets}
+\mdfsubtitle{Fairness Constraints}
+\begin{description}
+    \item[unconditional LTL fairness constraint:] $u_{fair} = \square\diamond\Psi$
+    \item[strong LTL fairness constraint:] $s_{fair}=\square\diamond\Phi\longrightarrow\square\diamond\Psi$
+    \item[weak LTL fairness constraint:] $w_{fair}=\diamond\square\Phi\longrightarrow\square\diamond\Psi$
+\end{description}
+\[ fair = u_{fair} \wedge s_{fair} \wedge w_{fair} \]
+\begin{itemize}
+    \item strong and unconditional fairness \follows solve contentions
+    \item weak fairness \follows resolve nondeterminism
+\end{itemize}
+\begin{align*}
+FairPaths_{fair}(s) &= \{\pi\in Paths(s) | \pi\models fair\} \\
+FairTraces_{fair}(s) &= \{trace(\pi)|\pi\in FairPaths_{fair}(s)\} \\
+s\models_{fair}\varphi &\text{ iff } \forall\pi\in FairPaths_{fair}(s).\pi\models \varphi \\
+TS\models_{fair}\varphi &\text{ iff }\forall s_0\in I.s_0\models_{fair}\varphi
+\end{align*}
+For TS and LTL formula $\varphi$ and LTL fairness assumption $fair$:
+\[ TS\models_{fair}\varphi \text{ iff } TS\models(fair\to\varphi) \]
+\mdfsubtitle{Fairness in CTL}
+\follows ignore unfair paths
+\begin{description}
+    \item[unconditional] $u_{fair} = \bigwedge_{0<i\leq k}\square\diamond\Psi$
+    \item[strong:] $s_{fair} = \bigwedge_{0<i\leq k}(\square\diamond\Phi_i\to\square\diamond\Psi_i)$
+    \item[weak] $w_{fair} = \bigwedge_{0<i\leq k}(\diamond\square\Phi_i\to\square\diamond\Psi_i)$
+\end{description}
+A \emph{CTL fairness} constraint is an \emph{LTL} formula over \emph{CTL formulas}
+\[ Sat_{fair}(\Phi) = \{s\in S| s\models_{fair} \Phi\} \]
+For transition system $TS$ without terminal states, a CTL formula $\Phi$ in ENF and CTL fairness assumption $fair$:
+\begin{enumerate}
+    \item establish whether $TS\models_{air}\Phi$
+    \item use bottom-up CTL procedure to determine $Sat_{fair}(\Phi)$
+    \begin{enumerate}
+        \item replace CTL-state formulas in $s_{fair}$ by atomic propositions \[ s_{fair}:=\bigwedge_{0<i\leq k}(\square\diamond a_i \to \square\diamond b_i) \]
+    \end{enumerate}
+\end{enumerate}
+\mdfsubtitle{Fair CTL Model Checking}
+$s\models_{fair}\exists\circ a$ iff $\exists s'\in Post(s)$ with $s'\models a$ and $\underset{s'\models_{fair}\exists\square true}{\underbrace{FairPaths(s')\not=\varnothing}}$
+\\
+$s\models{fair}\exists(a\until a')$ iff there exists a finite path fragment $s_0s_1\dots s_{n-1}s_n\in Paths_{fin}(s)$ with $n\geq 0$ such that $s_i\models a$ for $0\leq i<n,s_n\models a'$ and $\underset{s'\models_{fair}\exists\square true}{\underbrace{FairPaths(s')\not=\varnothing}}$
+\\
+Model Checking with fairness can be reduced to:
+\begin{itemize}
+    \item Model Checking CTL
+    \item computing $Sat_{fair}(\exists\square a)$ for $a\in AP$
+\end{itemize}
+
+Algorithm: \\
+\begin{algorithm}[H]
+compute $Sat_{fair}(\exists\square true) = \{s\in S | FairPaths(s)\not=\varnothing\}$
+\For{all $s\in Sat_{fair}(\exists\square true)$}{
+    $L(s) := L(s) \cup \{a_{fair}\}$
+    \tcc*{compute $Sat_{fair}(\Phi)$}
+}
+\For{all $0<i\leq|\Phi|$}{
+    \For{all $\Psi\in Sub(\Phi)$ with $|\Psi|=i$}{
+    \Switch{$\Psi$}{
+    \begin{align*}
+        true   &&: & &Sat_{fair}(\Psi) &:= S;\\
+        a      &&: & &Sat_{fair}(\Psi) &:= \{s\in S | a\in L(s)\}; \\
+        \neg a &&: & &Sat_{fair}(\Psi) &:= S\setminus Sat_{fair}(a); \\
+        a \wedge a' &&: & &Sat_{fair}(\Psi) &:= Sat_{fair}(a) \cap Sat_{fair}(a'); \\
+        \exists\circ a &&: & &Sat_{fair}(\Psi) &:= Sat(\exists\circ(a\wedge\red{a_{fair}})); \\
+        \exists(a\until a') &&: & &Sat_{fair}(\Psi) &:= Sat(\exists(a\until(a'\wedge\red{a_{fair}}))); \\
+        \exists\square a &&: & &Sat_{fair}(\Psi) &:= compute \, Sat_{fair}(\exists\square a);
+    \end{align*}
+    }
+    replace all occurrences of $\Psi$ (in $\Phi$) b< the fresh atomic proposition $a_\Psi$
+    \For{all $s\in Sat_{fair}(\Psi)$}{
+        $L(s):=L(s)\cup\{a_\Psi\}$
+    }
+    }
+}
+\Return $I\subseteq Sat_{fair}(\Phi)$
+\end{algorithm}
+
+Computation of $Sat_{fair}(\exists\square a)$:
+\begin{itemize}
+    \item Consider state $s$ only if $s\models a$, otherwise eliminate $s$
+    \item $s\models_{fair}\exists\square a$ iff there is a non-trivial SCC $D$ in $TS[a]$ reachable from $s$: \[ D\cap Sat(a_i)=\varnothing \text{ or } D\cap Sat(b_i)\not=\varnothing \text{ for } 0<i\leq k \]
+    \item $Sat_{sfair}(\exists\square a)=\{s\in S| Reach_{TS[a]}(s)\cap T\not=\varnothing\}$ where $T$ is the union of all non-trivial SSCs $C$ that contain $D$ satisfying above equation.
+\end{itemize}
+\mdfsubtitle{Time Complexity}
+$TS$ with $N$ states and $M$ transitions, CTL formula $\Phi$, CTL fairness constraint $fair$ with $k$ conjuncts: \\
+CTL model checking in $\O(|\Phi|\cdot(N+M)\cdot k)$
+\end{mdframed}
+
+\section{Real-Time Model Checking}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={soft real-time systems}
+]
+Violating soft real-time bounds does \emph{not} lead to invalidation of system. \follows ``quality of service'' requirements. Usually with probabilities attached (reach state X with probility of Y in Z time).
+\mdfsubtitle{hard real-time systems}
+Correctness of system depends on satisfying real-time constraints.
+\mdfsubtitle{discrete time domain}
+\begin{itemize}
+    \item time advances in discrete steps
+    \item actions only happen at natural time values \follows time domain $\mathds{N}$
+\end{itemize}
+\begin{description}
+    \item[advantages]
+    \begin{itemize}
+        \item conceptually simple
+        \item no need to change $TS$
+        \item take LTL or CTL
+        \item use traditional model checking algorithms
+    \end{itemize}
+    \item[disadvantages]
+    \begin{itemize}
+        \item fixed minimal delay granularity, between two points not observable
+        \item not invariant to changes in time scale
+        \item for asynchronous systems determination of mimimal delay hard
+    \end{itemize}
+\end{description}
+\begin{itemize}
+    \item time domain is dense
+    \item infinite branching of computation tree
+\end{itemize}
+\mdfsubtitle{Clocks}
+\begin{itemize}
+    \item value increases while in a state
+    \item may only be reset to zero
+    \item can be referenced in constraints
+    \item clocks increase at same pace (with rate $1$)
+    \item[\follows] guards on edges
+    \item[\follows] invariants on locations
+\end{itemize}
+\mdfsubtitle{Clock Constraints ($CC$)}
+$c\in\mathds{N},\, x\in C,\, C \text{ set of clocks}$
+\[ g:= x<c | x\leq c | x>c | x\geq c | g\wedge g \]
+Clock constraints without any conjunctions are atomic: $ACC(C)$ \\
+\follows \emph{rational} valued constraints can be translated into naturals by proper scaling.
+\mdfsubtitle{Timed Automata}
+$TA=(Loc,Act,C,\hookrightarrow,Loc_0,Inv,AP,L)$, where:
+\begin{align*}
+Loc & \text{ is a finite set of locations} \\
+Loc_0 & \text{ is a set of initial locations} \\
+C & \text{ is a finite set of clocks} \\
+\hookrightarrow\subseteq Loc\times CC(C)\times Act\times2^C\times Loc & \text{ is a transition relation} \\
+Inv: Loc\to CC(C) & \text{ is an invariant-assignement function} \\
+L:Loc\to2^{AP} & \text{ is a labeling function} \\
+\end{align*}
+Edge $\ell \overset{g:\alpha, C}{\scalebox{5}[1]{$\hookrightarrow$}} \ell'$ means intuitively:
+\begin{itemize}
+    \item action $\alpha$ is enabled once guard $g$ holds
+    \item when moving from $\ell$ to $\ell'$
+    \begin{itemize}
+        \item perform action $\alpha$
+        \item reset any clock in $C$ to zero
+        \item all clocks not in $C$ keep their value
+    \end{itemize}
+    \item Nondeterminism if multiple transitions are enabled
+    \item $Inv(\ell)$ constraints amount of time that may be spent in location $\ell$
+    \begin{itemize}
+        \item once it becomes invalid, $\ell$ must be left
+        \item if leaving is not possible, deadlock
+    \end{itemize}
+\end{itemize}
+\mdfsubtitle{Composition}
+$TA_i = (Loc_i,Act_i,C_i,\hookrightarrow_i,Loc_{0,i},Inv_i,AP_i,L_i)$ and handshake action set $H$:
+\[ TA_1 \Vert_H TA_2= (Loc,Act_1\cup Act_2,C,\hookrightarrow,Loc_0,Inv,AP,L) \]
+where
+\begin{align*}
+Loc   &= Loc_1\times Loc_2 \\
+Loc_0 &= Loc_{0,1} \times Loc_{0,2} \\
+C     &= C_1 \cup C_2 \\
+Inv(\langle\ell_1,\ell_2\rangle) &= Inv_1(\ell_1) \wedge Inv_2(\ell_2) \\
+L(\langle\ell_1,\ell_2)\rangle) &= L_1(\ell_1) \cup L_2(\ell_2)
+\end{align*}
+$\hookrightarrow$ is defined by
+\begin{description}
+    \item[$\alpha\in H$:] $\frac{
+    \ell_1 \overset{g_1:\alpha, D_1}{\scalebox{5}[1]{$\hookrightarrow$}}_1 \ell'_1 \wedge \ell_2 \overset{g_2:\alpha, D_2}{\scalebox{5}[1]{$\hookrightarrow$}}_2 \ell'_2
+    }{
+    \langle\ell_1,\ell_2\rangle\overset{g_1\wedge g_2: \alpha, D_1\cup D_2}{\scalebox{5}[1]{$\hookrightarrow$}} \langle\ell_1,\ell_2\rangle
+    }$
+    \item[$\alpha\not\in H$:] $\frac{
+    \ell_1 \overset{g_1:\alpha, D_1}{\scalebox{5}[1]{$\hookrightarrow$}}_1 \ell'_1
+    }{
+    \langle\ell_1,\ell_2\rangle\overset{g_1: \alpha, D_1}{\scalebox{5}[1]{$\hookrightarrow$}} \langle\ell_1,\ell_2\rangle
+    }$
+    and
+    $\frac{
+    \ell_2 \overset{g_2:\alpha, D_2}{\scalebox{5}[1]{$\hookrightarrow$}}_2 \ell'_2
+    }{
+    \langle\ell_1,\ell_2\rangle\overset{g_2: \alpha, D_2}{\scalebox{5}[1]{$\hookrightarrow$}} \langle\ell_1,\ell_2\rangle
+    }$
+\end{description}
+\mdfsubtitle{Clock Valuations}
+\begin{itemize}
+    \item \emph{clock valuation} $\eta$ for set $C$ of clocks is a function $\eta:C\to\mathds{R}_{\geq0}$ assigning each clock $x\in C$ its current value $\eta(x)$
+    \item $\eta+d$ for $d\in\mathds{R}_{\geq0}$ is defined by: $(\eta+d(x)=\eta(x)+d$ for all clocks $x\in C$
+    \item $reset\,x$ in $\eta$ for clock $x$ is defined by:
+    \[ (reset\, x\,in\, \eta)(x)=\begin{cases} \eta(y) & if\,y\not=x \\ 0 & if\,y=x \end{cases} \]
+\end{itemize}
+\mdfsubtitle{Satisfaction of Clock Constraints}
+$\models\subseteq Eval(C)\times CC(C)$ is defined by:
+\begin{align*}
+\eta\models true \\
+\eta\models x<c         & iff\,\eta(x) <c \\
+\eta\models x\leq c     & iff\,\eta(x) \leq c \\
+\eta\models x>c         & iff\,\eta(x) >c \\
+\eta\models x\geq c     & iff\,\eta(x) \geq c \\
+\eta\models g\wedge g'  & iff\,\eta\models g \wedge\eta\models g'
+\end{align*}
+\mdfsubtitle{Transition System from Timed Automata}
+For the timed automaton $TA=(Loc,Act,C,\hookrightarrow,Loc_0,Inv,AP,L)$ the transition system is: $TS(TA) = (S,Act',\to,I,AP',L')$
+\begin{align*}
+S &= Loc\times Eval(C), \text{ so states are of the form } s=\langle\ell,\eta\rangle \\
+Act'&=Act\cup\mathds{R}_{\geq0},\text{ (discrete) actions and time passage actions} \\
+I &= \{\langle\ell_0,\eta_0\rangle | \ell_0\in Loc_0 \wedge\eta_0(x)=0 \text{ for all } x\in C\} \\
+AP' &= AP\cup ACC(C) \\
+L' (\langle\ell,\eta\rangle) &= L(\ell)\cup\{g\in ACC(C)|\eta g\} \\
+\to& \text{is the transition relation defined below}
+\end{align*}
+\begin{description}
+    \item[Discrete Transition:] $\langle\ell,\eta\rangle\overset{\alpha}{\longrightarrow}\langle\ell',\eta'\rangle$ if there is a transition labeled $(g:\alpha,D)$ from location $\ell$ to $\ell'$ such that:
+    \begin{itemize}
+        \item $g$ is satisfied by $\eta$, i.e. $\eta\models g$
+        \item $\eta'=\eta$ with all clocks in $D$ resets to $0$, i.e. $\eta'=reset\, D\,in\,\eta$
+        \item $\eta'$ fulfills the invariant of location $\ell'$, i.e. $\eta'\models Inv(\ell')$
+    \end{itemize}
+    \item[Delay Transition] $\langle\ell,\eta\rangle\overset{d}{\longrightarrow}\langle\ell,\eta+d\rangle$ for $d\in\mathds{R}_{\geq0}$ if $\eta+d\models Inv(\ell)$
+\end{description}
+\follows uncountably many states of the form $\langle\ell,\eta+t\rangle$ possible
+\mdfsubtitle{Timed Paths through $TS(TA)$}
+Model possible behaviour of $TA$. Not every Path is realistic:
+\begin{description}
+    \item[time convergence:] time converges to a specific value \\
+    Time convergence is unrealistic and needs to be ignored (similar to unfair paths) \follows only use time-divergent paths.
+    \item[timelock:] passage of time stops \\
+    $TA$ is \emph{timelock-free} if no state in $Reach(TS(TA))$ contains a timelock \\
+    timelocks are modelling flaws \follows need mechanisms to check for them
+    \item[zenoness:] infinitely many actions take place in finite time. \\
+\end{description}
+\mdfsubtitle{Zenoness}
+\begin{itemize}
+    \item A $TA$ that performs infinitely many actions in finite time is \emph{zeno}.
+    \item Path $\pi$ in $TS(TA)$ is \emph{zeno}, if it is time-convergent and infinitely many actions $\alpha\in Act$ are executed along $\pi$
+    \item $TA$ is \emph{non-zeno} if there does not exist a zeno path in $TS(TA)$
+    \begin{itemize}
+        \item any $\pi$ in $TS(TA)$ is time-divergent
+        \item any time-convergent path has at least one delay transition.
+    \end{itemize}
+    \item Sufficient Condition for \emph{Non-Zenoness} (static analysis):\\
+    Let $TA$ with set $C$ of clocks such that for every (control) cycle:
+    \[ \ell_0\overset{g_1:\alpha_1,C_1}{\scalebox{5}[1]{$\hookrightarrow$}}\ell_1\overset{g_2:\alpha_2,C_2}{\scalebox{5}[1]{$\hookrightarrow$}}\dots\overset{g_n:\alpha_n,C_n}{\scalebox{5}[1]{$\hookrightarrow$}}\ell_n=\ell_0 \] there exists a clock $x\in C$ such that:
+    \begin{enumerate}
+        \item $x\in C$, for some $0<i\leq n$, and
+        \item for all clock evaluations $\eta$ there exists $c\in\mathds{N}_{>0}$ such that \[ \eta(x)<c \text{ implies } (\exists0<j\leq n.n\not\models g_j \text{ or } \eta\not\models Inv(\ell_j)) \]
+    \end{enumerate}
+\end{itemize}
+\mdfsubtitle{Adequate Modelling}
+A timed automaton is adequately modeling a time-critical system whenever it is \emph{non-zeno} and \emph{timelock-free}.
+\end{mdframed}
+
+\subsection{Timed CTL}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Syntax of Timed CTL (TCTL)}
+]
+TCTL formula over $AP$ and set $C$:
+\[ \Phi:= true | a | g | \Phi\wedge\Phi | \neg\Phi | \exists\varphi | \forall\varphi \]
+where $a\in AP, g\in ACC(C)$ and $\varphi$ is a path formula defined by $\varphi:=\diamond^J\Phi$ where
+$J\subseteq\mathds{R}_{\geq0}$ is an interval whose bounds are natural: $J:[n,m], (n,m], [n,m), (n,m)$ for $n,m\in\mathds{N}$ and $n\leq m$, $m=\infty$ allowed for right-open intervalls.
+\\
+\begin{align*}
+\exists\square^J\Phi&=\neg\forall\diamond^J\neg\Phi \\
+\forall\square^J\Phi&= \neg\exists\diamond^J\neg\Phi \\
+\diamond\Phi&=\diamond^{[0,\infty)}\Phi \\
+\square\Phi&=\square^{[0,\infty)}\Phi
+\end{align*}
+\mdfsubtitle{Semantics of TCTL}
+\begin{align*}
+s&\models true \\
+s&\models a &iff&& a&\in L(\ell) \\
+s&\models g &iff&& & \eta\models g\\
+s&\models \neg\Phi &iff&& & \neg s\models\Phi\\
+s&\models \Phi\wedge\Psi &iff&& & (s\models\Phi) \text{ and }(s\models\Psi) \\
+s&\models \exists\varphi &iff&& & \pi\models\varphi \text{ for some } \pi\in Pahts_{div}(s) \\
+s&\models \forall\varphi &iff&& & \pi\models\varphi \text{ for all } \pi\in Pahts_{div}(s) \\\\
+\end{align*}
+\mdfsubtitle{Delay Equivalence Relation $\Longrightarrow$}
+For infinite path fragments in $TS(TA)$ performing $\infty$ many actions, let
+\[s_0\overset{d_0}{\Longrightarrow}s_1\overset{d_1}{\Longrightarrow}s_2\overset{d_2}{\Longrightarrow}\dots \text{ with } d_0,d_1,d_2\dots \geq0\]
+denote the equivalence class such that the same time passes during the path. $ExecTime(\pi)=\sum_{i\geq0}d_i$
+\mdfsubtitle{Satisfaction Set}
+\[Sat(\Phi) = \{s\in Loc\times Eval(C) | s\models_{TCTL}\Phi\}\]
+\[TA\models\Phi \text{ iff } \forall\ell_0\in Loc_0.\langle\ell_0,\eta_0\rangle\models\Phi\]
+where $\eta_0(x)=0$ for all $x\in C$
+\mdfsubtitle{TCTL and CTL}
+TCTL only uses time-divergent paths, therefore:
+\[ \underset{\text{TCTL semantics}}{\underbrace{TS(TA)\models_{TCTL} \forall\varphi}} \text{ but } \underset{\text{CTL semantics}}{\underbrace{TS(TA)\not\models_{CTL} \forall\varphi}} \]
+\mdfsubtitle{Timelock}
+A state is \emph{timelock-free} iff $\exists\square true$. I.e., there is a time-divergent path starting in this state.\\
+$TA$ is timelock-free, iff $\forall s \in Reach(TS(TA)):\,s\models\exists\square true$\\
+\follows Timelock-checking with a timed CTL formula.
+\mdfsubtitle{TCTL Model Checking}
+\[ \underset{\text{timed automaton}}{\underbrace{TA}}\models\Phi \iff \underset{\text{infinite transition system}}{\underbrace{TS(TA)}}\models\Phi \]
+consider finite quotient of $TS(TA)$ \follows Region Transition System $RTS(TA)$ \\
+transform TCTL formula $\Phi$ into ``equivalent'' CTL formula $\hat{\Phi}$
+\[ TA\models_{TCTL}\Phi \iff \underset{finite transition system}{\underbrace{RTS(TA)}}\models_{CTL}\hat{\Phi} \]
+\begin{enumerate}
+    \item elimintation of timing parameters
+    \begin{itemize}
+        \item eliminate all intervalls $J\not=[0\infty)$ from TCTL formulas
+        \item introduce fresh clock $z$ not formerly in $TA$
+        \item $s\models\exists\diamond^J\Phi$ iff $reset\,z\in\,s\models z\in J\wedge\Phi$
+        \item process $\exists\square^J\Phi, \forall\diamond^J\Phi, \forall\square^J\Phi$ similarly
+    \end{itemize}
+    Formally: for any state $s$ of $TS(TA)$ it holds:
+    \[ s\models\exists\diamond^J\Phi\,\iff\,\underset{\text{state in } TS(TA\oplus z)}{\underbrace{s\{z:=0\}}}\models\exists\diamond((z\in J)\wedge\Phi) \] where $TA\oplus z$ it $TA$ over $C$ extended with $z\not\in C$
+    \\
+    For any state $s$ of $TS(TA) it holds. that:$
+    \begin{enumerate}
+        \item $s\models\exists(\Phi\until^J\Psi)$ iff $\underset{\text{state in } TS(TA\oplus z)}{\underbrace{s\{z:=0\}}}\models\exists((\Phi\vee\Psi)\until((z\in J)\wedge\Psi))$
+        \item $s\models\forall(\Phi\until^J\Psi)$ iff $\underset{\text{state in } TS(TA\oplus z)}{\underbrace{s\{z:=0\}}}\models\forall((\Phi\vee\Psi)\until((z\in J)\wedge\Psi))$
+    \end{enumerate}
+    \item Clock Equivalence $\cong$ is an equivalence realtion on clock valuations:
+    \begin{itemize}
+        \item Equivalent clock valuations satisfy the same clock constraint $g$:
+        \[ \eta\cong\eta'\Rightarrow(\eta\models g \iff \eta'\models g) \]
+        \item Time-divergent paths of equivalent paths are ``equivalent'' \follows equivalent paths satisfy the same path formulas.
+        \item The number of equivalence classes under $\cong$ is finite.
+    \end{itemize}
+    (a) and (b) are ensured, if equivalent states:
+    \begin{itemize}
+        \item agree on the integer part of all clock values
+        \item agree on the ordering of the fractional parts of all clocks.
+    \end{itemize}
+    if clocks exceed the \emph{maximal constant} with which they are compared, their precise value is not of interest.
+    \item Construct Region Transition System $TS=RTA(TA)$
+    \item apply CTL model-checking algorithm to check $TS\models\Phi$
+\end{enumerate}
+\mdfsubtitle{Clock Equivalence}
+$\eta$ and $\eta'$ are equivalent, $\eta\cong\eta'$ if: \\
+{\tiny $c_x$ is the largest constant which $x$ is compared to
+ }
+\begin{itemize}
+    \item for any $x\in C:\,\eta(x)>c_x \iff \eta'(x)>c_x$
+    % \\ $\lfloor\eta(x)\rfloor=\lfloor\eta'(x)\rfloor$
+    \item for any $x\in C:$ if $\,\eta(x),\eta'\leq c_x$ then: \\
+    % $frac(\eta(x))=0 \iff frac(\eta'(x))=0$
+    $\lfloor\eta(x)\rfloor = \lfloor\eta'(x)\rfloor$ and $frac(\eta(x))=0 \iff frac(\eta'(x))=0$
+    \item for any $x,y\in C:$ if $\eta(x),\eta'(x)\leq c_x$ and $\eta(y),\eta'(y)\leq c_y$, then: \\
+    $frac(\eta(x))\leq frac(\eta(y)) \iff frac(\eta'(x))\leq frac(\eta'(y))$
+\end{itemize}
+\begin{center}
+\scalebox{1}{\input{images/clockRegions.tikz}}
+\end{center}
+furthermore: $s\cong s'$ iff $\ell=\ell'$ and $\eta\cong\eta'$
+\mdfsubtitle{Regions}
+\begin{description}
+    \item[clock region:] $[\eta]=\{\eta'\in Eval(C) | \eta\cong\eta'\}$
+    \item[state region:] $[s]=\langle\ell,[\eta]\rangle = \{\langle s,\eta'\rangle | \eta'\in[\eta]\}$ e
+\end{description}
+\mdfsubtitle{Bounds on number of regions}
+$|C|!\cdot\prod_{x\in C} c_x\leq | \underset{\text{number of regions}}{\underbrace{Eval(C)\setminus\cong}} | \leq |C|!\cdot 2^{|C|-1} \cdot \prod_{x\in C} (2c_x+2)$ \\
+The number of state regions is $|Loc|$ times larger. \\
+\emph{Exponential} in number of Clocks.
+\mdfsubtitle{Preservation of Atomic Properties}
+\begin{enumerate}
+    \item For $\eta,\eta'\in Eval(C)$ such that $\eta\cong\eta'$:
+    \[ (\eta\models g \text{ if and only if } \eta'\models g) \text{ for any } g \in ACC(TA\cup\Phi) \]
+    \item For $s,s'\in TS(TA)$ such that $s\cong s'$:
+    \[ s\models a \text{ if and only iff } s'\models a \text{ for any } a\in AP' \]
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Region Automaton}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Unbounded Regions}
+]
+Clock reagion is \emph{unbounded}: $r_\infty=\{\eta\in Eval(C) | \forall x\in C.\eta(x)>c_x\}$
+\mdfsubtitle{Successor Regions}
+$r'$ is the \emph{successor} (clock) region of $r$, $r'=succ(r)$ if either:
+\begin{enumerate}
+    \item $r=r_\infty$ and $r=r'$
+    \item $r\not=r_\infty,r\not=r'$ and $\forall\eta\in r$:
+    \[ \exists d\in\mathds{R}_{>0}.(\eta+d\in r' \text{ and } \forall0\leq d'\leq d.\eta+d'\in r\cup r) \]
+\end{enumerate}
+The \emph{successor region}: $succ(\langle\ell,r\rangle) = \langle\ell,succ(r)\rangle$
+\mdfsubtitle{Time Convergence}
+Time convergent paths that only perform \emph{delay transitions}. \\
+For non-zeno $TA$ and $\pi=s_0s_1s_2\dots$ a path in $TS(TA)$:
+\begin{enumerate}
+    \item $\pi$ is \emph{time convergent} \follows $\exists$ state region $\langle\ell,r\rangle$ such that for some $j$:
+    \[ s_i\in\langle\ell,r\rangle \text{ for all } i\geq j \]
+    \item If $\exists$ state region with $r\not=r_\infty$ and an index $j$ such that:
+    \[ s_i\in\langle\ell,r\rangle \text{ for all } i\geq j \]
+    then $\pi$ is \emph{time-convergent}.
+\end{enumerate}
+\mdfsubtitle{Region Automaton}
+For non-zeno $TS$ with $TS(TA)=(S,Act,\to,I,AP,L)$ let:
+\[ RTS(TA,\Phi)=(S',Act\cup\{\tau\},\to',I',AP',L') \text{ with} \]
+\begin{align*}
+S' = S\setminus\cong &= \{[s]|s\in S\} &\text{the state regions} \\
+I'&=\{[s]|s\in I\} &\text{the initial states} \\
+L'(\langle\ell,r\rangle) &= L(\ell)\cup \{g\in AP'\setminus AP |r\models g\} \\
+\to' :& \frac{\ell \overset{g:\alpha,D}{\scalebox{5}[1]{$\hookrightarrow$}} \ell'\;r\models g\; reset\;D\;in\;r\models Inv(\ell')}{\langle\ell,r\rangle\overset{\alpha}{\longrightarrow}'\langle\ell',reset\;D\;in\;r\rangle} &\text{and} \\
+&\frac{r\models Inv(\ell)\quad succ(r)\models Inv(\ell)}{\langle\ell,r\rangle\overset{\tau}{\longrightarrow'}\langle\ell,succ(r)\rangle}
+\end{align*}
+\mdfsubtitle{Correctness}
+For non-Zeno timed automaton $TA$ and $TCTL_\diamond$ formula $\Phi$:
+\[ \underset{\text{TCTL semantics}}{\underbrace{TA\models\Phi}} \text{ iff } \underset{\text{CTL semantics}}{\underbrace{RTS(TA,\Phi)\models\Phi}} \]
+\mdfsubtitle{Timelock Freedom}
+Non-zeno $TA$ is \emph{timelock-free} iff no reachable state in $RTS(TA)$ is terminal. \\
+\follows timelock freedom checking can be reduced to reachability analysis on $RTS(TA)$
+\end{mdframed}
+
+\subsection{TCTL Model Checking Algorithm}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={TCTL Model Checking Algorithm}
+]
+\begin{algorithm}[H]
+R:=$RTS(TA\oplus z,\Phi)$; \tcc*{with state space $S_{rts}$ and labelling $L{rts}$}
+\For{all $i\leq|\Phi|$}{
+    \For{all $\Psi\in Sub(\Phi)$ with $|\Psi|=i$}{
+    \Switch{$\Psi$}{
+        \begin{align*}
+        true &&:&& Sat_R(\Psi)&:= S_{rts};\\
+        a &&:&& Sat_R(\Psi)&:= \{s\in S_{rts}| a\in L_{rts}(s)\};\\
+        \Psi_1\wedge\Psi_2 &&:&& Sat_R(\Psi)&:= \{s\in S_{rts}| \{a_{\Psi_1},a_{\Psi_2}\}\subseteq L_{rts}(s)\};\\
+        \neg\Psi' &&:&& Sat_R(\Psi)&:= \{s\in S_{rts}| a_{\Psi'}\not\in L_{rts}(s)\};\\
+        \exists(\Psi_1\until^J\Psi_2) &&:&& Sat_R(\Psi)&:= Sat_{CTL}\left(\exists((a_{\Psi_1}\vee a_{\Psi_2})\until(z\in J)\wedge a_{\Psi_2})\right);\\
+        \forall(\Psi_1\until^J\Psi_2) &&:&& Sat_R(\Psi)&:= Sat_{CTL}\left(\forall((a_{\Psi_1}\vee a_{\Psi_2})\until(z\in J)\wedge a_{\Psi_2})\right);
+        \end{align*}
+    }
+    \For{all $s\in S_{rts}$ with $s\{z:=0\}\in Sat_R(\Psi)$}{
+    $L_{rts}(s):=L_{rts}(s)\cup\{a_\Psi\}$
+    \tcc*{add $a_\Psi$ to labelling of state regions where $\Psi$ holds}
+    }
+    }
+}
+\Return $I_{rts}\subseteq Sat_R(\Phi)$
+\end{algorithm}
+\mdfsubtitle{Time Complexity}
+timed automaton $TA$, TCTL $\Phi$, $N$ is number of states, $K$ is number of transitions in $RTS(TA,\Phi)$:
+\[ TA\models\Phi: \quad \o((N+K)\cdot|\Phi|) \]
+\end{mdframed}
+
+% part 4
 
 \end{document}

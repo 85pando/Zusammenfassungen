@@ -1,0 +1,9 @@
+\begin{tikzpicture}[
+]
+\draw[green,thick] (0,0) ellipse (3 and 2);
+\draw[blue,thick] (.5,0) circle (1.5);
+\draw[orange,thick] (-.5,0) circle (1.5);
+\node[green] (ctl*) at (2.6,0) {CTL$^*$};
+\node[blue] (ctl) at (1.6,0) {CTL};
+\node[orange] (ltl) at (-1.6,0) {LTL};
+\end{tikzpicture}

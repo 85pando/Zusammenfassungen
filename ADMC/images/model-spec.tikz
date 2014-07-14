@@ -1,0 +1,11 @@
+\begin{tikzpicture}[
+]
+
+\draw[fill=red!70!yellow!70] (0,0) circle (1.5);
+\draw[fill=red!70!blue!70] (0,0) circle (1);
+
+\node[] at (1.25,0) {$\mathcal{S}$};
+\node[] at (0,0) {$\mathcal{M}$};
+
+
+\end{tikzpicture}
