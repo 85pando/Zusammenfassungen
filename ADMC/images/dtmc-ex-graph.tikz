@@ -1,0 +1,18 @@
+\begin{tikzpicture}[
+state/.style={draw,rounded corners,node distance=60},
+initial state/.style={state,initial,initial text=,initial above},
+arrow/.style={draw,->,>=latex},
+]
+\node[initial state] (start) {start};
+\node[state,below of = start] (try) {try};
+\node[state,left of = try] (del) {delivered};
+\node[state,right of = try] (lost) {lost};
+
+\path[arrow]
+(start) edge node[left] {$1$} (try) 
+(try) edge node[below] {$\frac{9}{10}$} (del)
+(del) edge[bend left] node[above left] {$1$} (start)
+(try) edge[bend left] node[above] {$\frac{1}{10}$} (lost)
+(lost) edge[bend left] node[below] {$1$} (try)
+;
+\end{tikzpicture}

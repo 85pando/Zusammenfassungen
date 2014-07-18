@@ -19,6 +19,10 @@
 \newcommand{\until}{\,\mathcal{U}\,}
 \newcommand{\wuntil}{\,\mathcal{W}\,}
 \renewcommand{\O}{\mathcal{O}}
+\newcommand{\underbraceset}[2]{\underset{#1}{\underbrace{#2}}}
+
+%line between multicols
+\setlength{\columnseprule}{.5pt}
 
 \begin{document}
 
@@ -68,7 +72,7 @@ When is a system correct?
 \begin{enumerate}
     \item It does what we expect it to do. \follows functional model checking
     \item It does so in a timely manner. \follows real time or probabilistic model checking.
-    \item It does so with a certain probability over a certain period of time. \follows probabilistic model checking
+    \item It does so with a certain probability over a certain period of time. \follows probabilistic model checking.
 \end{enumerate}
 
 \begin{minipage}[t]{3cm}
@@ -1179,7 +1183,522 @@ R:=$RTS(TA\oplus z,\Phi)$; \tcc*{with state space $S_{rts}$ and labelling $L{rts
 \end{algorithm}
 \mdfsubtitle{Time Complexity}
 timed automaton $TA$, TCTL $\Phi$, $N$ is number of states, $K$ is number of transitions in $RTS(TA,\Phi)$:
-\[ TA\models\Phi: \quad \o((N+K)\cdot|\Phi|) \]
+\[ TA\models\Phi: \quad \O((N+K)\cdot|\Phi|) \]
+\end{mdframed}
+
+\subsection{Clock Zones}
+Number of clock regions too large, need coarser abstraction: \emph{clock zones}, efficient representation in \emph{difference bound matrices}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Forward Analysis}
+]
+\begin{itemize}
+    \item start from initial configuration
+    \item determine configurations that are reachable within $1,2,\dots,n$ steps
+    \item termination: goal configuration reached or no new successors (\follows fixpoint)
+\end{itemize}
+\mdfsubtitle{Backward Analysis}
+\begin{itemize}
+    \item start from goal configuration
+    \item determine configurations that can reach the goal within $1,2,\dots,n$ steps
+    \item termination: initial configuration reached or no new predecessors (\follows fixpoint)
+\end{itemize}
+\mdfsubtitle{Clock Zones}
+Symbolic representation of timed automata configurations.\\
+For set $z$ of clock valuations and edge $e=\ell\overset{g:\alpha, D}{\scalebox{5}[1]{$\hookrightarrow$}}\ell'$ let:
+\begin{align*}
+Pre_e(z) &= \{ \eta\in\mathds{R}^n_{\geq0} | \exists\eta'\in z,d\in\mathds{R}_{\geq0}.(\eta+d\models g)\wedge\eta' = reset\,D\,in\, (\eta+d)\} \\
+Post_e(z) &= \{ \eta'\in\mathds{R}^n_{\geq0} | \exists\eta\in z,d\in\mathds{R}_{\geq0}.(\eta+d\models g)\wedge\eta' = reset\,D\,in\, (\eta+d)\}
+\end{align*}
+Intuition:
+\begin{itemize}
+    \item $\eta\in Pre_e(z)$ if for some $\eta'\in z$ and delay $d$ holds: $(\ell,\eta)\overset{d}{\Longrightarrow}\dots\overset{e}{\longrightarrow}(\ell',\eta')$
+    \item $\eta'\in Post_e(z)$ if for some $\eta\in z$ and delay $d$ holds: $(\ell,\eta)\overset{d}{\Longrightarrow}\dots\overset{e}{\longrightarrow}(\ell',\eta')$
+\end{itemize}
+\mdfsubtitle{Zones}
+Clock Constraints are conjunctions of constraints of the form
+\begin{itemize}
+    \item $x\prec c$ and $x-y\prec c$ for $\prec\in\{<,\leq,=,\geq,>\}$ and $c\in\mathds{Z}$
+\end{itemize}
+A \emph{Zone} is a (maximal) set of clock valuations satisfying a clock constraint. \\
+Clock zone of $g:\llbracket g\rrbracket=\{\eta\in Eval(C)|\eta\models g\}$ \\
+A \emph{state zone} of $s=\langle\ell,\eta\rangle$ is $\langle\ell,z\rangle$ with $\eta\in z$ \\
+For zone $z$ and edge $e$, $Post_e(z)$ and $Pre_e(z)$ are zones. \\
+\mdfsubtitle{Operations on Zones}
+\begin{tabular}{ll}
+Future of $z$: & $\overset{\rightarrow}{z} = \{\eta+d | \eta\in z\wedge d\in\mathds{R}_{\geq0}\}$ \\
+Past of $z$: & $\overset{\leftarrow}{z} = \{\eta-d | \eta\in z\wedge d\in\mathds{R}_{\geq0}\}$ \\
+Intersection of two zones: & $z\cap z' = \{\eta|\eta\in z \wedge\eta\in z'\}$ \\
+Clock Reset in a zone: & reset $D$ in $z$ = $\{$ reset $D$ in $\eta | \eta\in z\}$ \\
+Inverse Clock Reset of a zone: & reset$^-1\,D$ in $z=\{\eta|$ reset $D$ in $\eta\in z\}$
+\end{tabular}
+zones are closed under these operations
+\mdfsubtitle{Clock Zones Examples}
+\begin{multicols}{2}
+$\red{(2<x\leq5)}\wedge\green{(1<y\leq5)}\wedge\blue{(y-x\leq0)}$
+\begin{center}
+\scalebox{.7}{\input{images/clock-zones.tikz}}
+\end{center}
+Future of $z$:
+\begin{center}
+\scalebox{.7}{\input{images/clock-zones-future.tikz}}
+\end{center}
+Past of $z$:
+\begin{center}
+\scalebox{.7}{\input{images/clock-zones-past.tikz}}
+\end{center}
+Intersection of two zones: {\tiny $z'=1\leq y\leq3$}
+\begin{center}
+\scalebox{.7}{\input{images/clock-zones-intersect.tikz}}
+\end{center}
+Clock reset in a zone:
+\begin{center}
+\scalebox{.7}{\input{images/clock-zones-reset.tikz}}
+\end{center}
+Inverse Clock reset:
+\begin{center}
+\scalebox{.7}{\input{images/clock-zones-inverse-reset.tikz}}
+\end{center}
+\end{multicols}
+\mdfsubtitle{Symbolic Representation of Successor and Predecessors}
+For edge $e=\ell\overset{g:\alpha, D}{\scalebox{5}[1]{$\hookrightarrow$}}\ell'$ we have:
+\begin{align*}
+Pre_e(z) &= \{ \eta\in\mathds{R}^n_{\geq0} | \exists\eta'\in z,d\in\mathds{R}_{\geq0}.(\eta+d\models g)\wedge\eta' = reset\,D\,in\, (\eta+d)\} \\
+Post_e(z) &= \{ \eta'\in\mathds{R}^n_{\geq0} | \exists\eta\in z,d\in\mathds{R}_{\geq0}.(\eta+d\models g)\wedge\eta' = reset\,D\,in\, (\eta+d)\}
+\end{align*}
+Express this symbolically with operations on zones:
+\begin{align*}
+Pre_e(z)  &= \overleftarrow{reset^{-1}\,D\,in\,(z\cap\llbracket D=0\rrbracket)\cap\llbracket g\rrbracket} \\
+Post_e(z) &= reset\,D\,in\,(\overrightarrow{z}\cap\llbracket g\rrbracket)
+\end{align*}
+\mdfsubtitle{Successor (Forward Analysis)}
+\begin{multicols}{2}
+zone: $Z$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone.tikz}}
+\end{center}
+advance time: $\overrightarrow{Z}$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-advance.tikz}}
+\end{center}
+\columnbreak
+satisfy guard: $\overrightarrow{Z}\cap g$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-guard.tikz}}
+\end{center}
+reset clock: $[y\leftarrow0](\overrightarrow{Z}\cap g)$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-reset.tikz}}
+\end{center}
+\end{multicols}
+\mdfsubtitle{Predecessor (Backward Analysis)}
+\begin{multicols}{2}
+zone: $Z$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-b.tikz}}
+\end{center}
+undo clock reset: $[C\leftarrow]^{\overset{y}{\overbrace{-1}}}(Z\cap(\overset{x}{\overbrace{C=0}}))$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-b-undo.tikz}}
+\end{center}
+consider guard: $([C\leftarrow]^{-1}(Z\cap(C=0)))\cap g$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-b-guard.tikz}}
+\end{center}
+go back in time: $\overleftarrow{([C\leftarrow]^{-1}(Z\cap(C=0)))\cap g}$
+\begin{center}
+\scalebox{.7}{\input{images/symb-zone-b-goback.tikz}}
+\end{center}
+\end{multicols}
+\mdfsubtitle{Backward Symbolic Reachability Analysis}
+\emph{Backward Symbolic Transition System} of $TA$ is inductively defined by:
+\[ \frac{
+    e=\ell \overset{g:\alpha, D}{\scalebox{5}[1]{$\hookrightarrow$}} \ell',\; z=Pre(z')
+}{
+    (\ell',z')\Leftarrow (\ell,z)
+} \]
+Computation Schema:
+\begin{align*}
+T_0 &&&= &&\{(\ell,\mathds{R}_{\geq0}^n) | \ell \text{ is a goal location}\} \\
+T_1 &&&= &T0\cup &\{(\ell,z) | \exists(\ell',z')\in,T_0.(\ell',z')\leftarrow(\ell,z) \text{ and } \ell'=\ell \text{ implies } z\not\subseteq z'\} \\
+\dots &&& &\dots \\
+T_{k+1} &&&= &T0\cup &\{(\ell,z) | \exists(\ell',z')\in,T_0.(\ell',z')\leftarrow(\ell,z) \text{ and } \ell'=\ell \text{ implies } z\not\subseteq z'\} \\
+\dots &&& &\dots
+\end{align*}
+until
+\begin{itemize}
+    \item computation stabilizes (fixpoint)
+    \item initial configuration reached (property violated)
+\end{itemize}
+\mdfsubtitle{Forward Symbolic Reachability Analysis}
+\emph{Forward Symbolic Transition System} of $TA$ is inductively defined by:
+\[ \frac{
+    e=\ell \overset{g:\alpha, D}{\scalebox{5}[1]{$\hookrightarrow$}} \ell',\; z'=Post(z)
+}{
+    (\ell,z)\Rightarrow (\ell',z')
+} \]
+Computation Schema:
+\begin{align*}
+T_0 &&&= &&\{(\ell_0,z_0) | \forall x\in C.z_o(x)=0\} \\
+T_1 &&&= &T0\cup &\{(\ell',z') | \exists(\ell,z)\in,T_0.(\ell,z)\rightarrow(\ell',z') \text{ and } \ell=\ell' \text{ implies } z\not\subseteq z'\} \\
+\dots &&& &\dots \\
+T_{k+1} &&&= &T0\cup &\{(\ell',z') | \exists(\ell,z)\in,T_k.(\ell,z)\rightarrow(\ell',z') \text{ and } \ell=\ell' \text{ implies } z\not\subseteq z'\} \\
+\dots &&& &\dots
+\end{align*}
+until
+\begin{itemize}
+    \item computation stabilizes (fixpoint)
+    \item goal configuration reached (property violated)
+\end{itemize}
+Forward Symbolic Reachability Analysis is correct but may not terminate.
+\mdfsubtitle{Abstract Forward Reachabilty (only proposed)}
+Let $\gamma$ associate sets of valuations to sets of valuations. \\
+\emph{Forward Symbolic Transition System} of $TA$ is inductively defined by:
+\[ \frac{
+    e=\ell \overset{g:\alpha, D}{\scalebox{5}[1]{$\hookrightarrow$}} \ell',\; z'=\gamma(z)
+}{
+    (\ell,z)\Rightarrow \gamma(\ell',\gamma(z')
+} \]
+Computation Schema:
+\begin{align*}
+T_0 &&&= &&\{(\ell_0,\gamma(z_0) | \forall x\in C.z_o(x)=0\} \\
+T_1 &&&= &T0\cup &\{(\ell',z') | \exists(\ell,z)\in,T_0.(\ell,z)\rightarrow\gamma(\ell',z') \} \\
+\dots &&& &\dots \\
+T_{k+1} &&&= &T0\cup &\{(\ell',z') | \exists(\ell,z)\in,T_k.(\ell,z)\rightarrow\gamma(\ell',z')\} \\
+\dots &&& &\dots
+\end{align*}
+inclusion check and termination as before.
+\begin{itemize}
+    \item Soundness: (anything found in abstract system is also in actual system)
+    \[
+    \underbraceset{\text{reachability in } TS(TA)}{\langle\ell_0,\eta_0\rangle\to^*\langle\ell,\eta\rangle}
+    \implies
+    \exists\underbraceset{\text{ reachability in } TS(TA)}{\langle\ell_0,\eta_0\rangle\to^*\langle\ell,\eta\rangle} \text{ with } \eta\in z
+     \]
+    \item Completeness: (anything from the actual system can also be found in abstract system)
+    \[
+    \underbraceset{\text{ reachability in } TS(TA)}{\langle_0,\eta_0\to^*\langle\ell,\eta\rangle}
+    \implies
+     \exists\underbraceset{\text{abstract symbolic reachability}}{\langle\ell_0,\gamma(\{\eta_0\})\rangle\implies^*_\gamma\langle\ell,z\rangle} \text{ for some $z$ with } \eta\in z \]
+\end{itemize}
+for any $\gamma$ soundness and completeness are desirable
+\begin{itemize}
+    \item Finiteness: $\{\gamma(z)|\gamma \text{ defined on } z\}$ is finite
+    \item Correctness: $\gamma$ is sound wrt. reachability
+    \item Completeness: $\gamma$ is complete wrt. reachability
+    \item Effectiveness: $\gamma$ is defined on zones and $\gamma(z)$ is a zone
+\end{itemize}
+\mdfsubtitle{$k$-Normalization}
+A \emph{$k$ bounded zone} is described by a $k$-bounded clock constraint (consisting of $k$ atomic clock constraints). The \emph{$norm_k(Z)$} is the smallest $k$-bounded zone containing zone z
+\begin{center}
+\scalebox{.7}{\input{images/k-bounded-zone.tikz}}
+\end{center}
+\begin{itemize}
+    \item Finiteness: $norm_k(\bullet)$ is a finite abstraction operator
+    \item Correctness: $norm_k(\bullet)$ is sound wrt. reachability (provided $k$ is the maximal constant appearing in the constraints of $TS$)
+    \item Completeness: $norm_k(\bullet)$ is complete wrt. reachability, since $z\subseteq norm_k(\bullet)$ so $norm_k(\bullet)$ is an over-approximation
+    \item Effectiveness $norm_k(\bullet)$ is a zone
+\end{itemize}
+\end{mdframed}
+
+\subsection{Difference Bound Matrices}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Difference Bound Matrices}
+]
+Zone $z$ over $C$ is represented by DBM $Z$ of cardinality $|C+1|\cdot|C+1|$. For $C=\{x_1,\dots,x_n\}$, let $C_0=\{x_0\}\cup C$ with $x_0=0$ and:
+\[ Z(i,j) = (c,\prec) \iff x_i-x_j\prec c \]
+Further:
+\begin{align*}
+Z(i,j) &:= (c,\prec) \text{ for each bound } x_i-x_j\prec \text { in } z \\
+Z(i,j) &:= \infty \text{ (no bound) if clock difference } x_i-x_j \text{is unbounded in } z \\
+Z(0,j) &:= (0,\leq)\, 0-x\leq 0 \text{\tiny all clocks are positive} \\
+Z(i,i) &:= (0,\leq) \text{ each clock is at most itself}
+\end{align*}
+rows are for lower bounds, columns for higher bounds, always: $x_0=0$
+\begin{center}
+\hspace{-2em}
+\raisebox{-.5\height}{\scalebox{.7}{\input{images/DBM.tikz}}}
+\follows $\begin{pmatrix}
+0 & -3 & 0 \\ 9 & 0 & 4 \\ 5 & 2 & 0
+\end{pmatrix}$
+\end{center}
+\mdfsubtitle{Canonical Form}
+A zone $z$ is in \emph{canonical form} iff no constraint can be strengthened without reducing $\llbracket z\rrbracket = |\{\eta|\eta\in z\}|$ {\tiny the size of the zone}. \\
+For each zone $z$ there eixts a \emph{unique} zone $z'$ such that $\llbracket z\rrbracket = \llbracket z'\rrbracket$ and $z'$ is in canonical form.\\
+Zone $z$ is in its \emph{canonical form} iff DBM $Z$ satisfies:
+\[ Z(i,j) \leq Z(i,k)+Z(k,j) \text{ for any } x_i,x_j,x_k\in C_0 \]
+\mdfsubtitle{Operations on DBM entries}
+Let $\preceq\in\{<,\leq\}$
+\begin{itemize}
+    \item Comparison of DBM entries: $(c,\preceq)<(c',\preceq')$ if $c<c'$
+    \item Addition of DBM entries:
+    \begin{align*}
+    c+\infty &= \infty \\
+    (c,\leq) + (c',\leq) &= (c+c',\leq) \\
+    (c,<) + (c',\leq) &= (c+c',<)
+    \end{align*}
+\end{itemize}
+
+\mdfsubtitle{Transform DBM into its canonical form}
+Deriving the \emph{tightest constraint} on a pair of clocks in a zone is equivalent to finding the shortest weighted path between their vertices.\\
+For Example Floyd-Warshall's All-Pairs Shortest-Path Algorithm \\
+\begin{algorithm}[H]
+\For{all $k:=1\,to\,n$}{
+     \For{$i:=1$ to $n$}{
+        \For{$j:=1$ to $n$}{
+            $\underbraceset{\text{i to j}}{path[i][j]} = min(\underbraceset{curMin}{path[i][j]}, \underbraceset{candidateMin}{path[i][k]+path[k][j]});$
+        }
+     }
+}
+Worst Case time complexity in $\O(|C_0|^3)$\\
+A canonical zone may contain redundant constraints: $x_i\overset{(n,\preceq)}{\longrightarrow}x_j$ is \emph{redundant} if a path if a path from $x_i$ to $x_j$ has weight of at most $(n,\preceq)$
+\end{algorithm}
+\mdfsubtitle{DBM Operations for Property Checking}
+\begin{itemize}
+    \item Nonemptiness: $\llbracket Z\rrbracket\not=\varnothing$?
+    \begin{itemize}
+        \item $Z=\varnothing$ if $x_i-x_j\preceq c$ and $x_j-x_i\preceq'c'$ and $(c,\preceq)<(c',\preceq')$
+        \item[\follows] search for negative cycles in the graph representation
+        \item mark $Z$ when upper bound is set to value $<$ its corresponding lower bound
+    \end{itemize}
+    \item Inclusion test: is $\llbracket Z\rrbracket\subseteq\llbracket Z'\rrbracket$?\\
+    for DBMs in canonical form, test whether $Z(i,j)\leq Z'(i,j)$ for all $i,j\in C_0$ \marginnote{might be $|Z(\dots)|$ if canonicalization does not remove negative values.}
+    \item Satisfaction: does $Z\models g$? \\
+    check whether $\llbracket Z\wedge g\rrbracket = \varnothing$ (if yes, it does not)
+\end{itemize}
+\mdfsubtitle{DBM Operations Delays}
+\begin{itemize}
+    \item Future: determine $\overrightarrow{Z}$
+    \begin{itemize}
+        \item remove upper bounds on any clock:
+        \[ \overrightarrow{Z}(i,0)=\infty \text{ and } \overrightarrow{Z}(i.j)=Z(i,j) \text{ for } j\not=0 \]
+        \item $Z$ is canonical $\implies$ $\overrightarrow{Z}$ is canonical
+    \end{itemize}
+    \item Past: determine $\overleftarrow{Z}$
+    \begin{itemize}
+        \item set the lower bounds on all individual clocks to $(0,\preceq)$:
+        \[ \overleftarrow{Z}(i,0)=\infty \text{ and } \overleftarrow{Z}(i,j)=Z(i,j) \text{ for } j\not=0 \] \marginnote{this formula may be wrong in the slides: slide 3-164}
+    \end{itemize}
+    \item Conjunction: $\llbracket Z\rrbracket \wedge (x_i-x_j\preceq n)$
+    \begin{itemize}
+        \item if $(n,\preceq)<Z(i,j)$ then $Z(i,j):=(n,\preceq)$ else do nothing
+        \item put $Z$ into canonical form (in time $\O(|C_0|^2$) using that only $Z(i,j)$ changed.
+    \end{itemize}
+    \item Clock Reset: $x_j:=d$ in $Z$
+    \[ Z(i,j):=(d,\leq)+Z(0,j) \text{ and } Z(j,i):= Z(j,0)+(-d,\leq) \]
+    \item $k$-Normalization: $norm_k(Z)$
+    \begin{itemize}
+        \item remove all bounds $x-y\preceq m$ for which $(m,\preceq)>(k,\leq)$ {\tiny $\to \infty$}
+        \item set all bounds $x-y\preceq m$ with $(m,\preceq)<(-k,<)$ to $(-k,<)$
+        \item put the DBM back into canonical form (Floyd-Warshall)
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+
+\section{Probabilistic Model Checking}
+
+\begin{itemize}
+    \item Functional Requirements
+    \begin{itemize}
+        \item Functions or Services that the system has to provide.
+    \end{itemize}
+    \item Nonfunctional Requirements
+    \begin{itemize}
+        \item properties not directly related to functional correctness (often quantitative)
+        \item response time, reliability, dependability, performance, quality of service
+    \end{itemize}
+
+    \begin{mdframed}[roundcorner=5pt,
+    subtitlebelowline=false,subtitleaboveline=false,
+    subtitlebackgroundcolor=blue!30,
+    % backgroundcolor=blue!20,
+    frametitlerule=true,
+    frametitlebackgroundcolor=blue!30,
+    frametitle={System Correctness}
+    ]
+    A system is correct if it is capable of doing what it is expected to do over a certain period of time with a certain probability.
+    \end{mdframed}
+    Probabilistic Approaches:
+    \begin{itemize}
+        \item Termination of probabilistic programs \\
+        does a probabilistic program terminate with probability one?
+        \item Markov decision processes\\
+        stochastic and nondeterministic behaviour, does a certain (linear) temporal logic formula hold with probability $p$?
+        \item Discrete-time Markov Chains \\
+        can we reach a goal state via a given trajectory with probability $p$?
+        \item Discrete Markov Decision Process\\
+        What is maximal (or minimal) probability of doing something?
+        \item Continuous-time Markov Chains \\
+        Can we do so within a given time interval $I$?
+    \end{itemize}
+\end{itemize}
+
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Probabilistic Model Checking}
+]
+{\tiny not probabilistic approaches to model checking like Monte-Carlo Model Checking or Random Walks, which perform incomplete sampling of state space} \\
+Checking of Reachability and Probabilistic temporal logic formulae
+\begin{itemize}
+    \item time-bounded reachability
+    \item long-run averages, steady state
+\end{itemize}
+\mdfsubtitle{Measurable Space}
+\begin{itemize}
+    \item A \emph{sample space} $\Omega$ of a chance experiment is a set of values representing the possible outcomes of the experiment.
+    \item A \emph{$\sigma$-algebra} is a pair $(\Omega,\mathcal{F})$ with $\Omega\not=\varnothing$ and $\mathcal{F}\subseteq2^\Omega$ a collection of subsets of sample space $\Omega$ such that:
+    \begin{enumerate}
+        \item $\Omega\in\mathcal{F}$ ("all events are possible")
+        \item $A\in \mathcal{F}\implies (\Omega-A)\in\mathcal{F}$ ($A$ is a set of events, so the complement of events is also possible)
+        \item $(\forall i\geq0.A_i\in\mathcal{F})\implies(\bigcup_{i\geq0} A_i)\in\mathcal{F}$ (the countable union of all sets of possible events are also possible)
+    \end{enumerate}
+    \item elements of $\mathcal{F}$ are called \emph{events}
+    \item the pair $(\Omega,\mathcal{F})$ is called a \emph{measurable space}
+\end{itemize}
+\mdfsubtitle{Probability Space}
+A \emph{probability space} $\mathcal{P}$ is a structure $(\Omega,\mathcal{F},Pr)$ with:
+\begin{itemize}
+    \item $(\Omega,\mathcal{F}$ is a $\sigma$-algebra
+    \item $Pr:\mathcal{f}\to[0,1]$ is a \emph{probability measure}, i.e.
+    \begin{enumerate}
+        \item $Pr(\Omega)=1$, i.e. $\Omega$ is the certain event
+        \item $Pr\left( \bigcup_{i\in I}A_i \right)=\sum_{i\in I} Pr(A_i)$ for any $A_i\in\mathcal{F}$ with $\underbraceset{\text{independent events}}{A_i\cap A_j=\varnothing}$ for $i\not= j$ where $\{A_i\}_{i\in I}$ is finite or countably infinite
+    \end{enumerate}
+\end{itemize}
+The elements in $\mathcal{F}$ of a probability space $(\Omega,\mathcal{F},Pr)$ are called \emph{measurable events}.
+\begin{itemize}
+    \item No possible outcome of chance experiments is missed when considering $\Omega$.
+    \item Probabilities for different $A_i$s add up if the $A_i$s are pairwise disjoint.
+\end{itemize}
+\mdfsubtitle{Properties of Probabilities}
+For measurable events $A,B$ and $A_i$ and probability measure $Pr$:
+\begin{align*}
+Pr(A) &= 1-Pr(\Omega-A) \\
+Pr(A\cup B) &= Pr(A)+Pr(B)-Pr(A\cap B) \\
+Pr(A\cap B) &= \underbraceset{\text{$A$ happens if $B$ happens}}{Pr(A|B)}\cdot Pr(B) \\
+A\subseteq B &\implies Pr(A)\leq Pr(B) \\
+Pr(\bigcup_{n\geq 1} A_n) &= \sum_{n\geq1}Pr(A_n) & \text{provided $A_n$ are pairwise disjoint}
+\end{align*}
+\mdfsubtitle{Discrete Probability Space}
+$Pr$ is a \emph{discrete probability} measure on $(\Omega,\mathcal{F})$ if
+\begin{itemize}
+    \item there is a countable set $A\in\Omega$ such that for $a\in A$:
+    \[
+    \{a\}\in\mathcal{F} \text{ and } \sum_{a\in A}Pr(\{a\})=1
+    \]
+\end{itemize}
+$(\Omega\mathcal{F},Pr)$ is then called a \emph{discrete probability space}, otherwise it is a \emph{continuous probability space}.
+\mdfsubtitle{Measurable Function}
+Let $(\omega,\mathcal{F}$ and $(\Omega',\mathcal{F}'$ be measurable spaces. Function $f:\Omega\to\Omega'$ is a \emph{measurable function} if
+\[
+f^{-1}(A) = \{a|f(a)\in A\}\in\mathcal{F} \text{ for all } A\in\mathcal{F}''
+\]
+\mdfsubtitle{Random Variable}
+Measurable function $X:\Omega\to\mathds{R}$. $\mathds{R}$ is a \emph{random variable}. \\
+The \emph{probability distribution} of $X$ is $Pr_X=Pr\circ X^{-1}$ where $Pr$ is a probability measure on $(\Omega,\mathcal{F})$.
+\mdfsubtitle{Distribution Function}
+The \emph{Distribution Function} $F_X$ of random variable $X$ is defined by:
+\[
+F_X(d) = \underset{X}{Pr}((-\infty,d]) = Pr(\underbraceset{\{X\leq d\}}{\{a\in\Omega|X(a)\leq d\}}) \text{ for real }d
+\]
+properties:
+\begin{itemize}
+    \item $F_X$ is monotonic and right-continuous (increases with greater $d$)
+    \item $0\leq F_X(d)\leq1$
+    \item $lim_{d\to-\infty}F_X(d)=0$
+    \item $lim_{d\to\infty}F_X(d)=1$
+\end{itemize}
+\mdfsubtitle{Distribution Function for Continuous Random Variable}
+The \emph{distribution function} $F_X$ of random variable $X$ is defined for $d\in\mathds{R}$ by:
+\[
+F_X(d)=\underset{X}{Pr}(X\in(-\infty,d]) = Pr(\{a\in\Omega|X(a)\leq d\})
+\]
+In the continuous case, $F_X$ is called the \emph{cumulative density function}.
+\mdfsubtitle{Distribution Function as Sums/Integrals}
+\begin{itemize}
+    \item For discrete random variable $X$, $F_X$ can be written as
+    \[
+    F_X(d)=\sum_{d_i\leq d}\underset{X}{Pr}(X=d_i)
+    \]
+    \item For continuous random variable $X$, $F_X$ can be written as:
+    \[
+    F_X(d)=\int_{-\infty}^d f_X(i) du \text{ with $f$ the density function}
+    \]
+\end{itemize}
+\mdfsubtitle{Discrete-Time Markov Chains}
+State-transition systems augmented with probabilities:
+\begin{description}
+    \item[States:] set of states representing possible configurations of the system being modeled.
+    \item[Transitions:] transitions between states model evolution of systems states; occur in discrete time-steps
+    \item[Probabilities:] probabilities of making transitions between states are given by discrete probability distributions
+\end{description}
+A \emph{DTMC} $\mathcal{M}$ is a tuple $(S,P,\iota_{init},AP,L)$ with
+\begin{itemize}
+    \item $S$ is a countable nonempty set of states (preferably finite)
+    \item $P:S\times S\to[0,1]$ transition probability function, s.t. $\sum_{s'}P(s,s')=1$ \\
+    $P(s,s')$ is the probability to jump from $s$ to $s'$ in one step
+    \item $\iota_{init}:S\to[0,1]$ the initial distribution with $\sum_{s\in S}\iota_{init}(s)=1$
+    \begin{itemize}
+        \item $\iota_{init}(s)$ is the probability that system starts in state $s$
+        \item state $s$ for which $\iota_{init}(s)>0 is an initial state$
+    \end{itemize}
+    \item $L:S\to 2^{AP}$, the labeling function
+\end{itemize}
+next state is always chosen probabilistically, no non-determinism to model concurrency \follows Markov Decision Processes (MDPs)
+\mdfsubtitle{Properties in DTMC}
+\begin{itemize}
+    \item State graph of DTMC $\mathcal{M}$ is a digraph $G=(V,E)$ with
+    \begin{itemize}
+        \item vertices $V$ are states of $\mathcal{M}$ and $(s,s')\in E \iff P(s,s')>0$
+    \end{itemize}
+    \item Paths in $\mathcal{M}$ are maximal (i.e. infinite) paths in its state graph
+    \item Notations: $Paths(\mathcal{M})$ and $Paths_{fin}(\mathcal{M}$ denote the set of finite paths in $\mathcal{M}$
+    \item Direct successors and predecessors
+    \begin{itemize}
+        \item $Post(s)=\{s'\in S|P(s,s')>0\}$ and $Pre(s)=\{s'\in S|P(s',s)>0\}$
+        \item $Post^*(s)$ and $Pre^*(s)$ are reflexive and transitive closures
+    \end{itemize}
+    \item Absorbing States:
+    \begin{itemize}
+        \item state of MC $\mathcal{M}$ is called absorbing iff $Post^*(s)=\{s\}$ {\tiny (state cannot be left)}
+        \item then $P(s,s)=1$ and $\forall t\not=s:P(s,t)=0$
+    \end{itemize}
+\end{itemize}
+\mdfsubtitle{Example for Discrete-Time Markov Chain}
+\begin{multicols}{2}
+\begin{center}
+\scalebox{1}{\input{images/dtmc-ex-graph.tikz}}
+\end{center}
+\begin{align*}
+P&=
+\begin{pmatrix}
+0 & 1 & 0 & 0 \\
+0 & 0 & \frac{1}{10} & \frac{9}{10} \\
+0 & 1 & 0 & 0 \\
+1 & 0 & 0 & 0
+\end{pmatrix},
+&\iota_{init}&=\begin{pmatrix}1\\0\\0\\0\end{pmatrix}
+\end{align*}
+probability to be in states after one step: $\begin{pmatrix}
+0 \\ 1 \\ 0 \\ 0
+\end{pmatrix}$
+\end{multicols}
+
 \end{mdframed}
 
 % part 4

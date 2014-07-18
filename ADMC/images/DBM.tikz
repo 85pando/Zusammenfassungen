@@ -1,0 +1,27 @@
+\begin{tikzpicture}[
+arrow/.style={draw,->,>=stealth},
+]
+
+%grid
+\draw[black!50] (0,0) grid (9.3,5.3);
+\draw[arrow] (0,0) -- (9.3,0);
+\path (0,0) -- (9,0) node[pos=0,below] {0} node[pos=.33,below] {3} node[pos=.66,below] {6} node[pos=1,below] {9};
+\draw[arrow] (0,0) -- (0,5.3);
+\path (0,0) -- (0,5) node[pos=0,left] {0} node[pos=2/5,left] {2} node[pos=1,left] {5};
+
+%area zone
+\path[fill=yellow,opacity=.3]
+(3,0) -- (4,0)
+	--(9,5)
+	--(3,5)
+	--cycle
+;
+%bound
+\path[draw,blue,very thick]
+(3,0) -- (4,0)
+	--(9,5)
+	--(3,5)
+	--cycle
+;
+
+\end{tikzpicture}

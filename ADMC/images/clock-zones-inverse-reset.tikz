@@ -1,0 +1,33 @@
+\begin{tikzpicture}[
+arrow/.style={draw,->,>=stealth},
+]
+
+%grid
+\draw[black!50] (0,0) grid (6.3,6.3);
+\draw[arrow] (0,0) -- (6.3,0);
+\path (0,0) -- (6,0) node[pos=0,below] {0} node[pos=.5,below] {3} node[pos=1,below] {6};
+\draw[arrow] (0,0) -- (0,6.3);
+\path (0,0) -- (0,6) node[pos=0,left] {0} node[pos=.5,left] {3} node[pos=1,left] {6};
+
+%area
+\path[fill=green,opacity=.3]
+(2,0) -- (5,0)
+	-- (5,6.3)
+	-- (2,6.3)
+	-- cycle
+;
+
+\path[draw,blue,very thick]
+(2,0) -- (5,0)
+;
+\node[draw,circle,fill=blue,blue] (dot) at (4,0) {};
+\path[arrow,blue,very thick]
+(dot) -- (4,3)
+;
+\node[draw,circle,fill=blue,blue] (dot) at (2.5,0) {};
+\path[arrow,blue,very thick]
+(dot) -- (2.5,5)
+;
+
+
+\end{tikzpicture}
