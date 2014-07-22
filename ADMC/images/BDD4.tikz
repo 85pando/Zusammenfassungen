@@ -1,0 +1,40 @@
+\begin{tikzpicture}[
+var/.style={draw,circle},
+term/.style={draw},
+line/.style={draw,thick},
+zero/.style={line,dotted},
+one/.style={line,solid},
+]
+\node[var] (z) at (-.5,3) {$z$};
+
+\node[var] (x1) at (-1.5,2) {$x$};
+\node[var] (x2) at (.5,2)   {$x$};
+
+\node[var] (y1) at (-2,1) {$y$};
+\node[var] (y2) at (-1,1) {$y$};
+%\node[var] (y3) at (0,1)  {$y$};
+\node[var] (y4) at (1,1)  {$y$};
+
+\node[term] (t1) at (-1.5,0) {$0$};
+\node[term] (t2) at (.5,0)   {$1$};
+
+
+\path[zero]
+(z) edge  (x1)
+(x1) edge (y1)
+%(x2) edge (y3)
+(x2) edge (y2)
+(y1) edge (t1)
+(y2) edge (t1)
+%(y3) edge (t1)
+(y4) edge (t2)
+; \path[one]
+(z) edge  (x2)
+(x1) edge (y2)
+(x2) edge (y4)
+(y1) edge (t2)
+(y2) edge (t2)
+%(y3) edge (t2)
+(y4) edge (t1)
+;
+\end{tikzpicture}

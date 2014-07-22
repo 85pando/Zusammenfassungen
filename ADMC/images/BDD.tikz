@@ -1,0 +1,24 @@
+\begin{tikzpicture}[
+var/.style={draw,circle},
+term/.style={draw},
+line/.style={draw,thick},
+zero/.style={line,dotted},
+one/.style={line,solid},
+]
+\node[var] (x) at (0,0) {$x$};
+\node[var] (y1) at (-1,-1) {$y$};
+\node[var] (y2) at (1,-1) {$y$};
+\node[term] (t1) at (-1.5,-2) {$1$};
+\node[term] (t2) at (-.5,-2) {$0$};
+\node[term] (t3) at (.5,-2) {$0$};
+\node[term] (t4) at (1.5,-2) {$0$};
+\path[zero]
+(x) edge (y1)
+(y1) edge (t1)
+(y2) edge (t3)
+; \path[one]
+(x) edge (y2)
+(y1) edge (t2)
+(y2) edge (t4)
+;
+\end{tikzpicture}

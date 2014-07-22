@@ -1921,7 +1921,7 @@ Check whether a state $s$ in a DTMC satisfies a PCTL formula:
 \end{itemize}
 \mdfsubtitle{Probability and Next-Operator}
 \begin{itemize}
-    \item $s\models\mathbb{P}_J(\circ\Phi)$ iff $Prob(s,\circ\Pthi)\in J$
+    \item $s\models\mathbb{P}_J(\circ\Phi)$ iff $Prob(s,\circ\Phi)\in J$
     \item $Prob(s,\circ\Phi)\equiv\displaystyle\sum_{s'\in Sat(\Phi)}P(s,s')$ {\tiny sum up probabilities to get into $Sat(\Phi)$}
     \item Matrix-Vector Multiplication: $(Probs(s,\circ\Phi))_{s\in S}=P\cdot\iota_\Phi$ {\tiny one step from init of $\Phi$}
 \end{itemize}
@@ -1929,7 +1929,7 @@ Check whether a state $s$ in a DTMC satisfies a PCTL formula:
 $s\models\mathbb{P}_J(\Phi\until^{\leq h}\Psi)$ iff $Prob(s,\Phi\until^{\leq h})\in J$ is the least solution of:
 \begin{itemize}
     \item $1$ if $s\models\Psi$ {\tiny 0 steps}
-    \item for $h>0$ and $s\models\Phi\or\neg\Psi:$
+    \item for $h>0$ and $s\models\Phi\vee\neg\Psi:$
     \[\sum_{s'\in S}P(s,s')\cdot Prob(s',\Phi\until^{\leq h-1}\Psi) \] {\tiny iterate number of steps}
     \item $0$ otherwise {\tiny fail}
 \end{itemize}
@@ -1960,8 +1960,8 @@ For finite DTMC $\mathcal{M}$ and PCTL formula $\Phi$, $\mathcal{M}\models\Phi$ 
 \O(poly(size(\mathcal{M}))\cdot n_{\max}\cdot|\Phi|)
 \]
 \begin{itemize}
-    \item $n_\max=\max\{n|\Psi_1\until^{\leq n}\Psi_2 \text{ occurs in }\Phi\}$
-    \item $n_\max=1$ if $\Phi$ does not contain the bounded until-operator
+    \item $n_{\max}=\max\{n|\Psi_1\until^{\leq n}\Psi_2 \text{ occurs in }\Phi\}$
+    \item $n_{\max}=1$ if $\Phi$ does not contain the bounded until-operator
     \item $size(\mathcal{M}$ probably exponential
     \item $\Phi$ can be exponentially larger than LTL
 \end{itemize}
@@ -1992,6 +1992,272 @@ frametitle={Continuous Time Markov Chain (CTMC)}
     \item An informative counterexample is one which is small and has a high probability.
 \end{itemize}
 \end{mdframed}
+
+\section{Binary Decision Diagrams and Symbolic Model Checking}
+Explicit Representation of $TS$ might be to large, need something smaller.
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Boolean Functions}
+]
+boolean variable $x_1,x_2,\dots,x,y,z$ ranging over values $0$ and $1$
+\mdfsubtitle{Boolean Function}
+\begin{itemize}
+    \item function $f:\{0,1\}^n\to\{0,1\}$
+    \begin{itemize}
+        \item $\overline{0}:=1$ and $\overline{1}:=0$
+        \item $x\cdot y:=1$ if $x$ and $y$ have value $1$, otherwise $x\cdot y:=0$ {\tiny and}
+        \item $x+y:=0$ if $x$ and $y$ have value $0$, otherwise $x+y:=1$ {\tiny or}
+        \item $x\oplus y:=1$ if exactly one of $x$ and $y$ equals $1$
+    \end{itemize}
+\end{itemize}
+\mdfsubtitle{Alternative Representations}
+\begin{itemize}
+    \item function: $f(x,y):=\overline{x+y}$
+    \item truth tables
+    \begin{tabular}{cc|c}
+    $x$ & $y$ & $f(x,y)$ \\
+    \hline
+    1 & 1 & 0 \\
+    0 & 1 & 0 \\
+    1 & 0 & 0 \\
+    0 & 0 & 1
+    \end{tabular}\\
+    Seemingly easy comparison (for identical variable ordering), satisfiability, validity, but exponential number of lines (variable combinations)
+    \item boolean formula $\neg(p\vee q)$
+    \\ compact, but deciding, e.g., satisfiability is NP-complete
+\end{itemize}
+\end{mdframed}
+
+\subsection{Binary Decision Tree}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Binary Decision Tree}
+]
+\begin{itemize}
+    \item non-terminal nodes labelled with boolea variables
+    \item terminal nodes labelled with $0$ or $1$
+    unique boolean functions on variables in terminal nodes
+    \begin{itemize}
+        \item dashed outgoing edge of node: $variable=0$
+        \item solid outgoing edge of node $variable=1$
+        \item function value: value of terminal node along path
+    \end{itemize}
+\end{itemize}
+\follows not a compact representation \follows build something that is no longer a tree
+\end{mdframed}
+
+\subsection{Binary Decision Diagram (BDD)}
+\begin{mdframed}[roundcorner=5pt,
+subtitlebelowline=false,subtitleaboveline=false,
+subtitlebackgroundcolor=blue!30,
+% backgroundcolor=blue!20,
+frametitlerule=true,
+frametitlebackgroundcolor=blue!30,
+frametitle={Binary Decision Diagram (BDD)}
+]
+\begin{multicols}{2}
+\begin{itemize}
+    \item a BDD is a finite Directed Acyclic Graph, such that: {\tiny (all binary decision trees are BDDs)}
+    \begin{itemize}
+        \item it has a unique initial node
+        \item all terminal nodes are labelled with $0$ or $1$
+        \item all non-terminal nodes are labelled with boolean variables
+        \item each non-terminal node has exactly two outgoing edges labelled $0$ (dashed line) or $1$ (solid line)
+    \end{itemize}
+\end{itemize}
+\begin{center}
+\scalebox{1}{\input{images/BDD.tikz}}
+\end{center}
+\end{multicols}
+\mdfsubtitle{From Binary Decision Tree to BDD}
+\begin{multicols}{2}
+\begin{description}
+    \item[C1:] removal of duplicate terminals
+    \begin{center}
+    \scalebox{1}{\input{images/BDD1.tikz}}
+    \end{center}
+    \item[C2:] removal of redundant tests
+    \begin{center}
+    \scalebox{1}{\input{images/BDD2.tikz}}
+    \end{center}
+    \columnbreak
+    \item[C3:] removal of duplicate non-terminals: If two non-terminal nodes $n$ and $m$ are the roots of structurally identical sub-trees, then eliminate one of them and redirect all its incoming edges to the other node.
+    \begin{center}
+    \scalebox{1}{\input{images/BDD3.tikz}}
+    \scalebox{1}{\input{images/BDD4.tikz}}
+    \end{center}
+\end{description}
+\end{multicols}
+\mdfsubtitle{Reduced BDD}
+A BDD is reduced, when no further reduction $C1-C3$ is possible:
+\begin{center}
+\scalebox{1}{\input{images/BDD5.tikz}}
+\end{center}
+\mdfsubtitle{Special BDDs}
+\begin{multicols}{3}
+\begin{center}
+\scalebox{1}{\input{images/B1.tikz}}
+\end{center}
+\begin{center}
+\scalebox{1}{\input{images/B0.tikz}}
+\end{center}
+\begin{center}
+\scalebox{1}{\input{images/Bx.tikz}}
+\end{center}
+\end{multicols}
+\mdfsubtitle{Consistent Path}
+A Path through a BDD is \emph{consistent} if every value for a variable is decided no more than once. {\tiny When a variable is decided upon one value, it cannot be changed.}
+\\ \follows prevent multiple variable occurrences \follows impose and order on variables along every path \follows Ordered BDDs
+\mdfsubtitle{Ordered BDD (OBDD)}
+\begin{itemize}
+    \item let $[x_1,\dots,x_n]$ a list of variable names \emph{without duplicates}
+    \item let $B$ BDD so that all its non-terminal nodes are members of this list
+    \item $B$ has the ordering $[x_1,\dots,x_n]$ if for any path, the occurrence of $x_i$ preceding the occurrence of $x_j$ implies $i<j$
+    \item $B$ is then called an \emph{ordered BDD} (OBBD)
+\end{itemize}
+\mdfsubtitle{Compatible Variable Ordering}
+\begin{itemize}
+    \item For OBDDs $B_1$ and $B_2$, if it does not happen that there is a variable $x$ occurring before $y$ in $B_1$ and after $y$ in $B_2$, then we say that the variable orderings of $B_1$ and $B_2$ are \emph{compatible}. \\
+    \item If reduced OBDDs $B_1$ and $B_2$ describe the same boolean function, then they have identical structure.
+    \begin{itemize}
+        \item equivalence checking: check for identical structure
+        \item applying $C1-C3$ to an OBDD until no further reduction \follows leads to the same reduced OBDD, irrespective of the order they are applied \\
+        \follows \emph{canonical form}
+    \end{itemize}
+    \item OBDDs offer \emph{canonical representation} for boolean functions
+    \item OBDDs have worst case exponential size, computing optimal order is expensive, good heuristics usable
+\end{itemize}
+\mdfsubtitle{Benefits of Canonical Representation}
+\begin{itemize}
+    \item absence of redundant variables: if the value does not depend on some $x$ it will not appear in reduced OBDD
+    \item test for semantic equivalence of functions $f$ and $g$
+    \begin{enumerate}
+        \item determine compatible ordering of variables (with heuristics to make them good)
+        \item reduce $B_f$ and $B_g$
+        \item check $B_f$ and $B_g$ for identical structure
+    \end{enumerate}
+    \item test for validity: reduced OBDD is $B_1$
+    \item test for implication $f\implies g$:compute reduced OBDD for $f.g^{-1}$ and check whether it is $B_0$
+    \item test for satisfiability: reduced OBDD is not $B_0$
+\end{itemize}
+\mdfsubtitle{reduce}
+\begin{itemize}
+    \item idea:
+    \begin{itemize}
+        \item implements $C1-C3$ in efficient fashion {\tiny $C1$ is just a special case of $C3$}
+        \item traverse BDD bottom-up, start with terminal nodes
+        \item for $B$ with $[x_1,\dots,x_l]$, $B$ has at most $l+1$ layers
+        \item during traversal: assign integer labels $id(n)$ to each node $n$
+    \end{itemize}
+    \item algorithm
+    \begin{itemize}
+        \item node $n$ and $m$ have the same label, is sub-BDD computes same boolean function
+        \item keep only one node per $id$
+    \end{itemize}
+    \begin{center}
+    \scalebox{1}{\input{images/OBDD.tikz}}
+    \end{center}
+    \item if $id(lo(n)) = id(hi(n))$, then $id(n):=id(lo(n))$ \\
+    boolean test represented by $n$ is redundant
+    \item if another node $m$ labeled with same variable $x_i$ and if $id(lo(n))=id(lo(m))$ and $id(hi(n))=id(hi(m))$, then $id(n):=id(m)$ \follows they compute the same boolean function
+    \item if nothing of above applies, assign next unused integer
+\end{itemize}
+\mdfsubtitle{apply}
+\begin{itemize}
+    \item idea: implement the application of operations to boolean functions
+    \begin{itemize}
+        \item examples: $+,.,\oplus,$ complement $(f\oplus 1)$
+        \item $apply(op,B_f,B_g)$ computes reduced OBDD of $f \, op \, g$
+        \item algorithm operates recursively on structure of two OBDDs
+        \begin{itemize}
+            \item let $v$ be the variable highest in the variable order that occurs in $B_f$ or $B_g$
+            \item solve problem separately for $v=0$ and $v=1$
+            \item at the leaves apply $op$ directly
+            \item reduce result
+        \end{itemize}
+    \end{itemize}
+    \item Restriction:
+    \begin{itemize}
+        \item $f[0/x]$: boolean formula obtained by replacing all occurrences of $x$ in $f$ by $0$
+        \item $f[1/x]$: boolean formula obtained by replacing all occurrences of $x$ in $f$ by $1$
+    \end{itemize}
+    \item perform recursion on boolean formulas by decomposing them into simpler ones: $f$ on $x$ is equivalent to $\overline{x}\cdot f[0/x]+x\cdot f[1/x]$ {\tiny ($\equiv$ Shannon Expansion)}
+    \item use in $apply$
+    $f\,op\,g = \overline{x_i}\cdot(f[0/x_i]\,op\,g[0/x_i])+x_i\cdot(f[1/x_i]\,op\,g[1/x_i])$
+\end{itemize}
+Algorithm of apply:
+\begin{itemize}
+    \item proceed from roots of $B_f$ and $B_g$ to construct the nodes of OBDD $B_{f\,op\,g}$
+    \item let $r_f$ and $r_g$ the root nodes of $B_f$ and $B_g$, respectively
+    \item case:
+    \begin{itemize}
+        \item both nodes are terminal nodes: compute $l_f\,op\,l_g$, if $0\Rightarrow B_0$, if $1\Rightarrow B_1$
+        \item both root nodes are $x_i$ nodes: create $x_i$ node $n$ with
+        \begin{itemize}
+            \item dashed line to $apply(op,lo(r_f),lo(r_g))$
+            \item solid line to $apply(op,hi(r_f),hi(r_g))$
+        \end{itemize}
+        \item $r_f$ is an $x_i$ node, but $r_g$ is a terminal node or an $x_j$ node with $j>i$
+        \begin{itemize}
+            \item we know there is no $x_i$ node in $B_g$ because the two OBDDs have a compatible ordering \\
+            \follows $g$ is indepenednt of $x_i$ since $g\equiv g[0/x_i]\equiv g[1/x_i]$ \\
+            \follows create $x_i$ node $n$ with
+            \begin{itemize}
+                \item dashed line to $apply(op,lo(r_f),r_g$
+                \item solid line to $apply(op,hi(r_f),r_g$
+            \end{itemize}
+        \end{itemize}
+        \item $r_g$ is a non-terminal node, but $r_f$ is a terminal node or an $x_j$ node with $j>i$
+        \\ \follows symmetrically to above case
+    \end{itemize}
+    \item call reduce on the result
+\end{itemize}
+Memoisation
+\begin{itemize}
+    \item remember results of apply for future calls with identical arguments
+    \begin{itemize}
+        \item more efficient
+        \item less reduction needed
+    \end{itemize}
+    \item without memoization: apply is exponential in size of arguments
+    \item with memoization: number of calls bounded by $2\cdot|B_f|\cdot|B_g|$
+    \item in praxis often even better
+\end{itemize}
+\mdfsubtitle{restrict}
+Purpose
+\begin{itemize}
+    \item compute $f[0/x]$ and $f[1/x]$
+    \item calls: $restrict(0,x,B_f)$ and $restrict(1,x,B_f)$
+    \item[\follows] yields same variable ordering in result as in $B_f$
+\end{itemize}
+Procedure
+\begin{itemize}
+    \item $restrict(0,x,B_f)$: for each node $n$ labeled $x$
+    \begin{itemize}
+        \item redirect incoming edges to $lo(n)$
+        \item remove $n$
+        \item call $reduce$ on the result (iteratively)
+    \end{itemize}
+    \item $restrict(1,x,B_f)$: same, but redirect to $hi(n)$
+\end{itemize}
+\mdfsubtitle{exists}
+useful to express relaxations on constraints for subset of variables:
+\begin{itemize}
+    \item $\exists x.f := f[0/x]+f[1/x]$ {\tiny ($\exists x.f$ can be true by x being $1$ or $0$)}
+    \begin{itemize}
+        \item $exists:\quad apply(+,restrict(0,x,B_f),restrict(1,x,B_f))$
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+
 
 
 % part 5

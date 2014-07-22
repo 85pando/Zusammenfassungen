@@ -1,0 +1,18 @@
+\begin{tikzpicture}[
+var/.style={draw,circle},
+term/.style={draw},
+line/.style={draw,thick},
+zero/.style={line,dotted},
+one/.style={line,solid},
+]
+\node[var] (n) at (0,1) {$n$};
+
+\node[var] (lo) at (-1,0) {$lo(n)$};
+\node[var] (hi) at (1,0)   {$hi(n)$};
+
+\path[zero]
+(n) edge (lo)
+; \path[one]
+(n) edge (hi)
+;
+\end{tikzpicture}
