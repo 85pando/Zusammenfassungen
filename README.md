@@ -20,14 +20,20 @@ Was man so braucht/What you need:
 
 * **AlgoDat**: Algorithmen und Datenstrukturen
 * **ADMC**: Advanced Model Checking
+* **Blended Interaction**
 * **CGIS**: Computergrafik und interaktive Systeme
+* **CloudDB**: Datamanagement in the Cloud
 * **DAA**: Design and Analysis of Algorithms
 * **DBS**: Datenbanksysteme
+* **DM-Foundations**: Data Mining Foundations
 * **DS**: Diskrete Strukturen
 * **funcSaf**: functional safety in embedded systems
+* **InfoVis**: Information Visualization
 * **MCSS**: Model Checking of Software Systems
 * **MGI**: Mathematische Grundlagen der Informatik
 * **MMDBS**: Multimedia Database Systems
 * **RSN**: Rechnersysteme und Netze
 * **SEng**: Software Engineering
 * **TI**:Theoretische Informatik
+* **UE-Design**: User Experience - Design
+* **VISS**: Visual Interaction Systems
