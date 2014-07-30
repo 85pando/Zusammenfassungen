@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\Gruppe{Stephan Heidinger}{ADMC - Zusammenfassung v0.1}
+\Gruppe{Stephan Heidinger}{ADMC - Zusammenfassung v0.9}
 \Header{advanced Model Checking}{SS 14}{Stephan Heidinger}
 
 % \begin{shaded}
@@ -2096,6 +2096,7 @@ frametitle={Binary Decision Diagram (BDD)}
     \end{center}
 \end{description}
 \end{multicols}
+The boolean function is not very recognizable after reduction.
 \mdfsubtitle{Reduced BDD}
 A BDD is reduced, when no further reduction $C1-C3$ is possible:
 \begin{center}
@@ -2116,6 +2117,21 @@ A BDD is reduced, when no further reduction $C1-C3$ is possible:
 \mdfsubtitle{Consistent Path}
 A Path through a BDD is \emph{consistent} if every value for a variable is decided no more than once. {\tiny When a variable is decided upon one value, it cannot be changed.}
 \\ \follows prevent multiple variable occurrences \follows impose and order on variables along every path \follows Ordered BDDs
+\mdfsubtitle{Conjunction and Disjunction}
+\begin{multicols}{2}
+Conjunction
+\begin{center}
+\scalebox{1}{\input{images/BDD-conjunction.tikz}}
+\end{center}
+\columnbreak
+Disjunction
+\begin{center}
+\scalebox{1}{\input{images/BDD-disjunction.tikz}}
+\end{center}
+\end{multicols}
+\begin{center}
+This works only for consistent paths!
+\end{center}
 \mdfsubtitle{Ordered BDD (OBDD)}
 \begin{itemize}
     \item let $[x_1,\dots,x_n]$ a list of variable names \emph{without duplicates}
@@ -2256,10 +2272,118 @@ useful to express relaxations on constraints for subset of variables:
         \item $exists:\quad apply(+,restrict(0,x,B_f),restrict(1,x,B_f))$
     \end{itemize}
 \end{itemize}
+Implementation Improvements:
+\begin{itemize}
+    \item restricted nodes have same structure until $x$-nodes, compute application of $+$ to these sub-BDDs
+\end{itemize}
+\mdfsubtitle{OBDD Operations}
+\begin{center}\begin{tabular}{c|c}
+Boolean formula $f$ & OBDD $B_f$ \\
+\hline
+$0$            & $B_0$ \\
+$1$            & $B_1$ \\
+$x$            & $B_x$ \\
+$\overline{f}$ & swap $0$ and $1$ nodes in $B_f$ \\
+$f+g$          & \texttt{apply}($+,B_f,B_g$) \\
+$f\cdot g$     & \texttt{apply}($\cdot,B_f,B_g$) \\
+$f\oplus g$    & \texttt{apply}($\oplus,B_f,B_g$) \\
+$f[1/x]$       & \texttt{restrict}($1,x,b_f$) \\
+$f[0/x]$       & \texttt{restrict}($0,x,b_f$) \\
+$\exists x.f$  & \texttt{apply}($+,B_{f_{f[0/x]}},B_{f_{g[1/x]}}$) \\
+$\forall x.f$  & \texttt{apply}($\cdot,B_{f_{f[0/x]}},B_{f_{g[1/x]}}$) \\
+\end{tabular} \\[.5cm]
+\begin{tabular}{l|l|l|l}
+Algorithm & Input OBDD(s) & Output OBDD & Time Complexity \\
+\hline
+\texttt{reduce}    & $B$                 & reduced $B$                                                  & $\O(|B|\cdot\log|B|)$ \\
+\texttt{apply}     & $B_f,B_g$ (reduced) & $B_{f\,op\,g}$ (reduced)                                     & $\O(|B_f|\cdot|B_g|)$ \\
+\texttt{restrict}  & $B_f$ (reduced)     & $B_{f[0/x]}$ or $B_{f[1/x]}$ (reduced)                       & $\O(|B_f|\cdot\log|B_f|)$ \\
+\texttt{$\exists$} & $B_f$ (reduced)     & $B_{\exists x_1.\exists x_2.\dots .\exists x_n.f}$ (reduced) & NP-complete
+\end{tabular}
+\end{center}
+Domain specific OBDDs exists, which may improve some operations, but they mostly use the canonicity property.
+\mdfsubtitle{Symbolic Model Checking Algorithm}
+    \begin{align*}
+    \phi \text{ is } & \top                        &&: \Return \, S \\
+    \phi \text{ is } & \perp                       &&: \Return \, \varnothing \\
+    \phi \text{ is } & \text{atomic}               &&: \Return \, \{s\in S|\phi\in L(s)\} \\
+    \phi \text{ is } & \neg\phi_1                  &&: \Return \, S-SAT(\phi_1) \\
+    \phi \text{ is } & \phi_1\wedge\phi_2          &&: \Return \, SAT(\phi_1)\cap SAT(\phi_2) \\
+    \phi \text{ is } & \phi_1\vee\phi_2            &&: \Return \, SAT(\phi_1)\cup SAT(\phi_2) \\
+    \phi \text{ is } & \phi_1\to\phi_2             &&: \Return \, SAT(\neg\phi_1\vee\phi_2) \\
+    \phi \text{ is } & \forall\circ\phi_1          &&: \Return \, SAT(\neg\exists\circ\neg\phi_1) \\
+    \phi \text{ is } & \exists\circ\phi_1          &&: \Return \, SAT_{\exists\circ}(\phi_1) \\
+    \phi \text{ is } & \forall(\phi_1\until\phi_2) &&: \Return \, SAT(\neg(\exists[\neg\phi_2\until(\neg\phi_1\wedge\neg\phi_2)]\vee \exists\square\neg\phi_2)) \\
+    \phi \text{ is } & \exists(\phi_1\until\phi_2) &&: \Return \, SAT(\exists\until(\phi_1,\phi_2)) \\
+    \phi \text{ is } & \exists\diamond\phi_1       &&: \Return \, SAT(\exists(\top\until\phi_1)) \\
+    \phi \text{ is } & \exists\square\phi_1        &&: \Return \, SAT(\neg\forall\diamond\neg\phi_1) \\
+    \phi \text{ is } & \forall\diamond\phi_1       &&: \Return \, SAT_{\forall\diamond(\phi_1)} \\
+    \phi \text{ is } & \forall\square\phi_1        &&: \Return \, SAT(\neg\exists\diamond\neg\phi_1)
+    \end{align*}
+\mdfsubtitle{Representing OBDDs}
+Transition System: $(S,Act,\to,I,AP,L)$
+\begin{itemize}
+    \item characteristic function $f_s$ for $L:S\to 2^{AP}$, ordering of OBDD is characteristic vector
+    \item transition relation: two copies of characteristic vector: $s\to s' \Longrightarrow ((v_1,\dots,v_n),(v'_1,\dots,v'_n))$
+\end{itemize}
+\mdfsubtitle{Operations on OBDDs used in Model Checking Algorithm}
+\begin{itemize}
+    \item intersection: $.$
+    \item union: $+$
+    \item complementation: $\neg$
+    \item $pre_\exists(Y)=\{s\in S|\exists s', (s\to s' \text{ and } s'\in Y)$
+    \item $pre_\forall(Y)=\{s\in S|\forall s', (s\to s' \text{ implies } s'\in Y)$ \\
+    $pre_\forall(Y)=S-pre_\exists(S-Y)$
+\end{itemize}
+\mdfsubtitle{Algorithm}
+\begin{algorithm}[H]
+    \Switch{$\Phi$}{
+    \begin{align*}
+    a & & : && return &\{ s\in S|a\in L(s) \} \\
+    \dots& & && \dots \\
+    \exists&\circ\Psi & : && return &\{ s\in S|Post(s)\cap Sat(\Phi)\not=\varnothing \} \\
+    \exists&(\Phi_1\until\Phi_2) &:&& & \text{compute smallest fixpoint} \\
+    \exists&(\Phi) &:&& & \text{compute greatest fixpoint }
+    \end{align*}
+    }
+\end{algorithm}
+\mdfsubtitle{$Sat_{EX}$}
+\begin{algorithm}[H]
+local var $X,Y$ \\
+$X:=SAT(\Phi);$ \\
+$y:=pre_{\exists}(X);$ \\
+\Return $Y$
+\end{algorithm}
+
+\mdfsubtitle{$SAT_{AF}(\Phi)$}
+\begin{algorithm}[H]
+local var $X,Y$ \\
+$X:=S;$ \\
+$y:=SAT(\Phi);$ \\
+\While{$X\not=Y$}{
+    $X:= Y;$ \\
+    $Y:= Y\cup pre_{\forall}(Y);$
+}
+\Return Y
+\end{algorithm}
+
+\mdfsubtitle{$SAT_{EU}(\Phi,\Psi)$}
+\begin{algorithm}[H]
+$W:=SAT(\Phi);$ \\
+$X:=S;$ \\
+$Y:=SAT(\Psi)$
+\While{$X\not=Y$}{
+    $X:=Y;$ \\
+    $Y:=Y\cup(W\cap pre_{\exists}(Y)$
+}
+\Return Y
+\end{algorithm}
+
+\mdfsubtitle{OBDD synthesis}
+\begin{itemize}
+    \item so far: $(model)\to TS \to truth\,table\to OBDD\to\texttt{reduce}$
+    \item better: $(model)\to OBDD$ (reduced)
+\end{itemize}
 \end{mdframed}
-
-
-
-% part 5 -36
 
 \end{document}
