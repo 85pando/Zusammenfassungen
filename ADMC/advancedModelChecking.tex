@@ -83,7 +83,7 @@ When is a system correct?
 \begin{minipage}[t]{12cm}
 \begin{itemize}
     \item Given a \blue{model} and a \red{specification}: \\ Does $\blue{M}\models\red{S}$?
-    \item When every behaviour of \blue{M} is also behaviour of \red{M} this is the case. \follows Model does not reveal properties violating the specification.
+    \item When every behaviour of \blue{M} is also behaviour of \red{S} this is the case. \follows Model does not reveal properties violating the specification.
     \item Model of course has to represent the behaviour of the system.
 \end{itemize}
 \end{minipage}
@@ -530,7 +530,7 @@ Computation of $Sat(a_i)$
 Sat(true) &= S \\
 Sat(a) &= \{s\in S | a\in L(s)\} \text{ for any } a\in AP \\
 Sat(\blue\Phi\wedge\red\Psi) &= Sat(\blue\Phi) \cap Sat(\red\Psi) \\
-Sat(\neg\Phi) &= s\setminus Sat(\Phi) \\
+Sat(\neg\Phi) &= S\setminus Sat(\Phi) \\
 Sat(\exists\circ\Phi) &= \{s\in S | Post(s)\cap Sat(\Phi)\not=\varnothing\} \\
 %
 Sat(\exists(\blue\Phi\until\red\Psi)) &\text{ is the smallest subset $T$ of $S$, such that } \\
@@ -552,6 +552,7 @@ $T:=Sat(\Phi_2);$ \\
 \ \\
 greatest Fixpoint calculation: $\exists\square\Phi$\\
 \begin{algorithm}[H]
+$T:=Sat(\Phi)$ \\
 \While{$\{s\in T | Post(s)\cap T=\varnothing\}\not=\varnothing$}{
     let $\{s\in T | Post(s)\cap T=\varnothing\}$ \\
     $T:=T\setminus\{s\}$;
@@ -690,8 +691,8 @@ Follow same recursive pattern using parse tree as for CTL model checking.
             a &:& Sat(\Psi)&:=\{s\in S|a\in L(s)\}; \\
             a_1\wedge a_2 &:& Sat(\Psi)&:=Sat(a_1)\cap Sat(a_2); \\
             \neg a &:& Sat(\Psi)&:=S\setminus Sat(a); \\
-            \exists\varphi &:& determine &Sat_{LTL}(\neg\varphi); \\
-             &:& Sat(\Psi)&:=S\setminus Sat_{LTL}(\neg\varphi)
+            \exists\varphi &:& determine &\ Sat_{LTL}(\neg\varphi); \\
+            \square\varphi &:& Sat(\Psi)&:=S\setminus Sat_{LTL}(\neg\varphi)
             \end{align*}
         }
         $AP:=AP\cup\{a_\Psi\};$ \tcc*{introduce fresh atomic proposition}
@@ -1237,6 +1238,7 @@ Intersection of two zones: & $z\cap z' = \{\eta|\eta\in z \wedge\eta\in z'\}$ \\
 Clock Reset in a zone: & reset $D$ in $z$ = $\{$ reset $D$ in $\eta | \eta\in z\}$ \\
 Inverse Clock Reset of a zone: & reset$^-1\,D$ in $z=\{\eta|$ reset $D$ in $\eta\in z\}$
 \end{tabular}
+\\
 zones are closed under these operations
 \mdfsubtitle{Clock Zones Examples}
 \begin{multicols}{2}
@@ -1252,6 +1254,7 @@ Past of $z$:
 \begin{center}
 \scalebox{.7}{\input{images/clock-zones-past.tikz}}
 \end{center}
+\columnbreak
 Intersection of two zones: {\tiny $z'=1\leq y\leq3$}
 \begin{center}
 \scalebox{.7}{\input{images/clock-zones-intersect.tikz}}
@@ -1420,9 +1423,9 @@ Zone $z$ over $C$ is represented by DBM $Z$ of cardinality $|C+1|\cdot|C+1|$. Fo
 \[ Z(i,j) = (c,\prec) \iff x_i-x_j\prec c \]
 Further:
 \begin{align*}
-Z(i,j) &:= (c,\prec) \text{ for each bound } x_i-x_j\prec \text { in } z \\
+Z(i,j) &:= (c,\prec) \text{ for each bound } x_i-x_j\prec c \text{ in } z \\
 Z(i,j) &:= \infty \text{ (no bound) if clock difference } x_i-x_j \text{is unbounded in } z \\
-Z(0,j) &:= (0,\leq)\, 0-x\leq 0 \text{\tiny all clocks are positive} \\
+Z(0,j) &:= (0,\leq)\, 0-x\leq 0 \text{ \tiny all clocks are positive} \\
 Z(i,i) &:= (0,\leq) \text{ each clock is at most itself}
 \end{align*}
 rows are for lower bounds, columns for higher bounds, always: $x_0=0$
@@ -1655,7 +1658,7 @@ A \emph{DTMC} $\mathcal{M}$ is a tuple $(S,P,\iota_{init},AP,L)$ with
     \item $\iota_{init}:S\to[0,1]$ the initial distribution with $\sum_{s\in S}\iota_{init}(s)=1$
     \begin{itemize}
         \item $\iota_{init}(s)$ is the probability that system starts in state $s$
-        \item state $s$ for which $\iota_{init}(s)>0 is an initial state$
+        \item state $s$ for which $\iota_{init}(s)>0 \text{ is an initial state}$
     \end{itemize}
     \item $L:S\to 2^{AP}$, the labeling function
 \end{itemize}
@@ -2351,7 +2354,7 @@ Transition System: $(S,Act,\to,I,AP,L)$
 \begin{algorithm}[H]
 local var $X,Y$ \\
 $X:=SAT(\Phi);$ \\
-$y:=pre_{\exists}(X);$ \\
+$Y:=pre_{\exists}(X);$ \\
 \Return $Y$
 \end{algorithm}
 
@@ -2359,7 +2362,7 @@ $y:=pre_{\exists}(X);$ \\
 \begin{algorithm}[H]
 local var $X,Y$ \\
 $X:=S;$ \\
-$y:=SAT(\Phi);$ \\
+$Y:=SAT(\Phi);$ \\
 \While{$X\not=Y$}{
     $X:= Y;$ \\
     $Y:= Y\cup pre_{\forall}(Y);$

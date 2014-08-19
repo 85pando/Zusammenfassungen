@@ -1,9 +1,10 @@
 \begin{tikzpicture}[
 state/.style={draw,rounded corners,node distance=60},
+initial state/.style={state, initial, initial text=,},
 arrow/.style={draw,->,>=latex},
 label/.style={black!50},
 ]
-\node[state] (idle) at (0,0) {$idle$};
+\node[initial state] (idle) at (0,0) {$idle$};
 \node[state,above right of = idle] (orig) {$orig$};
 \node[state,below right of = idle] (term) {$term$};
 \node[state,below right of = orig] (con) {$con$};
