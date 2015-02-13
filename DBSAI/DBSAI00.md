@@ -9,5 +9,6 @@ This document has been published under a Creative Commons - Attribution-NonComme
 \textit{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}
 Find any errors? Please send them back, I want to keep them!}
 
-# Duis autem
+- - - -
 
+![Course Structure](images/CourseStructure.png)
