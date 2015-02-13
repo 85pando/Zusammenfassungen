@@ -1,3 +1,4 @@
+# LaTeX temp files, don't want them
 *.aux
 *.bbl
 *.blg
@@ -8,5 +9,10 @@
 *.snm
 *.synctex.gz
 *.toc
+*.fls
+
+# MacOS files
 *.DS_Store
+
+# Thumbnails
 *.thumbnails

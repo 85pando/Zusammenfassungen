@@ -25,6 +25,7 @@ Was man so braucht/What you need:
 * **CloudDB**: Datamanagement in the Cloud
 * **DAA**: Design and Analysis of Algorithms
 * **DBS**: Datenbanksysteme
+* **DBSAI**: Database Systems Architecture and Implementation
 * **DM-Foundations**: Data Mining Foundations
 * **DS**: Diskrete Strukturen
 * **funcSaf**: functional safety in embedded systems
