@@ -1,18 +1,20 @@
 # Disks
 
-* Different types of storage have different speeds/latencies and capacities
+* Different types of storage have different speeds/latencies and capacities (Figure~\ref{image:MemoryHierarchy})
 
-    ![Speed of different Storage Types [@image:MemoryHierarchy]](images/MemoryHierarchy.png)
+    ![Speed of different Storage Types \label{image:MemoryHierarchy}](images/MemoryHierarchy.png)
 
 ## Magnetic Disk Setup
 
-![Setup of Magnetic Disks [@image:MagneticDisk]](images/MagneticDisk.png)
+![Setup of Magnetic Disks \label{image:magneticDisk}](images/MagneticDisk.png)
 
 * **Platters**: One or Two sided
 * Concentric Ring: **Tracks**
 * Arc-Shaped **sectors**
 * **Cylinder**: set of tracks with the same diameter
 * **block**: multiple of sector size
+
+\text{\tiny see Figure~\ref{image:magneticDisk}}
 
 ### Access Time
 

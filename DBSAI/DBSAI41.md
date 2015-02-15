@@ -144,31 +144,3 @@
 ### Extendible vs. Linear Hashing
 
 linear hashing => directory can be avoided by cleverness
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
