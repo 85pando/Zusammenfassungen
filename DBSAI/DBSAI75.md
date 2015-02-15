@@ -51,7 +51,7 @@
 
 * pipelined evaluation => avoid writing temporary files whenever possible
 
-![Pipelined Evaluation](images/PipelinedEvaluation.png)
+    ![Pipelined Evaluation](images/PipelinedEvaluation.png)
 
     * each operator passes its results directly to next operator
     * results propagate, as soon as they are available
