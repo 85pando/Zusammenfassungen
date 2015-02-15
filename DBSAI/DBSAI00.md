@@ -6,7 +6,7 @@ This document has been published under a Creative Commons - Attribution-NonComme
 \centerline{\href{http://creativecommons.org/licenses/by-nc-sa/3.0/}{\includegraphics[width=3cm]{../cc-by-nc-sa.png} } }
 \end{shaded}
 
-\textit{\ensuremath{\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}\underline{\hspace{0.5em}}\overset{-\mkern-11mu-\mkern-3.5mu\rhook}{\smash{\odot}\rule{0ex}{.46ex}}}
+\hm
 Find any errors? Please send them back, I want to keep them!}
 
 - - - -
