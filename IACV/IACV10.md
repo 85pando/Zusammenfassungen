@@ -33,7 +33,7 @@
     
         * most important noise model
         * good approximation for many practical situations
-        * density function: $$p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \cdot 10^{\frac{(x-\mu)^2}{2\sigma^2}}$$ where $\mu$ is the _mean_ and $\sigma$ is the standard deviation ($\sigma^2$ is called the _variance_)
+        * density function: $$p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \cdot e^{\frac{(x-\mu)^2}{2\sigma^2}}$$ where $\mu$ is the _mean_ and $\sigma$ is the standard deviation ($\sigma^2$ is called the _variance_)
         * $\mu-\sigma$ => $68\%$
         * $\mu-2\sigma$ => $95.5\%$
         * $\mu-3\sigma$ => $99.7\%$
@@ -130,7 +130,7 @@
 
     * around each pixel $n$, define a $k \times k$ window of pixels $\mathcal{W_n}$, which is written as vector of pixel indices
     * define distance $$d_{n,m}^2 := \Sigma_{s=1}^{k^2} \left( f(\mathcal{W}_n(s)) - f(\mathcal{W}_m(s)) \right)^2$$
-    * kernel weights: $k_{n,m} := 10^{- \frac{d^2_{n,m}}{2 \sigma^2}}$, where $\sigma>0$ is a parameter.
+    * kernel weights: $k_{n,m} := e^{- \frac{d^2_{n,m}}{2 \sigma^2}}$, where $\sigma>0$ is a parameter.
     * sums are usually restricted to window around $n$th pixel
     * very slow filter
 
