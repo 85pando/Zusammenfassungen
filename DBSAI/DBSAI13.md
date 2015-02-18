@@ -17,9 +17,9 @@
     * each record as a _unique record identifier_ ($rid$)
     * heap file maps given $rid$ to the page containing the record
     * heap file interface:
-    
+
         * ```f <- create(n)```
-        
+
             * to implement efficiently: heap file has to keep track of all pages with free space in the file $f$
 
         * ```delete(n)```
@@ -27,37 +27,37 @@
         * ```deleteRecord(f,rid)```
         * ```r <- getRecord(f,rid)```
         * ```openScan(f)```
-        
+
             * Heap file has to keep track of all pages in the file $f$
 
 * simple structures with those properties:
 
     * (doubly) _linked list_ of pages
-    
+
     ![Doubly Linked List of Pages](images/DoublyLinkedList.png)
-    
-        * ```f <- createFile(n)```
-        
-            1. DBMS allocates a free page (_header page_) and stores entry ```<n, header page>``` to known location on disk
-            2. header page is initialized to point to two doubly linked lists of pages: _full pages_ and _pages with free space_
-            3. initialize both lists empty
-            
-        * ```rid <- insertRecord(f,r)```
-        
-            1. _find page_ $p$ in the free list with space $> |r|$
-            2. should this fail, ask disk manager to _allocate new page_ $p$
-            3. record $r$ is _written_ to page $p$
-            4. since generally $|r| << |p|$, $p$ will belong to _list of free space_
-            5. a _unique_ $rid$ for $r$ is computed and returned
-            
-        * ```deleteRecord(f,r)```
-        
-            * may result in _moving the containing page_ from list of full pages to list of free space
-            * may also lead to _page deallocation_ if page is completely free
 
-        * ```openScan(f)```
+    * ```f <- createFile(n)```
 
-            * _both_ page lists have to be traversed
+        1. DBMS allocates a free page (_header page_) and stores entry ```<n, header page>``` to known location on disk
+        2. header page is initialized to point to two doubly linked lists of pages: _full pages_ and _pages with free space_
+        3. initialize both lists empty
+
+    * ```rid <- insertRecord(f,r)```
+
+        1. _find page_ $p$ in the free list with space $> |r|$
+        2. should this fail, ask disk manager to _allocate new page_ $p$
+        3. record $r$ is _written_ to page $p$
+        4. since generally $|r| << |p|$, $p$ will belong to _list of free space_
+        5. a _unique_ $rid$ for $r$ is computed and returned
+
+    * ```deleteRecord(f,r)```
+
+        * may result in _moving the containing page_ from list of full pages to list of free space
+        * may also lead to _page deallocation_ if page is completely free
+
+    * ```openScan(f)```
+
+        * _both_ page lists have to be traversed
 
     * _directory_ of pages
 
@@ -100,11 +100,11 @@
 * Linked List
 
     * Pro:
-    
+
         * Easy to implement
-    
+
     * Con:
-    
+
         * most pages will end up in free space list
         * searching for space may take long
 
