@@ -1,0 +1,8 @@
+{
+    "name": “IACV Summary",
+    "files": [ { "git": 1 } ],
+    "build": {
+        "build": "make summary",
+        "clean": "make clean"
+    }
+}
