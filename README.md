@@ -18,8 +18,8 @@ Was man so braucht/What you need:
 
 ## Which is which?
 
-* **AlgoDat**: Algorithmen und Datenstrukturen
 * **ADMC**: Advanced Model Checking
+* **AlgoDat**: Algorithmen und Datenstrukturen
 * **Blended Interaction**
 * **CGIS**: Computergrafik und interaktive Systeme
 * **CloudDB**: Datamanagement in the Cloud
@@ -28,11 +28,12 @@ Was man so braucht/What you need:
 * **DBSAI**: Database Systems Architecture and Implementation
 * **DM-Foundations**: Data Mining Foundations
 * **DS**: Diskrete Strukturen
-* **funcSaf**: functional safety in embedded systems
+* **FuncSaf**: Functional Safety In Embedded Systems
+* **IACV**: Image Analysis and Computer Vision
 * **InfoVis**: Information Visualization
 * **MCSS**: Model Checking of Software Systems
-* **MGI**: Mathematische Grundlagen der Informatik
 * **MMDBS**: Multimedia Database Systems
+* **MGI**: Mathematische Grundlagen der Informatik
 * **RSN**: Rechnersysteme und Netze
 * **SEng**: Software Engineering
 * **TI**:Theoretische Informatik
