@@ -43,7 +43,7 @@
 ![Homogenous Coordinates](images/homogenousCoordinates.png)
 
 * moving to _homogenous coordinates_: $p\in\mathbb{R}^2 \Longrightarrow \hat{p} = \widehat{\begin{bmatrix} x \\ y \end{bmatrix}} := \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} \in \mathbb{P}^2$
-* $mathbb{P}^2$ is called _projective space_, coordinates are _homogenous coordinates_
+* $\mathbb{P}^2$ is called _projective space_, coordinates are _homogenous coordinates_
 * Reverse projection to image coordinates is given by: $$\pi\left( \begin{bmatrix} x \\ y \\ w \end{bmatrix} \right) := \begin{bmatrix} \nicefrac{x}{w} \\ \nicefrac{y}{w} \end{bmatrix}$$
 * _affine transformations_ can now be written as matrices: $\widehat{T(p)} = \begin{bmatrix} A & t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} p \\ 1 \end{bmatrix}$
 

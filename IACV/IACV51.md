@@ -19,7 +19,7 @@
     * naive way: If $A^TA$ has an inverse, normal equations can be solved as a normal linear system => inefficient and not very robust.
     * better way => SVD: $A=U\Sigma V^T$ => normal equations reduce to: $\Sigma^2V^T\hat{x} = \Sigma U^Tb$
     
-        * Use _pseudo-inverse_ $\sigma^+$ to solve: $\hat{x} = V\Sigma^+ U^T b$
+        * Use _pseudo-inverse_ $\Sigma^+$ to solve: $\hat{x} = V\Sigma^+ U^T b$
         
 ### Weighted Least Squares
 

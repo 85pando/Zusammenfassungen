@@ -10,7 +10,7 @@
     * $C$: _focal point_, _optical centre_: location of pinhole
     * $m$: _image point_
     * $I$: _image plane_
-    * $F$: _focal plane_: coplanar to image plain, contains focal point $C$
+    * $F$: _focal plane_: coplanar to image plane, contains focal point $C$
     * _optical axis_: orthogonal to image plane, passes through $C$
     * _optical ray_: passes through $m$, $C$, $M$
     * $f$: focal distance: distance $I$ to $C$

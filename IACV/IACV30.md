@@ -9,7 +9,7 @@
 * Elementary building blocks: $f(x,y) = r\cdot \cos(2\pi (\omega_x x + \omega_y y)+\varphi)$
 
     * _wave number_: $\omega = [\omega_x \omega_y]$
-    * _frequency_$ $f=\vert \omega \vert_2$ => number of peaks per unit length
+    * _frequency_: $f=\vert \omega \vert_2$ => number of peaks per unit length
     * _direction of the wave_: $\frac{\omega}{f}$
     * _phase_: $\varphi\in\mathbb{R}$ => gives distance of the first peak to the origin
     * _amplitude_: $r\geq 0$ => gives maximum peak height
@@ -40,7 +40,7 @@
 
 * Complex valued function $\hat{f}:\mathbb{R}^2 \to \mathbb{C}$ is called **Fourier Transform**
 
-    * For each point in _frequency space, the value $\hat{f}(\omega) = re^{i\varphi}$ gives amplitude and phase of the elementary wave $W_\omega$
+    * For each point in _frequency space_, the value $\hat{f}(\omega) = re^{i\varphi}$ gives amplitude and phase of the elementary wave $W_\omega$
 
 * interpretation:
 
@@ -66,7 +66,7 @@ $$ f(p) = \frac{1}{2 \pi \sigma^2} \cdot e^{-\frac{p^2}{2\sigma^2}}
 \;\Rightarrow\;
 \hat{f}(\omega) = e^{-\frac{4 \pi^2\omega^2}{2\sigma^{-2}}}$$
 
-### Types of Filers:
+### Types of Filters:
 
 ![Difference of Gaussians](images/differenceOfGaussians.png)
 
