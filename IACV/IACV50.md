@@ -34,7 +34,7 @@
 * Special cases of affine transformations:
 
     * _pure translation_: $A=I_2$
-    * _Euclidean_: (rigid motion): $A$ is pure rotation (no scaling)
+    * _Euclidean_: (rigid motion): $A$ is pure rotation + translation (no scaling)
     * _Similarity_: $A = sR$, where $R$ is rotation and $s>0$, rotation and scaling
     * _Area preserving_: $\det(A) = 1$, five degrees of freedom 
 
