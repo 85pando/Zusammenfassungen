@@ -9,7 +9,7 @@
 * Elementary building blocks: $f(x,y) = r\cdot \cos(2\pi (\omega_x x + \omega_y y)+\varphi)$
 
     * _wave number_: $\omega = [\omega_x \omega_y]$
-    * _frequency_$ $f=\vert \omega \vert_2$ => number of peaks per unit length
+    * _frequency_ $f=\vert \omega \vert_2$ => number of peaks per unit length
     * _direction of the wave_: $\frac{\omega}{f}$
     * _phase_: $\varphi\in\mathbb{R}$ => gives distance of the first peak to the origin
     * _amplitude_: $r\geq 0$ => gives maximum peak height

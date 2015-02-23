@@ -31,7 +31,7 @@
     
     4. **computation of suitable key point descriptor**
     
-        * unit vecrot based on accumulated histograms of gradients
+        * unit vector based on accumulated histograms of gradients
         * compensated by location, scale and dominant orientation
 
 ## SIFT Feature Detection

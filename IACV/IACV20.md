@@ -22,7 +22,7 @@
         
             * forward difference kernel: \begin{tabular}{|c|c|c|} \hline 1 & -1 & 0 \\ \hline \end{tabular}
             * backward difference kernel: \begin{tabular}{|c|c|c|} \hline 0 & 1 & -1  \\ \hline \end{tabular}
-            * forward difference kernel: \begin{tabular}{|c|c|c|} \hline $\frac{1}{2}$ & 0 & $-\frac{1}{2}$ \\ \hline \end{tabular}
+            * central difference kernel: \begin{tabular}{|c|c|c|} \hline $\frac{1}{2}$ & 0 & $-\frac{1}{2}$ \\ \hline \end{tabular}
 
     * for greyscaleimage, gradient $\nabla f$ is a vector field consisting of partial derivatives: $\nabla f = \begin{bmatrix} \partial_x f \\ \partial_y f \end{bmatrix}$
     * the magnitude of the gradient is the length of the vector in every point: $\Vert \nabla f \Vert = \sqrt{ (\partial_x f)^2 + (\partial_y f)^2 }$
